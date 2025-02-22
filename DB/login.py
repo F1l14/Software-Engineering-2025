@@ -4,6 +4,7 @@ import mysql.connector
 """
 pip install mysql-connector-python
 
+need to commit after every transaction that alters data ( not needed in SELECT queries)
 """
 
 db = mysql.connector.connect(
@@ -15,7 +16,17 @@ db = mysql.connector.connect(
 
 cursor = db.cursor()
 
-cursor.execute("SELECT * FROM users")
+username = input("Enter username: ")
+password = input("Enter password: ")
 
-for item in cursor:
-    print(item)
+
+# cursor.execute("SELECT * FROM %s" % ("users"))
+
+cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", (username, password))
+
+# for item in cursor:
+#     print(item)
+if cursor.fetchone():
+    print("Login successful")
+else:
+    print("Wrong cresecentials")
