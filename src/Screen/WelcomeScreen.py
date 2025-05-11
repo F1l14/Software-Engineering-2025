@@ -7,5 +7,5 @@ class WelcomeScreen(QDialog):
     
     def display(self):
         uic.loadUi("ui/WelcomeScreen.ui", self)
-        self.loginButton.clicked.connect(self.handler.handle_login)
+        self.loginButton.clicked.connect(self.manage.handle_login)
         self.exec()

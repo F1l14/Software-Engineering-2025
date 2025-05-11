@@ -1,11 +1,12 @@
 import mysql.connector
+from src.Class.DBManager import DBManager
 from src.Screen.WelcomeScreen import WelcomeScreen
 from src.Manage.ManageMainClass import ManageMainClass
 from PyQt6.QtWidgets import QMessageBox
 class ManageWelcomeClass:
     def __init__(self):
         self.welcome_screen = WelcomeScreen()
-        self.welcome_screen.handler = self
+        self.welcome_screen.manage = self
         self.welcome_screen.display()
         
     def handle_login(self):
@@ -13,12 +14,8 @@ class ManageWelcomeClass:
         password = self.welcome_screen.passwordLineEdit.text()
         
         try:
-            conn = mysql.connector.connect(
-                host="localhost",
-                user="root",
-                password="",
-                database="pythonDB"
-            )
+            db = DBManager()
+            conn = db.conn
             cursor = conn.cursor()
             cursor.execute("SELECT password FROM users WHERE username = %s", (username,))
             result = cursor.fetchone()
@@ -26,7 +23,7 @@ class ManageWelcomeClass:
             if result and result[0] == password:
                 QMessageBox.information(self.welcome_screen, "Success", "Login successful!")
                 self.welcome_screen.accept()
-                self.main_screen.handler = ManageMainClass()
+                ManageMainClass()
             else:
                 self.welcome_screen.statusLabel.setText("Invalid username or password.")
 

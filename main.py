@@ -5,3 +5,4 @@ from src.Manage.ManageWelcomeClass import ManageWelcomeClass
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     ManageWelcomeClass()
+    sys.exit(app.exec())
