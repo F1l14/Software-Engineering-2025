@@ -1,5 +1,5 @@
 from src.Screen.MainScreen import MainScreen
-from src.Manage.ManageProgressClass import ManageProgressClass
+from src.Manage.Progress.ManageProgressClass import ManageProgressClass
 class ManageMainClass:
     def __init__(self):
         self.main_screen = MainScreen()

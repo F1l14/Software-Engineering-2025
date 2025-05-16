@@ -5,6 +5,6 @@ class DBManager:
             host="localhost",
             user="root",
             password="",
-            database="linq"
+            database="LinQ-SEProject"
         )
 

@@ -6,5 +6,5 @@ class ProgressScreen(QDialog):
         super().__init__()
     
     def display(self):
-        uic.loadUi("ui/ProgressScreen.ui", self)
+        uic.loadUi("ui/3_Progress/ProgressScreen.ui", self)
         self.exec()
