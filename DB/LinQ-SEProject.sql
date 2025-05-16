@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 16, 2025 at 04:42 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- Generation Time: May 16, 2025 at 06:16 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -29,9 +29,8 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `business` (
   `name` varchar(80) NOT NULL,
-  `logo` blob NOT NULL,
   `owner` varchar(80) NOT NULL,
-  `date_created` date NOT NULL
+  `logo` blob NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -41,8 +40,18 @@ CREATE TABLE `business` (
 --
 
 CREATE TABLE `departments` (
-  `name` varchar(80) NOT NULL,
-  `manager` int(11) NOT NULL
+  `name` varchar(80) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `department_notices`
+--
+
+CREATE TABLE `department_notices` (
+  `notice_id` int(11) NOT NULL,
+  `department` varchar(80) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -52,9 +61,19 @@ CREATE TABLE `departments` (
 --
 
 CREATE TABLE `employees` (
-  `id` int(11) NOT NULL,
   `username` varchar(80) NOT NULL,
   `department` varchar(80) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `employee_tags`
+--
+
+CREATE TABLE `employee_tags` (
+  `employee` varchar(80) NOT NULL,
+  `tag` varchar(80) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -64,23 +83,10 @@ CREATE TABLE `employees` (
 --
 
 CREATE TABLE `events` (
-  `event_id` int(20) NOT NULL,
-  `creator` int(11) NOT NULL,
-  `datetime_start` datetime NOT NULL,
-  `datetime_end` datetime NOT NULL,
-  `croud` enum('team','business','department','') NOT NULL,
-  `notice_id` int(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `has_tags`
---
-
-CREATE TABLE `has_tags` (
-  `user_id` int(80) NOT NULL,
-  `tag` varchar(80) NOT NULL
+  `id` int(11) NOT NULL,
+  `notice_id` int(11) NOT NULL,
+  `start` datetime NOT NULL,
+  `end` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -90,9 +96,35 @@ CREATE TABLE `has_tags` (
 --
 
 CREATE TABLE `managers` (
-  `id` int(11) NOT NULL,
   `username` varchar(80) NOT NULL,
   `department` varchar(80) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `messages`
+--
+
+CREATE TABLE `messages` (
+  `id` int(11) NOT NULL,
+  `history_id` int(11) NOT NULL,
+  `from_user` varchar(80) NOT NULL,
+  `to_user` varchar(80) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `messages_history`
+--
+
+CREATE TABLE `messages_history` (
+  `id` int(11) NOT NULL,
+  `name` varchar(80) NOT NULL,
+  `user_1` varchar(80) NOT NULL,
+  `user_2` varchar(80) NOT NULL,
+  `history` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`history`))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -102,10 +134,9 @@ CREATE TABLE `managers` (
 --
 
 CREATE TABLE `notices` (
-  `notice_id` int(20) NOT NULL,
-  `type` enum('team','business','department','') NOT NULL,
-  `event_id` int(20) DEFAULT NULL,
-  `datetime_created` datetime NOT NULL,
+  `id` int(11) NOT NULL,
+  `type` enum('business','department','team') NOT NULL,
+  `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `body` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -117,11 +148,11 @@ CREATE TABLE `notices` (
 
 CREATE TABLE `notifications` (
   `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `type` enum('message','team','business') NOT NULL,
+  `user` varchar(80) NOT NULL,
+  `type` enum('placeholder') NOT NULL,
   `body` text NOT NULL,
-  `is_read` tinyint(1) NOT NULL DEFAULT 0,
-  `created` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `created` timestamp NOT NULL DEFAULT current_timestamp(),
+  `opened` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -131,10 +162,22 @@ CREATE TABLE `notifications` (
 --
 
 CREATE TABLE `projects` (
-  `id` int(20) NOT NULL,
+  `name` varchar(80) NOT NULL,
   `description` text NOT NULL,
+  `team_id` int(11) NOT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `deadline` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `project_tags`
+--
+
+CREATE TABLE `project_tags` (
+  `project` varchar(80) NOT NULL,
+  `tag` varchar(80) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -144,8 +187,7 @@ CREATE TABLE `projects` (
 --
 
 CREATE TABLE `tags` (
-  `name` varchar(80) NOT NULL,
-  `admin_id` int(80) NOT NULL
+  `name` varchar(80) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -156,10 +198,9 @@ CREATE TABLE `tags` (
 
 CREATE TABLE `tasks` (
   `id` int(11) NOT NULL,
+  `team_id` int(11) NOT NULL,
   `name` varchar(80) NOT NULL,
-  `description` text NOT NULL,
-  `creator` int(11) NOT NULL,
-  `assigned_to` int(11) NOT NULL,
+  `assigned_to` varchar(80) NOT NULL,
   `state` enum('pending','completed') NOT NULL DEFAULT 'pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -170,9 +211,10 @@ CREATE TABLE `tasks` (
 --
 
 CREATE TABLE `teams` (
-  `id` int(20) NOT NULL,
-  `leader_id` int(11) NOT NULL,
-  `department_id` int(11) NOT NULL
+  `id` int(11) NOT NULL,
+  `name` varchar(80) NOT NULL,
+  `department` varchar(80) NOT NULL,
+  `leader` varchar(80) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -182,8 +224,19 @@ CREATE TABLE `teams` (
 --
 
 CREATE TABLE `team_members` (
-  `team_id` int(20) NOT NULL,
-  `member_id` int(20) NOT NULL
+  `team_id` int(11) NOT NULL,
+  `member` varchar(80) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `team_notices`
+--
+
+CREATE TABLE `team_notices` (
+  `notice_id` int(11) NOT NULL,
+  `team_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -193,13 +246,10 @@ CREATE TABLE `team_members` (
 --
 
 CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
   `username` varchar(80) NOT NULL,
   `password` varchar(80) NOT NULL,
-  `position` enum('admin','manager','employee') NOT NULL DEFAULT 'employee',
-  `name` varchar(80) NOT NULL,
-  `surname` varchar(80) NOT NULL,
-  `email` varchar(80) NOT NULL DEFAULT 'empty'
+  `firstname` varchar(80) NOT NULL,
+  `lastname` varchar(80) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -214,40 +264,94 @@ INSERT INTO `users` (`id`, `username`, `password`, `position`, `name`, `surname`
 --
 
 --
+-- Indexes for table `business`
+--
+ALTER TABLE `business`
+  ADD PRIMARY KEY (`name`),
+  ADD KEY `business_owner_user` (`owner`);
+
+--
 -- Indexes for table `departments`
 --
 ALTER TABLE `departments`
   ADD PRIMARY KEY (`name`);
 
 --
+-- Indexes for table `department_notices`
+--
+ALTER TABLE `department_notices`
+  ADD PRIMARY KEY (`notice_id`,`department`),
+  ADD KEY `dep_notice_depname` (`department`);
+
+--
+-- Indexes for table `employees`
+--
+ALTER TABLE `employees`
+  ADD PRIMARY KEY (`username`,`department`),
+  ADD KEY `employee_department_name` (`department`);
+
+--
+-- Indexes for table `employee_tags`
+--
+ALTER TABLE `employee_tags`
+  ADD PRIMARY KEY (`employee`,`tag`),
+  ADD KEY `employee_tags_tag` (`tag`);
+
+--
 -- Indexes for table `events`
 --
 ALTER TABLE `events`
-  ADD PRIMARY KEY (`event_id`);
+  ADD PRIMARY KEY (`id`,`notice_id`),
+  ADD KEY `event_notice_id` (`notice_id`);
 
 --
--- Indexes for table `has_tags`
+-- Indexes for table `managers`
 --
-ALTER TABLE `has_tags`
-  ADD PRIMARY KEY (`user_id`,`tag`);
+ALTER TABLE `managers`
+  ADD PRIMARY KEY (`username`,`department`),
+  ADD KEY `manager_department_name` (`department`);
+
+--
+-- Indexes for table `messages`
+--
+ALTER TABLE `messages`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `message_history_id` (`history_id`),
+  ADD KEY `message_from_user` (`from_user`),
+  ADD KEY `message_to_user` (`to_user`);
+
+--
+-- Indexes for table `messages_history`
+--
+ALTER TABLE `messages_history`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `notices`
 --
 ALTER TABLE `notices`
-  ADD PRIMARY KEY (`notice_id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `notifications`
 --
 ALTER TABLE `notifications`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `notification_user` (`user`);
 
 --
 -- Indexes for table `projects`
 --
 ALTER TABLE `projects`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`name`),
+  ADD KEY `project_team_id` (`team_id`);
+
+--
+-- Indexes for table `project_tags`
+--
+ALTER TABLE `project_tags`
+  ADD PRIMARY KEY (`project`,`tag`),
+  ADD KEY `project_tags_tag` (`tag`);
 
 --
 -- Indexes for table `tags`
@@ -259,26 +363,36 @@ ALTER TABLE `tags`
 -- Indexes for table `tasks`
 --
 ALTER TABLE `tasks`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `task_creator` (`creator`);
+  ADD PRIMARY KEY (`id`,`team_id`),
+  ADD KEY `task_team_id` (`team_id`),
+  ADD KEY `task_assigned_member` (`assigned_to`);
 
 --
 -- Indexes for table `teams`
 --
 ALTER TABLE `teams`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `team_leader_employee` (`leader`);
 
 --
 -- Indexes for table `team_members`
 --
 ALTER TABLE `team_members`
-  ADD PRIMARY KEY (`team_id`,`member_id`);
+  ADD PRIMARY KEY (`team_id`,`member`),
+  ADD KEY `member_employee` (`member`);
+
+--
+-- Indexes for table `team_notices`
+--
+ALTER TABLE `team_notices`
+  ADD PRIMARY KEY (`notice_id`,`team_id`),
+  ADD KEY `team_notice_teamid` (`team_id`);
 
 --
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`username`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -288,25 +402,31 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `events`
 --
 ALTER TABLE `events`
-  MODIFY `event_id` int(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `messages`
+--
+ALTER TABLE `messages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `messages_history`
+--
+ALTER TABLE `messages_history`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `notices`
 --
 ALTER TABLE `notices`
-  MODIFY `notice_id` int(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `projects`
---
-ALTER TABLE `projects`
-  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tasks`
@@ -318,13 +438,105 @@ ALTER TABLE `tasks`
 -- AUTO_INCREMENT for table `teams`
 --
 ALTER TABLE `teams`
-  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `users`
+-- Constraints for dumped tables
 --
-ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- Constraints for table `business`
+--
+ALTER TABLE `business`
+  ADD CONSTRAINT `business_owner_user` FOREIGN KEY (`owner`) REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `department_notices`
+--
+ALTER TABLE `department_notices`
+  ADD CONSTRAINT `dep_notice_depname` FOREIGN KEY (`department`) REFERENCES `departments` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `dep_notice_id` FOREIGN KEY (`notice_id`) REFERENCES `notices` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `employees`
+--
+ALTER TABLE `employees`
+  ADD CONSTRAINT `employee_department_name` FOREIGN KEY (`department`) REFERENCES `departments` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `employee_user_username` FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `employee_tags`
+--
+ALTER TABLE `employee_tags`
+  ADD CONSTRAINT `employee_tags_employee` FOREIGN KEY (`employee`) REFERENCES `employees` (`username`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `employee_tags_tag` FOREIGN KEY (`tag`) REFERENCES `tags` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `events`
+--
+ALTER TABLE `events`
+  ADD CONSTRAINT `event_notice_id` FOREIGN KEY (`notice_id`) REFERENCES `notices` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `managers`
+--
+ALTER TABLE `managers`
+  ADD CONSTRAINT `manager_department_name` FOREIGN KEY (`department`) REFERENCES `departments` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `manager_user_username` FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `messages`
+--
+ALTER TABLE `messages`
+  ADD CONSTRAINT `message_from_user` FOREIGN KEY (`from_user`) REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `message_history_id` FOREIGN KEY (`history_id`) REFERENCES `messages_history` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `message_to_user` FOREIGN KEY (`to_user`) REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD CONSTRAINT `notification_user` FOREIGN KEY (`user`) REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `projects`
+--
+ALTER TABLE `projects`
+  ADD CONSTRAINT `project_team_id` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `project_tags`
+--
+ALTER TABLE `project_tags`
+  ADD CONSTRAINT `project_tags_project` FOREIGN KEY (`project`) REFERENCES `projects` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `project_tags_tag` FOREIGN KEY (`tag`) REFERENCES `tags` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `tasks`
+--
+ALTER TABLE `tasks`
+  ADD CONSTRAINT `task_assigned_member` FOREIGN KEY (`assigned_to`) REFERENCES `team_members` (`member`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `task_team_id` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `teams`
+--
+ALTER TABLE `teams`
+  ADD CONSTRAINT `team_leader_employee` FOREIGN KEY (`leader`) REFERENCES `employees` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `team_members`
+--
+ALTER TABLE `team_members`
+  ADD CONSTRAINT `member_employee` FOREIGN KEY (`member`) REFERENCES `employees` (`username`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `members_team_id` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `team_notices`
+--
+ALTER TABLE `team_notices`
+  ADD CONSTRAINT `team_notice_id` FOREIGN KEY (`notice_id`) REFERENCES `notices` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `team_notice_teamid` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
