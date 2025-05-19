@@ -10,6 +10,20 @@ class DBManager:
     def  close(self):
         self.conn.close()
 
+    def login(self, username, password):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", (username, password))
+            result = cursor.fetchone()
+            if result:
+                return True
+            else:
+                return False
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+
     def create_user(self, username, password, firstname, lastname):
         cursor = self.conn.cursor()
         try:
