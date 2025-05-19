@@ -33,3 +33,15 @@ class DBManager:
             return "Business created successfully"
         finally:
             cursor.close()
+
+    def create_department(self, name):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("INSERT INTO departments (name) VALUES (%s)", (name,))
+            self.conn.commit()
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        else:
+            return "Department created successfully"
+        finally:
+            cursor.close()
