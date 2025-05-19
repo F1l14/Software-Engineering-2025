@@ -110,15 +110,3 @@ class DBManager:
             return "Task created successfully"
         finally:
             cursor.close()
-
-    def assign_task():
-        cursor = self.conn.cursor()
-        try:
-            cursor.execute("INSERT INTO tasks (name) VALUES (%s)", (name,))
-            self.conn.commit()
-        except mysql.connector.Error as err:
-            return f"Error: {err}"
-        else:
-            return "Task created successfully"
-        finally:
-            cursor.close()
