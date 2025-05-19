@@ -22,6 +22,19 @@ class DBManager:
         finally:
             cursor.close()
 
+    def create_employee(self, username, department):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("INSERT INTO employees (username, department) VALUES (%s, %s)", (username, department))
+            self.conn.commit()
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        else:
+            return "Employee created successfully"
+        finally:
+            cursor.close()
+
+
     def create_business(self, name, owner, logo=None):
         cursor = self.conn.cursor()
         try:
@@ -43,5 +56,55 @@ class DBManager:
             return f"Error: {err}"
         else:
             return "Department created successfully"
+        finally:
+            cursor.close()
+    
+
+    def create_team(self, name, department, leader):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("INSERT INTO teams (name, department, leader) VALUES (%s, %s, %s)", (name, department, leader))
+            self.conn.commit()
+            self.new_member(cursor.lastrowid, leader)
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        else:
+            return "Team created successfully"
+        finally:
+            cursor.close()
+
+    def new_member(self, team_id, member):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("INSERT INTO team_members (team_id, member) VALUES (%s, %s)", (team_id, member))
+            self.conn.commit()
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        else:
+            return "Member added successfully"
+        finally:
+            cursor.close()
+
+    def create_task(self, team_id, name, assigned_to):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("INSERT INTO tasks (team_id, name, assigned_to) VALUES (%s, %s, %s)", (team_id, name, assigned_to,))
+            self.conn.commit()
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        else:
+            return "Task created successfully"
+        finally:
+            cursor.close()
+
+    def assign_task():
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("INSERT INTO tasks (name) VALUES (%s)", (name,))
+            self.conn.commit()
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        else:
+            return "Task created successfully"
         finally:
             cursor.close()
