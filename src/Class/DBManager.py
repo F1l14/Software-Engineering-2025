@@ -124,6 +124,18 @@ class DBManager:
         finally:
             cursor.close()
 
+    def completeTask(self, task_id):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("UPDATE tasks SET state = 'completed' WHERE id = %s", (task_id,))
+            self.conn.commit()
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        else:
+            return "Task completed successfully"
+        finally:
+            cursor.close()
+
     def createNotification(self, user, type, body):
         cursor = self.conn.cursor()
         try:
