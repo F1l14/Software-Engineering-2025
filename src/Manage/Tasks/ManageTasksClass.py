@@ -12,3 +12,7 @@ class ManageTasksClass:
     def getTasks(self):
         tasks = self.__db.queryTasks(self.__username)
         print(tasks)
+
+    def getProjects(self):
+        projects = self.__db.queryProjects(self.__username)
+        print(projects)
