@@ -17,4 +17,13 @@ class ManageProgressClass:
         data = db.queryAllEmployees()
         return data
     
-    
+    def filterTable(self, text):
+        table = self.progress_screen.employeeTable
+        for row in range(table.rowCount()):
+            match = False
+            for col in range(table.columnCount()):
+                item = table.item(row, col)
+                if item and text.lower() in item.text().lower():
+                    match = True
+                    break
+            table.setRowHidden(row, not match)

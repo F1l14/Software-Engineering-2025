@@ -22,14 +22,14 @@
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="1" column="0">
     <layout class="QGridLayout" name="gridLayout">
-     <item row="1" column="0">
+     <item row="2" column="0">
       <widget class="QPushButton" name="pushButton">
        <property name="text">
         <string>Επιλογή</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="0">
+     <item row="1" column="0">
       <widget class="QTableWidget" name="employeeTable">
        <property name="rowCount">
         <number>0</number>
@@ -42,14 +42,14 @@
        </attribute>
       </widget>
      </item>
+     <item row="0" column="0">
+      <widget class="QLineEdit" name="searchBox">
+       <property name="placeholderText">
+        <string>Αναζήτηση...</string>
+       </property>
+      </widget>
+     </item>
     </layout>
-   </item>
-   <item row="0" column="0">
-    <widget class="QLineEdit" name="lineEdit">
-     <property name="placeholderText">
-      <string>Αναζήτηση...</string>
-     </property>
-    </widget>
    </item>
   </layout>
  </widget>

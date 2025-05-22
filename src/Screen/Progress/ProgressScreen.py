@@ -11,6 +11,8 @@ class ProgressScreen(QDialog):
         self.employeeTable = self.findChild(QTableWidget, "employeeTable")
         self.searchBox = self.findChild(QLineEdit, "searchBox")
         self.createEmployeeList()
+        if self.searchBox:
+            self.searchBox.textChanged.connect(self.manage.filterTable)
         self.exec()
         
     def createBusinessGraph(self):
