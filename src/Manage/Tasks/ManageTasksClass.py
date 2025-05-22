@@ -28,9 +28,17 @@ class ManageTasksClass:
                 self.__tasks_list[task["name"]] = [task]
         return self.__tasks_list
         
-    def displayTasks(self, task_name):
+    def displayTasks(self):
         
-            self.addToList(task_name)
+        self.tasks_screen.listWidget.clear()
+        for project in self.__tasks_list:
+            print(project)
+            
+            self.tasks_screen.listWidget.addItem(project)
+            
+            for task in self.__tasks_list[project]:
+                self.addToList(task["task_name"])
+                
 
     def getProjects(self):
         # user = leader

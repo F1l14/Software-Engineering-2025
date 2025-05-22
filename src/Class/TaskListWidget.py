@@ -20,7 +20,7 @@ class TaskItem(QWidget):
         layout.addWidget(self.label)
 
         # Delete button
-        self.delete_btn = QPushButton("Delete")
+        self.delete_btn = QPushButton("ok")
         self.delete_btn.clicked.connect(self.remove_item)
         layout.addWidget(self.delete_btn)
 
