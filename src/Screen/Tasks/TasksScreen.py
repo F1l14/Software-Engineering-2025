@@ -7,5 +7,5 @@ class TasksScreen(QMainWindow):
         self.display()
     
     def display(self):
-        uic.loadUi("ui/MainScreen.ui", self)
+        uic.loadUi("ui/8_Tasks/TasksScreen.ui", self)
         self.show()

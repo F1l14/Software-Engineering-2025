@@ -1,5 +1,7 @@
 from src.Class.DBManager import DBManager
 from src.Screen.Tasks.TasksScreen import TasksScreen
+from src.Class.TaskListWidget import TaskItem
+from PyQt6.QtWidgets import QListWidgetItem
 class ManageTasksClass:
     """
 
@@ -13,15 +15,19 @@ class ManageTasksClass:
 
     def __init__(self, user):
         self.tasks_screen = TasksScreen()
-        self.tasks_screen
-        
+
         self.__db = DBManager()
         self.__user = user
         
     def getTasks(self):
         tasks = self.__user.getTasks(self.__db)
-        self.__tasks_list.append(tasks)
-        print(tasks)
+        for task in tasks:
+            self.__tasks_list.append(task)
+        return self.__tasks_list
+        
+    def displayTasks(self):
+        for task in self.__tasks_list:
+            self.addToList(task[2])
 
     def getProjects(self):
         # user = leader
@@ -50,3 +56,17 @@ class ManageTasksClass:
             return True
         else:
             return False
+
+    def addToList(self, name):
+
+        item = QListWidgetItem()
+        task_text = name
+
+        # Create the custom widget
+        task_widget = TaskItem(task_text, self.tasks_screen.listWidget, item)
+        item.setSizeHint(task_widget.sizeHint())
+
+        # Add item to list and set the widget
+        self.tasks_screen.listWidget.addItem(item)
+        self.tasks_screen.listWidget.setItemWidget(item, task_widget)
+        # self.tasks_screen.show()
