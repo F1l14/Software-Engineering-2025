@@ -6,3 +6,7 @@ class User:
 
     def __str__(self):
         return f"User({self.username}, {self.firstname}, {self.lastname})"
+    
+    def getTasks(self, db):
+        return db.queryTasks(self.username)
+        
