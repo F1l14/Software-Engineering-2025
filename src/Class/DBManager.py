@@ -111,10 +111,10 @@ class DBManager:
         finally:
             cursor.close()
 
-    def queryTasks(self, employee):
+    def queryTasks(self, employee, state="pending"):
         cursor = self.conn.cursor()
         try:
-            cursor.execute("SELECT * FROM tasks WHERE assigned_to = %s", (employee,))
+            cursor.execute("SELECT * FROM tasks WHERE assigned_to = %s AND state= %s", (employee, state))
             result = cursor.fetchall()
             return result
         except mysql.connector.Error as err:
