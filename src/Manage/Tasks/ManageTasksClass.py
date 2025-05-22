@@ -10,7 +10,7 @@ class ManageTasksClass:
     """
     __db = None
     __user = None
-    __tasks_list = []
+    __tasks_list = {}
     __projects_list = []
 
     def __init__(self, user):
@@ -22,12 +22,15 @@ class ManageTasksClass:
     def getTasks(self):
         tasks = self.__user.getTasks(self.__db)
         for task in tasks:
-            self.__tasks_list.append(task)
+            if task["name"] in self.__tasks_list:
+                self.__tasks_list[task["name"]].append(task)
+            else:
+                self.__tasks_list[task["name"]] = [task]
         return self.__tasks_list
         
     def displayTasks(self):
         for task in self.__tasks_list:
-            self.addToList(task[2])
+            self.addToList(task[3])
 
     def getProjects(self):
         # user = leader
