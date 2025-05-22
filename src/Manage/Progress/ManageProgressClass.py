@@ -12,4 +12,9 @@ class ManageProgressClass:
         data = db.queryBusinessData()
         return data
     
+    def getEmployeeData(self):
+        db = DBManager()
+        data = db.queryAllEmployees()
+        return data
+    
     
