@@ -1,4 +1,5 @@
 from src.Class.DBManager import DBManager
+from src.Screen.Tasks.TasksScreen import TasksScreen
 class ManageTasksClass:
     """
 
@@ -11,9 +12,9 @@ class ManageTasksClass:
     __projects_list = []
 
     def __init__(self, user):
-        # self.progress_screen = ProgressScreen()
-        # self.progress_screen.manage = self
-        # self.progress_screen.display()
+        self.tasks_screen = TasksScreen()
+        self.tasks_screen
+        
         self.__db = DBManager()
         self.__user = user
         
