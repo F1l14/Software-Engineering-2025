@@ -112,3 +112,41 @@ class DBManager:
             return "Task created successfully"
         finally:
             cursor.close()
+            
+            
+            
+    # Use Case 3:
+    def queryBusinessData(self):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("""
+                SELECT 
+                    DATE_FORMAT(completed_at, '%Y-%m') AS month, 
+                    COUNT(*) AS completed_projects 
+                FROM projects 
+                WHERE status = 'completed'
+                GROUP BY month
+                ORDER BY month
+            """)
+            result = cursor.fetchall()
+            return result
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+            
+    def queryAllEmployees(self):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("""
+                            SELECT 
+                                users.username, users.firstname, users.lastname, employees.department
+                            FROM users 
+                            INNER JOIN employees ON users.username = employees.username
+                           """)
+            result = cursor.fetchall()
+            return result
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
