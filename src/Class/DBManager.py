@@ -123,3 +123,15 @@ class DBManager:
             return "Task assigned successfully"
         finally:
             cursor.close()
+
+    def createNotification(self, user, type, body):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("INSERT INTO notifications (user, type, body) VALUES (%s, %s, %s)", (user, type, body))
+            self.conn.commit()
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        else:
+            return "Notification created successfully"
+        finally:
+            cursor.close()
