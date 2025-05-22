@@ -1,4 +1,5 @@
-from src.Class import User, Task
+from src.Class.User import User
+from src.Class.Task import Task
 class Leader(User):
     __task_list = []
     def __init__(self, username, firstname, lastname):

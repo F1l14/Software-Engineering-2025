@@ -4,8 +4,8 @@ class User:
         self.firstname = firstname
         self.lastname = lastname
 
-    def __str__(self):
-        return f"User({self.username}, {self.firstname}, {self.lastname})"
+    # def __str__(self):
+    #     return f"User({self.username}, {self.firstname}, {self.lastname})"
     
     def getTasks(self, db):
         return db.queryTasks(self.username)
