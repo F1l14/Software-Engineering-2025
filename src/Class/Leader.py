@@ -1,7 +1,5 @@
 from src.Class.User import User
-from src.Class.Task import Task
 class Leader(User):
-    __task_list = []
     def __init__(self, username, firstname, lastname):
         super().__init__(username, firstname, lastname)
         self.__team = None
@@ -15,6 +13,5 @@ class Leader(User):
         return db.queryProjects(self.username)
     
     def createTask(self, db, team_id, name, assigned_to=None):
-        new_task = Task(name, assigned_to)
-        self.__task_list.append(new_task)
+        new_task = db.createTask(team_id, name, assigned_to)
         return {"db_message": db.createTask(team_id, name, assigned_to), "task": new_task}
