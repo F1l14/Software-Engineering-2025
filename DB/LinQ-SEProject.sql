@@ -256,8 +256,6 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `password`, `position`, `name`, `surname`, `email`) VALUES
-(1, 'admin', 'root', 'admin', 'Αναστάσιος', 'Παπαδόπουλος', 'apapadopoulos@gmail.com');
 
 --
 -- Indexes for dumped tables
