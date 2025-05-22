@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QDialog, QTableWidgetItem, QTableWidget, QLineEdit
+from PyQt6.QtWidgets import QDialog, QTableWidgetItem, QTableWidget, QLineEdit, QPushButton
 from PyQt6 import uic
 import matplotlib.pyplot as plt
 
@@ -11,8 +11,15 @@ class ProgressScreen(QDialog):
         self.employeeTable = self.findChild(QTableWidget, "employeeTable")
         self.searchBox = self.findChild(QLineEdit, "searchBox")
         self.createEmployeeList()
+        
         if self.searchBox:
             self.searchBox.textChanged.connect(self.manage.filterTable)
+
+        self.employeeTable.cellDoubleClicked.connect(self.onRowSelected)
+
+        self.employeeDetailsButton.clicked.connect(self.onRowSelected)
+
+        
         self.exec()
         
     def createBusinessGraph(self):
@@ -46,4 +53,15 @@ class ProgressScreen(QDialog):
             self.employeeTable.setItem(row, 1, QTableWidgetItem(str(first_name)))
             self.employeeTable.setItem(row, 2, QTableWidgetItem(str(last_name)))
             self.employeeTable.setItem(row, 3, QTableWidgetItem(str(department)))
-            
+
+    def onRowSelected(self, row):
+        # Get data from the selected row
+        username = self.employeeTable.item(row, 0).text()
+        first_name = self.employeeTable.item(row, 1).text()
+        last_name = self.employeeTable.item(row, 2).text()
+        department = self.employeeTable.item(row, 3).text()
+        # Proceed to another window, e.g.:
+        self.showPersonalProgress(username, first_name, last_name, department)
+
+    def showPersonalProgress(self, username, first_name, last_name, department):
+        self.manage.showPersonalProgress(username, first_name, last_name, department)

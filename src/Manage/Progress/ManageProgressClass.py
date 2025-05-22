@@ -1,5 +1,6 @@
 from src.Screen.Progress.ProgressScreen import ProgressScreen
 from src.Class.DBManager import DBManager
+from src.Manage.Progress.ManagePersonalProgressClass import ManagePersonalProgressClass
 class ManageProgressClass:
     def __init__(self):
         self.progress_screen = ProgressScreen()
@@ -27,3 +28,7 @@ class ManageProgressClass:
                     match = True
                     break
             table.setRowHidden(row, not match)
+            
+            
+    def showPersonalProgress(self, username, first_name, last_name, department):
+        ManagePersonalProgressClass(username, first_name, last_name, department)
