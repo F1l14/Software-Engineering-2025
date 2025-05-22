@@ -5,7 +5,8 @@ class DBManager:
             host=host,
             user=user,
             password=password,
-            database=database
+            database=database,
+            use_pure=True
         )
 
     def  close(self):
