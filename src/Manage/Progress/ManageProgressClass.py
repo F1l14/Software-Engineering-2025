@@ -1,4 +1,4 @@
-from src.Screen.ProgressScreen import ProgressScreen
+from src.Screen.Progress.ProgressScreen import ProgressScreen
 
 class ManageProgressClass:
     def __init__(self):
