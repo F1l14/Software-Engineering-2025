@@ -100,6 +100,17 @@ class DBManager:
         finally:
             cursor.close()
 
+    def queryProjects(self, leader):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("SELECT t1.* FROM projects t1 JOIN teams t2  ON t1.team_id= t2.id WHERE t2.leader = %s", (leader,))
+            result = cursor.fetchall()
+            return result
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+
     def queryTasks(self, employee):
         cursor = self.conn.cursor()
         try:
