@@ -3,7 +3,8 @@ class Employee(User):
     def __init__(self, username, firstname, lastname):
         super().__init__(username, firstname, lastname)
         
-
+    def completeTask(self, db, task_id):
+        return db.completeTask(task_id)
     # def __str__(self):
     #     return f"Employee({self.username}, {self.firstname}, {self.lastname})"
 
