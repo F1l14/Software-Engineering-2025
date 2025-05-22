@@ -111,3 +111,15 @@ class DBManager:
             return "Task created successfully"
         finally:
             cursor.close()
+    
+    def assignTask(self, tadk_id, assigned_to):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("UPDATE tasks SET assigned_to = %s WHERE id = %s", (assigned_to, task_id))
+            self.conn.commit()
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        else:
+            return "Task assigned successfully"
+        finally:
+            cursor.close()
