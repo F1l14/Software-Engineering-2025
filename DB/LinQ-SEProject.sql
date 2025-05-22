@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 16, 2025 at 06:16 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: May 22, 2025 at 05:07 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -43,6 +43,22 @@ CREATE TABLE `departments` (
   `name` varchar(80) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `departments`
+--
+
+INSERT INTO `departments` (`name`) VALUES
+('Ανθρώπινο Δυναμικό'),
+('Διοίκηση'),
+('Έρευνα και Ανάπτυξη'),
+('Λογιστήριο'),
+('Μάρκετινγκ'),
+('Νομικό Τμήμα'),
+('Πληροφορική'),
+('Προμήθειες'),
+('Πωλήσεις'),
+('Υποστήριξη');
+
 -- --------------------------------------------------------
 
 --
@@ -64,6 +80,22 @@ CREATE TABLE `employees` (
   `username` varchar(80) NOT NULL,
   `department` varchar(80) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `employees`
+--
+
+INSERT INTO `employees` (`username`, `department`) VALUES
+('anikolaou', 'Πωλήσεις'),
+('epanagiotou', 'Ανθρώπινο Δυναμικό'),
+('gpapadopoulos', 'Πληροφορική'),
+('ivasileiou', 'Προμήθειες'),
+('kchatzidaki', 'Νομικό Τμήμα'),
+('kdimetriou', 'Μάρκετινγκ'),
+('mkonstantinou', 'Λογιστήριο'),
+('nstathopoulos', 'Έρευνα και Ανάπτυξη'),
+('santoniou', 'Διοίκηση'),
+('tmichailidis', 'Υποστήριξη');
 
 -- --------------------------------------------------------
 
@@ -99,6 +131,15 @@ CREATE TABLE `managers` (
   `username` varchar(80) NOT NULL,
   `department` varchar(80) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `managers`
+--
+
+INSERT INTO `managers` (`username`, `department`) VALUES
+('epanagiotou', 'Ανθρώπινο Δυναμικό'),
+('kdimetriou', 'Μάρκετινγκ'),
+('santoniou', 'Διοίκηση');
 
 -- --------------------------------------------------------
 
@@ -162,12 +203,24 @@ CREATE TABLE `notifications` (
 --
 
 CREATE TABLE `projects` (
+  `id` int(11) NOT NULL,
   `name` varchar(80) NOT NULL,
   `description` text NOT NULL,
-  `team_id` int(11) NOT NULL,
+  `team_id` int(11) DEFAULT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
+  `status` enum('unassigned','assigned','completed') NOT NULL DEFAULT 'unassigned',
+  `completed_at` datetime DEFAULT NULL,
   `deadline` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `projects`
+--
+
+INSERT INTO `projects` (`id`, `name`, `description`, `team_id`, `created`, `status`, `completed_at`, `deadline`) VALUES
+(1, 'ERP Εφαρμογή', 'Ανάπτυξη συστήματος ERP για την εταιρεία', 1, '2025-05-22 13:14:27', 'completed', '2025-05-22 16:33:48', '2025-07-15 00:00:00'),
+(2, 'Web Portal Πελατών', 'Δημιουργία διαδραστικού portal για πελάτες', 3, '2025-05-22 13:14:27', 'completed', '2025-05-22 16:33:55', '2025-06-20 00:00:00'),
+(3, 'Σύστημα HR', 'Διαχείριση προσωπικού και αιτήσεων', NULL, '2025-05-22 13:14:27', 'unassigned', NULL, '2025-09-30 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -180,6 +233,15 @@ CREATE TABLE `project_tags` (
   `tag` varchar(80) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `project_tags`
+--
+
+INSERT INTO `project_tags` (`project`, `tag`) VALUES
+('ERP Εφαρμογή', 'backend'),
+('Web Portal Πελατών', 'frontend'),
+('Σύστημα HR', 'urgent');
+
 -- --------------------------------------------------------
 
 --
@@ -189,6 +251,17 @@ CREATE TABLE `project_tags` (
 CREATE TABLE `tags` (
   `name` varchar(80) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tags`
+--
+
+INSERT INTO `tags` (`name`) VALUES
+('backend'),
+('documentation'),
+('frontend'),
+('high-priority'),
+('urgent');
 
 -- --------------------------------------------------------
 
@@ -217,6 +290,15 @@ CREATE TABLE `teams` (
   `leader` varchar(80) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `teams`
+--
+
+INSERT INTO `teams` (`id`, `name`, `department`, `leader`) VALUES
+(1, 'Ομάδα Ανάπτυξης ERP', 'Έρευνα και Ανάπτυξη', 'nstathopoulos'),
+(2, 'Ομάδα HR', 'Ανθρώπινο Δυναμικό', 'epanagiotou'),
+(3, 'Ομάδα Portal Πελατών', 'Πωλήσεις', 'anikolaou');
+
 -- --------------------------------------------------------
 
 --
@@ -227,6 +309,17 @@ CREATE TABLE `team_members` (
   `team_id` int(11) NOT NULL,
   `member` varchar(80) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `team_members`
+--
+
+INSERT INTO `team_members` (`team_id`, `member`) VALUES
+(1, 'gpapadopoulos'),
+(1, 'nstathopoulos'),
+(2, 'epanagiotou'),
+(3, 'kdimetriou'),
+(3, 'mkonstantinou');
 
 -- --------------------------------------------------------
 
@@ -258,8 +351,18 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`username`, `password`, `position`, `firstname`, `lastname`, `email`) VALUES
-('admin', 'root', 'admin', 'Αναστάσιος', 'Παπαδόπουλος', 'apapadopoulos@gmail.com');
+INSERT INTO `users` (`username`, `password`, `firstname`, `lastname`) VALUES
+('admin', 'root', 'Αναστάσιος', 'Παπαδόπουλος'),
+('anikolaou', 'root', 'Αντώνης', 'Νικολάου'),
+('epanagiotou', 'root', 'Ελένη', 'Παναγιώτου'),
+('gpapadopoulos', 'root', 'Γιάννης', 'Παπαδόπουλος'),
+('ivasileiou', 'root', 'Ιωάννα', 'Βασιλείου'),
+('kchatzidaki', 'root', 'Κατερίνα', 'Χατζηδάκη'),
+('kdimetriou', 'root', 'Κώστας', 'Δημητρίου'),
+('mkonstantinou', 'root', 'Μαρία', 'Κωνσταντίνου'),
+('nstathopoulos', 'root', 'Νίκος', 'Σταθόπουλος'),
+('santoniou', 'root', 'Σοφία', 'Αντωνίου'),
+('tmichailidis', 'root', 'Θανάσης', 'Μιχαηλίδης');
 
 --
 -- Indexes for dumped tables
@@ -345,7 +448,7 @@ ALTER TABLE `notifications`
 -- Indexes for table `projects`
 --
 ALTER TABLE `projects`
-  ADD PRIMARY KEY (`name`),
+  ADD PRIMARY KEY (`id`),
   ADD KEY `project_team_id` (`team_id`);
 
 --
@@ -374,7 +477,8 @@ ALTER TABLE `tasks`
 --
 ALTER TABLE `teams`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `team_leader_employee` (`leader`);
+  ADD KEY `team_leader_employee` (`leader`),
+  ADD KEY `team_department` (`department`);
 
 --
 -- Indexes for table `team_members`
@@ -431,6 +535,12 @@ ALTER TABLE `notifications`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `projects`
+--
+ALTER TABLE `projects`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
@@ -440,7 +550,7 @@ ALTER TABLE `tasks`
 -- AUTO_INCREMENT for table `teams`
 --
 ALTER TABLE `teams`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
@@ -510,7 +620,6 @@ ALTER TABLE `projects`
 -- Constraints for table `project_tags`
 --
 ALTER TABLE `project_tags`
-  ADD CONSTRAINT `project_tags_project` FOREIGN KEY (`project`) REFERENCES `projects` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `project_tags_tag` FOREIGN KEY (`tag`) REFERENCES `tags` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
@@ -524,6 +633,7 @@ ALTER TABLE `tasks`
 -- Constraints for table `teams`
 --
 ALTER TABLE `teams`
+  ADD CONSTRAINT `team_department` FOREIGN KEY (`department`) REFERENCES `departments` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `team_leader_employee` FOREIGN KEY (`leader`) REFERENCES `employees` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
