@@ -1,22 +1,22 @@
 from src.Class.DBManager import DBManager
 class ManageTasksClass:
     __db = None
-    __username = None
-    def __init__(self, username):
+    __user = None
+    def __init__(self, user):
         # self.progress_screen = ProgressScreen()
         # self.progress_screen.manage = self
         # self.progress_screen.display()
         self.__db = DBManager()
-        self.__username = username
+        self.__user = user
         
     def getTasks(self):
-        tasks = self.__db.queryTasks(self.__username)
+        tasks = self.__user.getTasks(self.__db)
         print(tasks)
 
     def getProjects(self):
-        projects = self.__db.queryProjects(self.__username)
+        projects = self.__user.getProjects(self.__db)
         print(projects)
 
     def createTask(self, team_id, name, assigned_to=None):
-        message = self.__db.createTask(team_id, name, assigned_to)
-        print(message)
+        task = self.__db.createTask(team_id, name, assigned_to)
+        print(task.message)
