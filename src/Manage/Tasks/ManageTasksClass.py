@@ -16,3 +16,7 @@ class ManageTasksClass:
     def getProjects(self):
         projects = self.__db.queryProjects(self.__username)
         print(projects)
+
+    def createTask(self, team_id, name, assigned_to=None):
+        message = self.__db.createTask(team_id, name, assigned_to)
+        print(message)
