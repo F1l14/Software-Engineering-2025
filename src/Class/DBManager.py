@@ -134,7 +134,7 @@ class DBManager:
         finally:
             cursor.close()
     
-    def assignTask(self, tadk_id, assigned_to):
+    def assignTask(self, task_id, assigned_to):
         cursor = self.conn.cursor()
         try:
             cursor.execute("UPDATE tasks SET assigned_to = %s WHERE id = %s", (assigned_to, task_id))
