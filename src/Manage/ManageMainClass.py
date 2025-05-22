@@ -1,5 +1,8 @@
 from src.Screen.MainScreen import MainScreen
 from src.Manage.Progress.ManageProgressClass import ManageProgressClass
+from src.Manage.Projects.ManageProjectClass import ManageProjectClass
+from src.Manage.Salaries.ManageEmployeeListClass import ManageEmployeeListClass
+
 class ManageMainClass:
     def __init__(self):
         self.main_screen = MainScreen()
@@ -9,3 +12,8 @@ class ManageMainClass:
     def progress(self):
         ManageProgressClass()
         
+    def projects(self):
+        ManageProjectClass()
+
+    def salaries(self):
+        ManageEmployeeListClass()        

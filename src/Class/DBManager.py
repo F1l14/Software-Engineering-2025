@@ -5,7 +5,8 @@ class DBManager:
             host=host,
             user=user,
             password=password,
-            database=database
+            database=database,
+            use_pure=True
         )
 
     def  close(self):
@@ -133,6 +134,7 @@ class DBManager:
             return "Task created successfully"
         finally:
             cursor.close()
+
     
     def assignTask(self, task_id, assigned_to):
         cursor = self.conn.cursor()
@@ -167,5 +169,43 @@ class DBManager:
             return f"Error: {err}"
         else:
             return "Notification created successfully"
+        finally:
+            cursor.close()
+            
+            
+            
+    # Use Case 3:
+    def queryBusinessData(self):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("""
+                SELECT 
+                    DATE_FORMAT(completed_at, '%Y-%m') AS month, 
+                    COUNT(*) AS completed_projects 
+                FROM projects 
+                WHERE status = 'completed'
+                GROUP BY month
+                ORDER BY month
+            """)
+            result = cursor.fetchall()
+            return result
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+            
+    def queryAllEmployees(self):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("""
+                            SELECT 
+                                users.username, users.firstname, users.lastname, employees.department
+                            FROM users 
+                            INNER JOIN employees ON users.username = employees.username
+                           """)
+            result = cursor.fetchall()
+            return result
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
         finally:
             cursor.close()

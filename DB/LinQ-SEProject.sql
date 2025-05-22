@@ -341,8 +341,10 @@ CREATE TABLE `team_notices` (
 CREATE TABLE `users` (
   `username` varchar(80) NOT NULL,
   `password` varchar(80) NOT NULL,
+  `position` varchar(80) NOT NULL,
   `firstname` varchar(80) NOT NULL,
-  `lastname` varchar(80) NOT NULL
+  `lastname` varchar(80) NOT NULL,
+  `email` varchar(80) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
