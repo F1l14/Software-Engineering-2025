@@ -7,6 +7,7 @@ class DBManager:
             password=password,
             database=database
         )
+
     def  close(self):
         self.conn.close()
 
@@ -24,7 +25,7 @@ class DBManager:
         finally:
             cursor.close()
 
-    def create_user(self, username, password, firstname, lastname):
+    def createUser(self, username, password, firstname, lastname):
         cursor = self.conn.cursor()
         try:
             cursor.execute("INSERT INTO users (username, password, firstname, lastname) VALUES (%s, %s, %s, %s)", (username, password, firstname, lastname))
@@ -36,7 +37,7 @@ class DBManager:
         finally:
             cursor.close()
 
-    def create_employee(self, username, department):
+    def createEmployee(self, username, department):
         cursor = self.conn.cursor()
         try:
             cursor.execute("INSERT INTO employees (username, department) VALUES (%s, %s)", (username, department))
@@ -49,7 +50,7 @@ class DBManager:
             cursor.close()
 
 
-    def create_business(self, name, owner, logo=None):
+    def createBusiness(self, name, owner, logo=None):
         cursor = self.conn.cursor()
         try:
             cursor.execute("INSERT INTO business (name, owner, logo) VALUES (%s, %s, %s)", (name, owner, logo))
@@ -61,7 +62,7 @@ class DBManager:
         finally:
             cursor.close()
 
-    def create_department(self, name):
+    def createDepartment(self, name):
         cursor = self.conn.cursor()
         try:
             cursor.execute("INSERT INTO departments (name) VALUES (%s)", (name,))
@@ -74,7 +75,7 @@ class DBManager:
             cursor.close()
     
 
-    def create_team(self, name, department, leader):
+    def createTeam(self, name, department, leader):
         cursor = self.conn.cursor()
         try:
             cursor.execute("INSERT INTO teams (name, department, leader) VALUES (%s, %s, %s)", (name, department, leader))
@@ -87,7 +88,7 @@ class DBManager:
         finally:
             cursor.close()
 
-    def new_member(self, team_id, member):
+    def newMember(self, team_id, member):
         cursor = self.conn.cursor()
         try:
             cursor.execute("INSERT INTO team_members (team_id, member) VALUES (%s, %s)", (team_id, member))
@@ -99,7 +100,7 @@ class DBManager:
         finally:
             cursor.close()
 
-    def create_task(self, team_id, name, assigned_to):
+    def createTask(self, team_id, name, assigned_to):
         cursor = self.conn.cursor()
         try:
             cursor.execute("INSERT INTO tasks (team_id, name, assigned_to) VALUES (%s, %s, %s)", (team_id, name, assigned_to,))
