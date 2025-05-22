@@ -101,6 +101,28 @@ class DBManager:
         finally:
             cursor.close()
 
+    def queryProjects(self, leader):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("SELECT t1.* FROM projects t1 JOIN teams t2  ON t1.team_id= t2.id WHERE t2.leader = %s", (leader,))
+            result = cursor.fetchall()
+            return result
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+
+    def queryTasks(self, employee, state="pending"):
+        cursor = self.conn.cursor(dictionary=True)
+        try:
+            cursor.execute("SELECT * FROM tasks t1 INNER JOIN projects t2 ON t1.project = t2.id WHERE t1.assigned_to = %s AND t1.state = %s", (employee, state))
+            result = cursor.fetchall()
+            return result
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+
     def createTask(self, team_id, name, assigned_to):
         cursor = self.conn.cursor()
         try:
@@ -110,6 +132,43 @@ class DBManager:
             return f"Error: {err}"
         else:
             return "Task created successfully"
+        finally:
+            cursor.close()
+
+    
+    def assignTask(self, task_id, assigned_to):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("UPDATE tasks SET assigned_to = %s WHERE id = %s", (assigned_to, task_id))
+            self.conn.commit()
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        else:
+            return "Task assigned successfully"
+        finally:
+            cursor.close()
+
+    def completeTask(self, task_id):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("UPDATE tasks SET state = 'completed' WHERE id = %s", (task_id,))
+            self.conn.commit()
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        else:
+            return "Task completed successfully"
+        finally:
+            cursor.close()
+
+    def createNotification(self, user, type, body):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("INSERT INTO notifications (user, type, body) VALUES (%s, %s, %s)", (user, type, body))
+            self.conn.commit()
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        else:
+            return "Notification created successfully"
         finally:
             cursor.close()
             
