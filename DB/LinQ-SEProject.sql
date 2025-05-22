@@ -248,16 +248,18 @@ CREATE TABLE `team_notices` (
 CREATE TABLE `users` (
   `username` varchar(80) NOT NULL,
   `password` varchar(80) NOT NULL,
+  `position` varchar(80) NOT NULL,
   `firstname` varchar(80) NOT NULL,
-  `lastname` varchar(80) NOT NULL
+  `lastname` varchar(80) NOT NULL,
+  `email` varchar(80) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `password`, `position`, `name`, `surname`, `email`) VALUES
-(1, 'admin', 'root', 'admin', 'Αναστάσιος', 'Παπαδόπουλος', 'apapadopoulos@gmail.com');
+INSERT INTO `users` (`username`, `password`, `position`, `firstname`, `lastname`, `email`) VALUES
+('admin', 'root', 'admin', 'Αναστάσιος', 'Παπαδόπουλος', 'apapadopoulos@gmail.com');
 
 --
 -- Indexes for dumped tables
