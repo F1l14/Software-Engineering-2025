@@ -24,6 +24,9 @@ class ManageTasksClass:
 
     def getProjects(self):
         # user = leader
+        if not self.checkLeader():
+            print("You are not a leader")
+            return
         projects = self.__user.getProjects(self.__db)
         self.__projects_list.append(projects)
         print(projects)
@@ -35,7 +38,14 @@ class ManageTasksClass:
 
     def createTask(self, team_id, name, assigned_to=None):
         # user = leader
+        if not self.checkLeader():
+            print("You are not a leader")
+            return
         task = self.__user.createTask(self.__db, team_id, name, assigned_to)
         print(task.message)
 
-    
+    def checkLeader(self):
+        if self.__user.__class__.__name__ == "Leader":
+            return True
+        else:
+            return False
