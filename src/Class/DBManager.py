@@ -100,6 +100,17 @@ class DBManager:
         finally:
             cursor.close()
 
+    def queryTasks(self, employee):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("SELECT * FROM tasks WHERE assigned_to = %s", (employee,))
+            result = cursor.fetchall()
+            return result
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+
     def createTask(self, team_id, name, assigned_to):
         cursor = self.conn.cursor()
         try:
