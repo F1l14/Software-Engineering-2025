@@ -23,21 +23,36 @@ class PersonalProgressScreen(QDialog):
         self.exec()
         
     def showEmployeeProgress(self):        
-        # Initialize counts to 0 in case a status is missing
-        assigned_count = 0
-        completed_count = 0
+        # Get project and task progress lists
+        project_progress = self.progressData["projects"]
+        task_progress = self.progressData["tasks"]
 
-        for entry in self.progressData:
+        # Initialize counts to 0 in case a status is missing
+        projects_assigned_count = 0
+        projects_completed_count = 0
+        tasks_pending_count = 0
+        tasks_completed_count = 0
+
+        # Count projects by status
+        for entry in project_progress:
             if entry['status'] == 'assigned':
-                assigned_count = entry['project_count']
+                projects_assigned_count = entry['project_count']
             elif entry['status'] == 'completed':
-                completed_count = entry['project_count']
+                projects_completed_count = entry['project_count']
+
+        # Count tasks by status
+        for entry in task_progress:
+            if entry['state'] == 'pending':
+                tasks_pending_count = entry['task_count']
+            elif entry['state'] == 'completed':
+                tasks_completed_count = entry['task_count']
 
         # Update labels with the counts
-        current_text1 = self.assignedProjectsLabel.text()
-        current_text2 = self.completedProjectsLabel.text()
-        self.assignedProjectsLabel.setText(current_text1 + ' ' + str(assigned_count))
-        self.completedProjectsLabel.setText(current_text2 + ' ' + str(completed_count))
+        self.assignedProjectsLabel.setText(f"Assigned Projects: {projects_assigned_count}")
+        self.completedProjectsLabel.setText(f"Completed Projects: {projects_completed_count}")
+        self.assignedTasksLabel.setText(f"Assigned Tasks: {tasks_pending_count}")
+        self.completedTasksLabel.setText(f"Completed Tasks: {tasks_completed_count}")
+        
         
     def showEvaluationData(self):
         self.evaluationData = self.manage.getEmployeeEvaluations()
