@@ -1,6 +1,7 @@
 from src.Screen.Progress.PersonalProgressScreen import PersonalProgressScreen
 from src.Class.Employee import Employee
 from src.Class.Evaluation import Evaluation
+from PyQt6.QtWidgets import QMessageBox
 class ManagePersonalProgressClass:
     def __init__(self, username, first_name, last_name, department):
 
@@ -18,3 +19,11 @@ class ManagePersonalProgressClass:
     
     def getEmployeeEvaluations(self):
         return self.evalation.getEmployeeEvaluations(self.employee.username)
+    
+    def export(self):
+        self.personal_screen.createExportFile()
+    
+    def showSuccessScreen(self):
+        QMessageBox.information(self.personal_screen, "Success", "Export successful!")
+        self.personal_screen.accept()
+    
