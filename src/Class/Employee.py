@@ -1,4 +1,5 @@
 from src.Class.User import User
+from src.Class.DBManager import DBManager
 class Employee(User):
     def __init__(self, username, firstname, lastname):
         super().__init__(username, firstname, lastname)
@@ -17,3 +18,11 @@ class Employee(User):
     #     if self.__department is None:
     #         self.__department = db.queryDepartment(self.username)
     #     return self.__department
+    
+    def getEmployeeProgress(self):
+        db = DBManager()
+        return db.queryEmployeeProgress(self.username)
+    
+    def getEmployeeEvaluations(self):
+        db = DBManager()
+        return db.queryPersonalEvaluations(self.username)

@@ -9,10 +9,10 @@ class PersonalProgressScreen(QDialog):
         uic.loadUi("ui/3_Progress/PersonalProgressScreen.ui", self)
         
         current_text1 = self.employeeFirstNameLabel.text()
-        self.employeeFirstNameLabel.setText(current_text1 + ' ' + self.manage.first_name)
+        self.employeeFirstNameLabel.setText(current_text1 + ' ' + self.manage.employee.firstname)
         
         current_text2 = self.employeeLastNameLabel.text()
-        self.employeeLastNameLabel.setText(current_text2 + ' ' + self.manage.last_name)
+        self.employeeLastNameLabel.setText(current_text2 + ' ' + self.manage.employee.lastname)
         
         current_text3 = self.employeeDepartmentLabel.text()
         self.employeeDepartmentLabel.setText(current_text3 + ' ' + self.manage.department)
