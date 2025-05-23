@@ -22,7 +22,3 @@ class Employee(User):
     def getEmployeeProgress(self):
         db = DBManager()
         return db.queryEmployeeProgress(self.username)
-    
-    def getEmployeeEvaluations(self):
-        db = DBManager()
-        return db.queryPersonalEvaluations(self.username)
