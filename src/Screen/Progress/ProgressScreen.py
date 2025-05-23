@@ -2,6 +2,7 @@ from PyQt6.QtWidgets import QDialog, QTableWidgetItem, QTableWidget, QLineEdit, 
 from PyQt6 import uic
 import matplotlib.pyplot as plt
 
+
 class ProgressScreen(QDialog):
     def __init__(self):
         super().__init__()
@@ -53,6 +54,7 @@ class ProgressScreen(QDialog):
             self.employeeTable.setItem(row, 1, QTableWidgetItem(str(first_name)))
             self.employeeTable.setItem(row, 2, QTableWidgetItem(str(last_name)))
             self.employeeTable.setItem(row, 3, QTableWidgetItem(str(department)))
+
 
     def onRowSelected(self, row):
         # Get data from the selected row
