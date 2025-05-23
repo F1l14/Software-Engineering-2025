@@ -208,4 +208,41 @@ class DBManager:
         except mysql.connector.Error as err:
             return f"Error: {err}"
         finally:
+            cursor.close()          
+            
+    def queryEmployeeProgress(self, username):
+        cursor = self.conn.cursor()
+        try:
+            # Query project progress
+            cursor.execute("""
+                SELECT 
+                    p.status,
+                    COUNT(*) AS project_count
+                FROM team_members tm
+                INNER JOIN projects p ON tm.team_id = p.team_id
+                WHERE tm.member = %s
+                GROUP BY p.status
+            """, (username,))
+            columns = [col[0] for col in cursor.description]
+            project_progress = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+            # Query task progress
+            cursor.execute("""
+                SELECT 
+                    t.state,
+                    COUNT(*) AS task_count
+                FROM tasks t
+                WHERE t.assigned_to = %s
+                GROUP BY t.state
+            """, (username,))
+            columns = [col[0] for col in cursor.description]
+            task_progress = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+            return {
+                "projects": project_progress,
+                "tasks": task_progress
+            }
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
             cursor.close()
