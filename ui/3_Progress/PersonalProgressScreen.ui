@@ -6,36 +6,70 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>462</width>
-    <height>381</height>
+    <width>559</width>
+    <height>532</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="3" column="1">
-    <widget class="QLabel" name="employeeDepartmentLabel">
+   <item row="16" column="1">
+    <widget class="QPushButton" name="exportButton">
      <property name="text">
-      <string>Τμήμα:</string>
+      <string>Εξαγωγή</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="1">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Orientation::Horizontal</enum>
+   <item row="14" column="1">
+    <widget class="QLabel" name="evaluationResultsLabel">
+     <property name="text">
+      <string>Αποτελέσματα Αξιολογήσεων:</string>
      </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
      </property>
-    </spacer>
+    </widget>
    </item>
-   <item row="11" column="1">
-    <widget class="QTableView" name="evaluationResultsTable"/>
+   <item row="12" column="1">
+    <widget class="QLabel" name="paycheckLabel">
+     <property name="text">
+      <string>Μισθός:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1">
+    <widget class="QLabel" name="completedProjectsLabel">
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>Ολοκληρωμένα Project:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QLabel" name="statistiscsLabel">
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;Στατιστικά&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="1">
+    <widget class="QLabel" name="assignedTasksLabel">
+     <property name="text">
+      <string>Ανοιχτά Tasks:</string>
+     </property>
+    </widget>
    </item>
    <item row="0" column="1">
     <widget class="QLabel" name="employeeDetailsLabel">
@@ -54,8 +88,51 @@
      </property>
     </widget>
    </item>
+   <item row="2" column="1">
+    <widget class="QLabel" name="employeeLastNameLabel">
+     <property name="text">
+      <string>Επώνυμο:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="15" column="1">
+    <widget class="QTableView" name="evaluationResultsTable"/>
+   </item>
+   <item row="4" column="1">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Orientation::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="11" column="1">
+    <spacer name="horizontalSpacer_3">
+     <property name="orientation">
+      <enum>Qt::Orientation::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="9" column="1">
+    <widget class="QLabel" name="completedTasksLabel">
+     <property name="text">
+      <string>Ολοκληρωμένα Tasks:</string>
+     </property>
+    </widget>
+   </item>
    <item row="7" column="1">
-    <widget class="QLabel" name="openProjects">
+    <widget class="QLabel" name="assignedProjectsLabel">
      <property name="text">
       <string>Ανοιχτά Project:</string>
      </property>
@@ -64,62 +141,38 @@
      </property>
     </widget>
    </item>
-   <item row="10" column="1">
-    <widget class="QLabel" name="evaluationResultsLabel">
-     <property name="text">
-      <string>Αποτελέσματα Αξιολογήσεων:</string>
+   <item row="13" column="1">
+    <spacer name="horizontalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Orientation::Horizontal</enum>
      </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="3" column="1">
+    <widget class="QLabel" name="employeeDepartmentLabel">
+     <property name="text">
+      <string>Τμήμα:</string>
      </property>
     </widget>
    </item>
-   <item row="12" column="1">
-    <widget class="QPushButton" name="exportButton">
-     <property name="text">
-      <string>Εξαγωγή</string>
+   <item row="8" column="1">
+    <spacer name="horizontalSpacer_4">
+     <property name="orientation">
+      <enum>Qt::Orientation::Horizontal</enum>
      </property>
-    </widget>
-   </item>
-   <item row="6" column="1">
-    <widget class="QLabel" name="completedProjectsLabel">
-     <property name="autoFillBackground">
-      <bool>false</bool>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
      </property>
-     <property name="text">
-      <string>Ολοκληρωμένα Project:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="1">
-    <widget class="QLabel" name="paycheckLabel">
-     <property name="text">
-      <string>Μισθός:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="QLabel" name="employeeLastNameLabel">
-     <property name="text">
-      <string>Επώνυμο:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="1">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;Στατιστικά&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignCenter</set>
-     </property>
-    </widget>
+    </spacer>
    </item>
   </layout>
  </widget>

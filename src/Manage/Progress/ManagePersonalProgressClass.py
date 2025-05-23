@@ -10,8 +10,14 @@ class ManagePersonalProgressClass:
         self.personal_screen = PersonalProgressScreen()
         self.personal_screen.manage = self
         self.personal_screen.display()
+        # self.personal_screen.showEvaluationData()
 
     def getData(self):
         db = DBManager()
         data = db.queryEmployeeProgress(self.username)
+        return data
+    
+    def getEmployeeEvaluations(self):
+        db = DBManager()
+        data = db.queryPersonalEvaluations(self.username)
         return data

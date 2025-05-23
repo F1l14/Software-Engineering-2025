@@ -150,3 +150,25 @@ class DBManager:
             return f"Error: {err}"
         finally:
             cursor.close()
+            
+            
+    def queryEmployeeProgress(self, username):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("""
+                SELECT 
+                    p.status,
+                    COUNT(*) AS project_count
+                FROM team_members tm
+                INNER JOIN projects p ON tm.team_id = p.team_id
+                WHERE tm.member = %s
+                GROUP BY p.status
+            """, (username,))
+            columns = [col[0] for col in cursor.description]
+            result = [dict(zip(columns, row)) for row in cursor.fetchall()]
+            return result
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+            
