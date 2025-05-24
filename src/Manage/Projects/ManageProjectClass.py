@@ -1,4 +1,5 @@
 from src.Screen.Projects.ProjectScreen import ProjectScreen
+from src.Screen.Projects.ProjectCreationScreen import ProjectCreationScreen
 from src.Class.DBManager import DBManager
 
 class ManageProjectClass:
@@ -12,4 +13,7 @@ class ManageProjectClass:
         projects = db.queryAllProjects()
         return projects
 
-    
+    def showProjectCreation(self):
+        self.projectCreation_screen = ProjectCreationScreen()
+        self.projectCreation_screen.manage = self
+        self.projectCreation_screen.display()
