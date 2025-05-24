@@ -18,6 +18,9 @@ class ManageTasksClass:
 
         self.__db = DBManager()
         self.__user = user
+
+        self.getTasks()
+        self.displayTasks()
         
     def getTasks(self):
         tasks = self.__user.getTasks(self.__db)
@@ -37,7 +40,7 @@ class ManageTasksClass:
             self.tasks_screen.listWidget.addItem(project)
             
             for task in self.__tasks_list[project]:
-                self.addToList(task["task_name"])
+                self.addToList(task["task_name"], task["id"])
                 
 
     def getProjects(self):
@@ -68,13 +71,13 @@ class ManageTasksClass:
         else:
             return False
 
-    def addToList(self, name):
+    def addToList(self, name, id):
 
         item = QListWidgetItem()
         task_text = name
 
         # Create the custom widget
-        task_widget = TaskItem(task_text, self.tasks_screen.listWidget, item)
+        task_widget = TaskItem(task_text, self.tasks_screen.listWidget, item, id, self)
         item.setSizeHint(task_widget.sizeHint())
 
         # Add item to list and set the widget

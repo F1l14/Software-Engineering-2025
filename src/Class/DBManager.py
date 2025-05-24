@@ -115,7 +115,7 @@ class DBManager:
     def queryTasks(self, employee, state="pending"):
         cursor = self.conn.cursor(dictionary=True)
         try:
-            cursor.execute("SELECT * FROM tasks t1 INNER JOIN projects t2 ON t1.project = t2.id WHERE t1.assigned_to = %s AND t1.state = %s", (employee, state))
+            cursor.execute("SELECT t2.name, t1.id, t1.task_name  FROM tasks t1 INNER JOIN projects t2 ON t1.project = t2.id WHERE t1.assigned_to = %s AND t1.state = %s", (employee, state))
             result = cursor.fetchall()
             return result
         except mysql.connector.Error as err:
