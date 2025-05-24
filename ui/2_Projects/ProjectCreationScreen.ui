@@ -10,10 +10,15 @@
     <height>397</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <bold>false</bold>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="nextButton">
    <property name="geometry">
     <rect>
      <x>420</x>
@@ -22,11 +27,26 @@
      <height>31</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(26, 41, 255);
+color: rgb(255, 255, 255);</string>
+   </property>
    <property name="text">
     <string>Next</string>
    </property>
+   <property name="autoDefault">
+    <bool>false</bool>
+   </property>
+   <property name="flat">
+    <bool>true</bool>
+   </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit">
+  <widget class="QLineEdit" name="nameBox">
    <property name="geometry">
     <rect>
      <x>50</x>
@@ -48,7 +68,7 @@
    <property name="font">
     <font>
      <pointsize>20</pointsize>
-     <bold>true</bold>
+     <bold>false</bold>
     </font>
    </property>
    <property name="styleSheet">
@@ -79,7 +99,7 @@
     <string>Project name:</string>
    </property>
   </widget>
-  <widget class="QTextEdit" name="textEdit">
+  <widget class="QTextEdit" name="descriptionBox">
    <property name="geometry">
     <rect>
      <x>53</x>
@@ -107,7 +127,7 @@
     <string>Project description:</string>
    </property>
   </widget>
-  <widget class="QDateTimeEdit" name="dateTimeEdit">
+  <widget class="QDateTimeEdit" name="deadlineBox">
    <property name="geometry">
     <rect>
      <x>50</x>
