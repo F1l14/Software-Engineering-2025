@@ -1,4 +1,5 @@
 from src.Screen.Projects.ProjectScreen import ProjectScreen
+from src.Class.DBManager import DBManager
 
 class ManageProjectClass:
     def __init__(self):
@@ -6,6 +7,9 @@ class ManageProjectClass:
         self.project_screen.manage = self
         self.project_screen.display()
 
-    def getProjects(self):
+    def getAllProjects(self):
         db = DBManager()
-        projects = db.    
+        projects = db.queryAllProjects()
+        return projects
+
+    
