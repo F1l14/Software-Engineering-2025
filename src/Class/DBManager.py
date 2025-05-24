@@ -209,3 +209,4 @@ class DBManager:
             return f"Error: {err}"
         finally:
             cursor.close()
+
