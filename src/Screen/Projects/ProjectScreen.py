@@ -1,4 +1,5 @@
 from PyQt6.QtWidgets import QDialog, QTableWidget
+from PyQt6.QtWidgets import QDialog, QTableWidget, QTableWidgetItem
 from PyQt6 import uic
 
 class ProjectScreen(QDialog):

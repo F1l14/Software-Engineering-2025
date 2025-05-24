@@ -8,9 +8,16 @@ class ManageProjectClass:
         self.project_screen.display()
 
     def getAllProjects(self):
-    def getAllProjects(self):
         db = DBManager()
         projects = db.queryAllProjects()
         return projects
 
+    
+        projects = db.queryAllProjects()
+        return projects
+
+    def showProjectCreation(self):
+        self.projectCreation_screen = ProjectCreationScreen()
+        self.projectCreation_screen.manage = self
+        self.projectCreation_screen.display()
     
