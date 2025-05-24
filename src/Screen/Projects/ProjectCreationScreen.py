@@ -12,10 +12,12 @@ class ProjectCreationScreen(QDialog):
         self.descriptionBox = self.findChild(QTextEdit, "descriptionBox")
         self.deadlineBox = self.findChild(QDateTimeEdit, "deadlineBox")
         self.nextButton = self.findChild(QPushButton, "nextButton")
-        #self.nextButton.clicked.connect(self.checkProjectDetails)
+        self.nextButton.clicked.connect(self.checkProjectDetails)
+        self.backButton = self.findChild(QPushButton, "backButton")
+        self.backButton.clicked.connect(self.cancel)
         self.exec()
 
-    """def checkProjectDetails(self):
+    def checkProjectDetails(self):
         name = self.nameBox.text().strip()
         description = self.descriptionBox.toPlainText().strip()
         deadline = self.deadlineBox.dateTime().toPyDateTime()
@@ -33,4 +35,7 @@ class ProjectCreationScreen(QDialog):
             QMessageBox.warning(self, "Input Error", "\n".join(errors))
             return False
 
-        self.manage."""
+        return True
+
+    def cancel(self):
+        self.reject()
