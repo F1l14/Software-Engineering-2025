@@ -5,3 +5,7 @@ class ManageProjectClass:
         self.project_screen = ProjectScreen()
         self.project_screen.manage = self
         self.project_screen.display()
+
+    def getProjects(self):
+        db = DBManager()
+        projects = db.    
