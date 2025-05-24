@@ -101,10 +101,21 @@ class DBManager:
         finally:
             cursor.close()
 
+    def queryTeamMembers(self, team_id):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("SELECT member FROM team_members WHERE team_id = %s", (team_id,))
+            result = cursor.fetchall()
+            return [row[0] for row in result]
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+
     def queryProjects(self, leader):
         cursor = self.conn.cursor()
         try:
-            cursor.execute("SELECT t1.* FROM projects t1 JOIN teams t2  ON t1.team_id= t2.id WHERE t2.leader = %s", (leader,))
+            cursor.execute("SELECT t1.name as project_name, t1.id as project_id, t2.name as team_name, t2.id as team_id, t3.member FROM projects t1 JOIN teams t2 ON t1.team_id = t2.id JOIN team_members t3 ON t2.id = t3.team_id WHERE t2.leader = %s", (leader,))
             result = cursor.fetchall()
             return result
         except mysql.connector.Error as err:
@@ -112,10 +123,13 @@ class DBManager:
         finally:
             cursor.close()
 
-    def queryTasks(self, employee, state="pending"):
+    def queryTasks(self, employee, option, state="pending"):
         cursor = self.conn.cursor(dictionary=True)
         try:
-            cursor.execute("SELECT * FROM tasks t1 INNER JOIN projects t2 ON t1.project = t2.id WHERE t1.assigned_to = %s AND t1.state = %s", (employee, state))
+            if option == "all":
+                cursor.execute("SELECT t2.name, t1.id, t1.task_name  FROM tasks t1 INNER JOIN projects t2 ON t1.project = t2.id WHERE t1.assigned_to = %s AND t1.state = %s", (employee, state))
+            else:
+                cursor.execute("SELECT t1.id AS task_id, t1.task_name, t1.team_id AS team_id FROM tasks t1 INNER JOIN projects t2 ON t1.project = t2.id INNER JOIN teams t3 ON t2.team_id = t3.id WHERE t1.assigned_to IS NULL AND t3.leader=%s", (employee,))
             result = cursor.fetchall()
             return result
         except mysql.connector.Error as err:
@@ -123,10 +137,10 @@ class DBManager:
         finally:
             cursor.close()
 
-    def createTask(self, team_id, name, assigned_to):
+    def createTask(self, team_id, project_id, task_name, assigned_to):
         cursor = self.conn.cursor()
         try:
-            cursor.execute("INSERT INTO tasks (team_id, name, assigned_to) VALUES (%s, %s, %s)", (team_id, name, assigned_to,))
+            cursor.execute("INSERT INTO tasks (team_id, project, task_name, assigned_to) VALUES (%s, %s, %s, %s)", (team_id, project_id, task_name, assigned_to,))
             self.conn.commit()
         except mysql.connector.Error as err:
             return f"Error: {err}"
