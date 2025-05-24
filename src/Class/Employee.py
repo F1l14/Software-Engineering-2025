@@ -6,18 +6,6 @@ class Employee(User):
         
     def completeTask(self, db, task_id):
         return db.completeTask(task_id)
-    # def __str__(self):
-    #     return f"Employee({self.username}, {self.firstname}, {self.lastname})"
-
-    # def getTeam(self, db):
-    #     if self.__team is None:
-    #         self.__team = db.queryTeam(self.username)
-    #     return self.__team
-
-    # def getDepartment(self, db):
-    #     if self.__department is None:
-    #         self.__department = db.queryDepartment(self.username)
-    #     return self.__department
     
     def getEmployeeProgress(self):
         db = DBManager()
