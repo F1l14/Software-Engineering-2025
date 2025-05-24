@@ -104,7 +104,7 @@ class DBManager:
     def queryProjects(self, leader):
         cursor = self.conn.cursor()
         try:
-            cursor.execute("SELECT t1.name FROM projects t1 JOIN teams t2  ON t1.team_id= t2.id WHERE t2.leader = %s", (leader,))
+            cursor.execute("SELECT t1.name as project_name, t2.name as team_name, t3.member FROM projects t1 JOIN teams t2 ON t1.team_id = t2.id JOIN team_members t3 ON t2.id = t3.team_id WHERE t2.leader = %s", (leader,))
             result = cursor.fetchall()
             return result
         except mysql.connector.Error as err:
