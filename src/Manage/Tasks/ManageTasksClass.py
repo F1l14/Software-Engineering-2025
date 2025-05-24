@@ -4,6 +4,7 @@ from src.Screen.Tasks.TaskCreationScreen import TaskCreationScreen
 from src.Class.TaskListWidget import TaskItem
 from PyQt6.QtWidgets import QListWidgetItem
 from PyQt6.QtWidgets import QMessageBox
+from PyQt6.QtWidgets import QTreeWidgetItem
 class ManageTasksClass:
     __db = None
     __user = None
@@ -22,19 +23,18 @@ class ManageTasksClass:
     
 
     def newCreateTaskScreen(self):
-        # user = leader
-        if not self.checkLeader():
-            print("You are not a leader")
-            self.show_popup()
-            return
         self.create_task_screen = TaskCreationScreen()
         self.addProjectsToTree()
     
     def addProjectsToTree(self):
-        
+        self.create_task_screen.treeWidget.clear()
         self.getProjects()
+
         for project in self.__projects_list:
-            self.tasks_screen.treeWidget.addTopLevelItem(project)
+            if project != []:
+                parent = QTreeWidgetItem([project[0][0]]) 
+                self.create_task_screen.treeWidget.addTopLevelItem(parent)
+                parent.addChild(QTreeWidgetItem(["test"]))
 
     def getTasks(self):
         tasks = self.__user.getTasks(self.__db)
@@ -59,7 +59,8 @@ class ManageTasksClass:
 
     def getProjects(self):
         projects = self.__user.getProjects(self.__db)
-        self.__projects_list.append(projects)
+        if projects is not None:
+            self.__projects_list.append(projects)
         print(projects)
 
     def completeTask(self, task_id):
