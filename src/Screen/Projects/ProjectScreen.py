@@ -9,6 +9,7 @@ class ProjectScreen(QDialog):
         uic.loadUi("ui/2_Projects/ProjectScreen.ui", self)
         self.projectList = self.findChild(QTableWidget, "projectList")
         self.showAllProjects()
+        self.createProjectButton.clicked.connect(self.manage.showProjectCreation)
         self.exec()
 
     def showAllProjects(self):
@@ -35,4 +36,6 @@ class ProjectScreen(QDialog):
             self.projectList.setItem(row, 5, QTableWidgetItem(str(status)))
             self.projectList.setItem(row, 6, QTableWidgetItem(str(completed_at)))
             self.projectList.setItem(row, 7, QTableWidgetItem(str(deadline)))
+
+
 
