@@ -26,6 +26,6 @@ class Employee(User):
     def getProjects(self, db):
         return db.queryProjects(self.username)
     
-    def createTask(self, db, team_id, name, assigned_to=None):
-        new_task = db.createTask(team_id, name, assigned_to)
-        return {"db_message": db.createTask(team_id, name, assigned_to), "task": new_task}
+    def createTask(self, db, team_id, project_id, task_name, assigned_to=None):
+        new_task = db.createTask(team_id, project_id, task_name, assigned_to)
+        return {"db_message": new_task}

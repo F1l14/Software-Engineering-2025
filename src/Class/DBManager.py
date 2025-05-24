@@ -104,7 +104,7 @@ class DBManager:
     def queryProjects(self, leader):
         cursor = self.conn.cursor()
         try:
-            cursor.execute("SELECT t1.name as project_name, t2.name as team_name, t3.member FROM projects t1 JOIN teams t2 ON t1.team_id = t2.id JOIN team_members t3 ON t2.id = t3.team_id WHERE t2.leader = %s", (leader,))
+            cursor.execute("SELECT t1.name as project_name, t1.id as project_id, t2.name as team_name, t2.id as team_id, t3.member FROM projects t1 JOIN teams t2 ON t1.team_id = t2.id JOIN team_members t3 ON t2.id = t3.team_id WHERE t2.leader = %s", (leader,))
             result = cursor.fetchall()
             return result
         except mysql.connector.Error as err:
@@ -123,10 +123,10 @@ class DBManager:
         finally:
             cursor.close()
 
-    def createTask(self, team_id, name, assigned_to):
+    def createTask(self, team_id, project_id, task_name, assigned_to):
         cursor = self.conn.cursor()
         try:
-            cursor.execute("INSERT INTO tasks (team_id, name, assigned_to) VALUES (%s, %s, %s)", (team_id, name, assigned_to,))
+            cursor.execute("INSERT INTO tasks (team_id, project, task_name, assigned_to) VALUES (%s, %s, %s, %s)", (team_id, project_id, task_name, assigned_to,))
             self.conn.commit()
         except mysql.connector.Error as err:
             return f"Error: {err}"

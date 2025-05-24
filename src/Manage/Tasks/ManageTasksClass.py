@@ -5,6 +5,7 @@ from src.Class.TaskListWidget import TaskItem
 from PyQt6.QtWidgets import QListWidgetItem
 from PyQt6.QtWidgets import QMessageBox
 from PyQt6.QtWidgets import QTreeWidgetItem
+from PyQt6.QtCore import Qt
 class ManageTasksClass:
     __db = None
     __user = None
@@ -41,22 +42,31 @@ class ManageTasksClass:
         else:
             team = member.parent()
             project = team.parent()
-            if project is None or team is None or member is None:
-                self.show_popup()
-                return
             print(f"Selected project: {project.text(0)}, team: {team.text(0)}, member: {member.text(0)}")
-
+            
+            task_name = self.create_task_screen.task_name_field.toPlainText()
+            if task_name == "":
+                self.show_popup("Please enter a task name.")
+                return
+            
+            mesg=self.__user.createTask(self.__db,
+                member.data(0, Qt.ItemDataRole.UserRole)["team_id"],
+                member.data(0, Qt.ItemDataRole.UserRole)["project_id"],
+                task_name
+            )
+            print(mesg["db_message"])
         
     def addProjectsToTree(self):
         self.create_task_screen.treeWidget.clear()
         self.getProjects()
-        print(self.__projects_list)
         for project in self.__projects_list:
             parent = QTreeWidgetItem(self.create_task_screen.treeWidget, [project])
             for team in self.__projects_list[project]:
                 team_item = QTreeWidgetItem(parent, [team])
                 for member in self.__projects_list[project][team]:
-                    member_item = QTreeWidgetItem(team_item, [member])
+                    member_item = QTreeWidgetItem(team_item, [member["name"]])
+                    member_item.setData(0, Qt.ItemDataRole.UserRole, {"team_id":member["team_id"], "project_id":member["project_id"]}) 
+                    
                     team_item.addChild(member_item)
             self.create_task_screen.treeWidget.addTopLevelItem(parent)
 
@@ -73,7 +83,7 @@ class ManageTasksClass:
         
         self.tasks_screen.listWidget.clear()
         for project in self.__tasks_list:
-            print(project)
+            
             
             self.tasks_screen.listWidget.addItem(project)
             
@@ -85,9 +95,12 @@ class ManageTasksClass:
         projects = self.__user.getProjects(self.__db)
         for project in projects:
             project_name = project[0]
-            team_name = project[1]
-            member = project[2]
+            project_id = project[1]
+            team_name = project[2]
+            team_id = project[3]
+            member = project[4]
 
+           
             # Ensure the project exists
             if project_name not in self.__projects_list:
                 self.__projects_list[project_name] = {}
@@ -98,7 +111,12 @@ class ManageTasksClass:
 
             # Ensure the member exists under the team
             if member not in self.__projects_list[project_name][team_name]:
-                self.__projects_list[project_name][team_name].append(member)
+                member_data = {
+                    "name": member,
+                    "team_id": team_id,
+                    "project_id": project_id
+                }
+                self.__projects_list[project_name][team_name].append(member_data)
 
     def completeTask(self, task_id):
         message = self.__user.completeTask(self.__db, task_id)
