@@ -25,7 +25,28 @@ class ManageTasksClass:
     def newCreateTaskScreen(self):
         self.create_task_screen = TaskCreationScreen()
         self.addProjectsToTree()
+        self.create_task_screen.submit_button.clicked.connect(self.submitNewTask)
     
+
+    def submitNewTask(self):
+        error_message = "Please select a project, team, and member to create a task."
+        selected_item = self.create_task_screen.treeWidget.selectedItems()
+        if selected_item == []:
+            self.show_popup("Please select a project and team to create a task.")
+            return
+        member = selected_item[0]
+        if member.parent() is None or member.parent().parent() is None:
+            self.show_popup(error_message)
+            return
+        else:
+            team = member.parent()
+            project = team.parent()
+            if project is None or team is None or member is None:
+                self.show_popup()
+                return
+            print(f"Selected project: {project.text(0)}, team: {team.text(0)}, member: {member.text(0)}")
+
+        
     def addProjectsToTree(self):
         self.create_task_screen.treeWidget.clear()
         self.getProjects()
@@ -102,10 +123,10 @@ class ManageTasksClass:
         self.tasks_screen.listWidget.setItemWidget(item, task_widget)
         # self.tasks_screen.show()
 
-    def show_popup(self):
+    def show_popup(self, text):
         msg = QMessageBox()
         msg.setWindowTitle("Error")
-        msg.setText("You are not a Leader!")
+        msg.setText(text)
         msg.setIcon(QMessageBox.Icon.Information)
         msg.setStandardButtons(QMessageBox.StandardButton.Ok)
         msg.exec()
