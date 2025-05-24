@@ -23,19 +23,45 @@ class ManageTasksClass:
         self.displayTasks()
         self.tasks_screen.create_button.clicked.connect(self.newCreateTaskScreen)
         self.tasks_screen.assign_task_button.clicked.connect(self.newAssignTaskScreen)
+        self.tasks_screen.refresh_button.clicked.connect(lambda: (self.getTasks("all"), self.displayTasks()))
     
     def newAssignTaskScreen(self):
         self.assign_tasks_screen = TaskAssignScreen()
         self.getTasks("unassigned")
         self.displayTasks("unassigned")
         self.assign_tasks_screen.unassigned_list.itemSelectionChanged.connect(self.changeTaskSelection)
+        self.assign_tasks_screen.submit_assign_button.clicked.connect(self.assignTask)
+
+    def assignTask(self):
+        selected_task = self.assign_tasks_screen.unassigned_list.selectedItems()[0]
+        selected_member = self.assign_tasks_screen.members_list.selectedItems()[0]
+
+        if not selected_task or not selected_member:
+            self.show_popup("Please select a task and a member to assign the task.")
+            return
+        task_id = selected_task.data(Qt.ItemDataRole.UserRole)[0]["task_id"]
+        member = selected_member.text()
+        mesg=self.__db.assignTask(task_id, member)
+        print(mesg)
+
+        self.assign_tasks_screen.unassigned_list.takeItem(self.assign_tasks_screen.unassigned_list.row(selected_task))
+        self.assign_tasks_screen.members_list.clear()
 
     def changeTaskSelection(self):
         selected_item = self.assign_tasks_screen.unassigned_list.selectedItems()[0]
         hidden_data = selected_item.data(Qt.ItemDataRole.UserRole)
-        print(hidden_data)
-        self.__db.getTeamMebers(hidden_data[0]["team_id"])
-        
+        # print(hidden_data)
+        members = self.__db.queryTeamMembers(hidden_data[0]["team_id"])
+        # print(f"Members: {members}")
+        self.displayMembers(members)
+
+    def displayMembers(self, members):
+        self.assign_tasks_screen.members_list.clear()
+        for member in members:
+            item = QListWidgetItem(member)
+            self.assign_tasks_screen.members_list.addItem(item)
+        self.assign_tasks_screen.show()
+
     def newCreateTaskScreen(self):
         self.create_task_screen = TaskCreationScreen()
         self.addProjectsToTree()
@@ -55,7 +81,7 @@ class ManageTasksClass:
         else:
             team = member.parent()
             project = team.parent()
-            print(f"Selected project: {project.text(0)}, team: {team.text(0)}, member: {member.text(0)}")
+            # print(f"Selected project: {project.text(0)}, team: {team.text(0)}, member: {member.text(0)}")
             
             task_name = self.create_task_screen.task_name_field.toPlainText()
             if task_name == "":
@@ -67,7 +93,7 @@ class ManageTasksClass:
                 member.data(0, Qt.ItemDataRole.UserRole)["project_id"],
                 task_name
             )
-            print(mesg["db_message"])
+            # print(mesg["db_message"])
         
     def addProjectsToTree(self):
         self.create_task_screen.treeWidget.clear()
@@ -86,14 +112,14 @@ class ManageTasksClass:
     def getTasks(self, option):
         self.__tasks_list = {}
         tasks = self.__user.getTasks(self.__db,option)
-        print(f"Tasks: {tasks}")
+        # print(f"Tasks: {tasks}")
         if option == "unassigned":
             for task in tasks:
                 if task["task_name"]  in self.__tasks_list:
                     self.__tasks_list[task["task_name"]].append(task)
                 else:
                     self.__tasks_list[task["task_name"]] = [task]
-                    print(task)
+                    # print(task)
         else:
             for task in tasks:
                 if task["name"] in self.__tasks_list:
@@ -114,11 +140,11 @@ class ManageTasksClass:
                 for task in self.__tasks_list[project]:
                     self.addToList(task["task_name"], task["id"])
         else:
-            print("============================")
-            print(self.__tasks_list)
+            # print("============================")
+            # print(self.__tasks_list)
             for task_name, task_list in self.__tasks_list.items():
                 for task in task_list:
-                    print(f"Task Name: {task_name}, Task ID: {task['task_id']}")
+                    # print(f"Task Name: {task_name}, Task ID: {task['task_id']}")
                     item = QListWidgetItem(task_name)
                     item.setData(Qt.ItemDataRole.UserRole, task_list)
                     self.assign_tasks_screen.unassigned_list.addItem(item)

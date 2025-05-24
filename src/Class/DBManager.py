@@ -101,6 +101,17 @@ class DBManager:
         finally:
             cursor.close()
 
+    def queryTeamMembers(self, team_id):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("SELECT member FROM team_members WHERE team_id = %s", (team_id,))
+            result = cursor.fetchall()
+            return [row[0] for row in result]
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+
     def queryProjects(self, leader):
         cursor = self.conn.cursor()
         try:
