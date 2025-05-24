@@ -22,3 +22,10 @@ class Employee(User):
     def getEmployeeProgress(self):
         db = DBManager()
         return db.queryEmployeeProgress(self.username)
+    
+    def getProjects(self, db):
+        return db.queryProjects(self.username)
+    
+    def createTask(self, db, team_id, name, assigned_to=None):
+        new_task = db.createTask(team_id, name, assigned_to)
+        return {"db_message": db.createTask(team_id, name, assigned_to), "task": new_task}
