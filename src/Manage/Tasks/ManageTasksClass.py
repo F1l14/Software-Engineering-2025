@@ -9,7 +9,7 @@ class ManageTasksClass:
     __db = None
     __user = None
     __tasks_list = {}
-    __projects_list = []
+    __projects_list = {}
 
     def __init__(self, user):
         self.tasks_screen = TasksScreen()
@@ -29,12 +29,15 @@ class ManageTasksClass:
     def addProjectsToTree(self):
         self.create_task_screen.treeWidget.clear()
         self.getProjects()
-
+        print(self.__projects_list)
         for project in self.__projects_list:
-            if project != []:
-                parent = QTreeWidgetItem([project[0][0]]) 
-                self.create_task_screen.treeWidget.addTopLevelItem(parent)
-                parent.addChild(QTreeWidgetItem(["test"]))
+            parent = QTreeWidgetItem(self.create_task_screen.treeWidget, [project])
+            for team in self.__projects_list[project]:
+                team_item = QTreeWidgetItem(parent, [team])
+                for member in self.__projects_list[project][team]:
+                    member_item = QTreeWidgetItem(team_item, [member])
+                    team_item.addChild(member_item)
+            self.create_task_screen.treeWidget.addTopLevelItem(parent)
 
     def getTasks(self):
         tasks = self.__user.getTasks(self.__db)
@@ -59,9 +62,22 @@ class ManageTasksClass:
 
     def getProjects(self):
         projects = self.__user.getProjects(self.__db)
-        if projects is not None:
-            self.__projects_list.append(projects)
-        print(projects)
+        for project in projects:
+            project_name = project[0]
+            team_name = project[1]
+            member = project[2]
+
+            # Ensure the project exists
+            if project_name not in self.__projects_list:
+                self.__projects_list[project_name] = {}
+
+            # Ensure the team exists under the project
+            if team_name not in self.__projects_list[project_name]:
+                self.__projects_list[project_name][team_name] = []
+
+            # Ensure the member exists under the team
+            if member not in self.__projects_list[project_name][team_name]:
+                self.__projects_list[project_name][team_name].append(member)
 
     def completeTask(self, task_id):
         message = self.__user.completeTask(self.__db, task_id)
