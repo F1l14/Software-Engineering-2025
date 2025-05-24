@@ -67,7 +67,7 @@ border-bottom: 2px solid black;
     <set>Qt::AlignmentFlag::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="createProjectButton">
    <property name="geometry">
     <rect>
      <x>690</x>
