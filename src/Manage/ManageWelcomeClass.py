@@ -1,4 +1,5 @@
 import mysql.connector
+from src.Class.Session import Session
 from src.Class.DBManager import DBManager
 from src.Screen.WelcomeScreen import WelcomeScreen
 from src.Manage.ManageMainClass import ManageMainClass
@@ -24,6 +25,7 @@ class ManageWelcomeClass:
             if result and result[0] == password:
                 QMessageBox.information(self.welcome_screen, "Success", "Login successful!")
                 self.welcome_screen.accept()
+                Session.setUser(username)
                 ManageMainClass()
             else:
                 self.welcome_screen.statusLabel.setText("Invalid username or password.")

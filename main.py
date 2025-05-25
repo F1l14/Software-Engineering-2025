@@ -7,5 +7,5 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     # Uncomment the line below to run the welcome screen
     # ManageWelcomeClass()
-    ManageMainClass()
+    ManageWelcomeClass()
     sys.exit(app.exec())
