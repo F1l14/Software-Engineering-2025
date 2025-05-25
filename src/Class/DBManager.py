@@ -122,6 +122,19 @@ class DBManager:
         finally:
             cursor.close()
 
+    def queryDepartments(self):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("SELECT name FROM departments")
+        
+            result = cursor.fetchall()
+            return result
+        except mysql.connector.Error as err:
+            return "ERROR"
+        finally:
+            cursor.close()
+
+
     def queryTasks(self, employee, option, state="pending"):
         cursor = self.conn.cursor(dictionary=True)
         try:

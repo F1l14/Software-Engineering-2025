@@ -7,6 +7,11 @@ from src.Screen.Setup.UserImportScreen import UserImportScreen
 from src.Screen.Setup.UsersListScreen import UsersListScreen
 from PyQt6.QtWidgets import QMessageBox
 from PyQt6.QtWidgets import QFileDialog
+from PyQt6.QtCore import Qt
+
+
+from PyQt6.QtWidgets import QTableWidgetItem, QComboBox
+
 import json
 
 class ManageSetupClass:
@@ -115,9 +120,7 @@ class ManageSetupClass:
                 
                 data = json.load(f) 
                 self.usersListSetup()
-               
-                for user in data:
-                    print(user["username"])
+                self.populateList(data)
 
         except json.JSONDecodeError as e:
             self.show_popup(f"Invalid JSON: {str(e)}")
@@ -131,6 +134,44 @@ class ManageSetupClass:
         self.users_list_screen.manage = self
         self.users_list_screen.display()
         self.user_import_screen.close()
+
+
+    def populateList(self, data):
+        departments = self.__db.queryDepartments()
+        
+        
+        if departments == "Error":
+            self.show_popup("DB ERROR")
+            return
+        flat_departments = [item[0] for item in departments]
+        print(flat_departments)
+
+        self.users_list_screen.tableWidget.setRowCount(len(data))
+        self.users_list_screen.tableWidget.setColumnCount(4)
+        self.users_list_screen.tableWidget.setHorizontalHeaderLabels(["First Name", "Last Name", "Username", "Department"])
+
+
+
+        for i, user in enumerate(data):
+            # Username (read-only)
+
+            firstname = QTableWidgetItem(user["firstname"])
+            firstname.setFlags(firstname.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            self.users_list_screen.tableWidget.setItem(i, 0, firstname)
+
+            lastname = QTableWidgetItem(user["lastname"])
+            lastname.setFlags(lastname.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            self.users_list_screen.tableWidget.setItem(i, 1, lastname)
+
+            username = QTableWidgetItem(user["username"])
+            username.setFlags(username.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            self.users_list_screen.tableWidget.setItem(i, 2, username)
+
+            # Role combobox
+            combo = QComboBox()
+            combo.addItems(flat_departments)
+            self.users_list_screen.tableWidget.setCellWidget(i, 3, combo)
+
 
     def mainScreenSetup(self, option=None):
         print("todo")
