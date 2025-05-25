@@ -207,7 +207,6 @@ CREATE TABLE `projects` (
   `name` varchar(80) NOT NULL,
   `description` text NOT NULL,
   `team_id` int(11) DEFAULT NULL,
-  `departments` varchar(80) NOT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `status` enum('unassigned','assigned','completed') NOT NULL DEFAULT 'unassigned',
   `completed_at` datetime DEFAULT NULL,
@@ -238,10 +237,10 @@ CREATE TABLE `project_departments` (
 -- Dumping data for table `project_departments`
 --
 
-INSERT INTO `project_tags` (`project`, `tag`) VALUES
-('ERP Εφαρμογή', 'backend'),
-('Web Portal Πελατών', 'frontend'),
-('Σύστημα HR', 'urgent');
+INSERT INTO `project_departments` (`project_id`, `department_name`) VALUES
+('2', 'Διοίκηση'),
+('1', 'Διοίκηση'),
+('2', 'Πληροφορική');
 
 -- --------------------------------------------------------
 
