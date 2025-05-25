@@ -475,7 +475,7 @@ ALTER TABLE `projects`
 -- Indexes for table `projects`
 --
 ALTER TABLE `project_departments`
-  ADD PRIMARY KEY (`project_id, department_name`);
+  ADD PRIMARY KEY (`project_id`, `department_name`);
 
 --
 -- Indexes for table `project_tags`
@@ -641,13 +641,12 @@ ALTER TABLE `notifications`
 --
 ALTER TABLE `projects`
   ADD CONSTRAINT `project_team_id` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-  ADD CONSTRAINT `depart` FOREIGN KEY (`departments`) REFERENCES `departments` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `projects`
 --
 ALTER TABLE `project_departments`
-  ADD CONSTRAINT `project_id` FOREIGN KEY (`project_id`) REFERENCES `projects`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `project_id` FOREIGN KEY (`project_id`) REFERENCES `projects`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `department_name` FOREIGN KEY (`department_name`) REFERENCES `departments`(`name`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
