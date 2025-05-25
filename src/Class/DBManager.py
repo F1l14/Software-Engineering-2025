@@ -209,6 +209,31 @@ class DBManager:
         finally:
             cursor.close() 
 
+    def createProject(self, selected_names, projectDetails):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute(
+                "INSERT INTO projects (name, description, deadline) VALUES (%s, %s, %s)",
+                (projectDetails[0], projectDetails[1], projectDetails[2])
+            )
+            project_id = cursor.lastrowid  
+
+            for dept_name in selected_names:
+                cursor.execute(
+                    "INSERT INTO project_departments (project_id, department_name) VALUES (%s, %s)",
+                    (project_id, dept_name)
+                )
+
+            self.conn.commit()
+        except mysql.connector.Error as err:
+            self.conn.rollback()  
+            return f"Error: {err}"
+        else:
+            return "Project created and departments assigned successfully"
+        finally:
+            cursor.close()
+
+
     # Use Case 3:
     def queryBusinessData(self):
         cursor = self.conn.cursor()
