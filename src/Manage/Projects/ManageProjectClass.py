@@ -13,6 +13,11 @@ class ManageProjectClass:
         projects = db.queryAllProjects()
         return projects
 
+    def getAllDepartments(self):
+        db = DBManager()
+        departments = db.queryAllDepartments()
+        return departments
+
     def showProjectCreation(self):
         self.projectCreation_screen = ProjectCreationScreen()
         self.projectCreation_screen.manage = self
