@@ -4,8 +4,10 @@ from src.Class.Admin import Admin
 from src.Screen.Setup.BusinessCreationScreen import BusinessCreationScreen
 from src.Screen.Setup.DepartmentCreationScreen import DepartmentCreationScreen
 from src.Screen.Setup.UserImportScreen import UserImportScreen
+from src.Screen.Setup.UsersListScreen import UsersListScreen
 from PyQt6.QtWidgets import QMessageBox
 from PyQt6.QtWidgets import QFileDialog
+import json
 
 class ManageSetupClass:
     def __init__(self):
@@ -53,6 +55,7 @@ class ManageSetupClass:
                 self.file_data = f.read()
         else:
             self.show_popup("No file selected.")
+            self.business_creation_screen.logo_field.clear()
         
     
     def departmentSetup(self):
@@ -80,9 +83,43 @@ class ManageSetupClass:
         if self.department_creation_screen.departments_list.count() == 0:
             self.show_popup("At least one department is required.")
             return
+        self.userImportSetup()
+    
+    def userImportSetup(self):
         self.department_creation_screen.hide()
         self.user_import_screen = UserImportScreen()
         self.department_creation_screen.close()
+
+        self.user_import_screen.upload_button.clicked.connect(self.importUsers)
+        self.user_import_screen.next_button.clicked.connect(self.users_list_setup)
+
+    def importUsers(self):
+        filename = QFileDialog.getOpenFileName(self.business_creation_screen, "Select JSON", "", "JSON Files (*.json)")
+        if filename[0]:
+            self.user_import_screen.file_label.setText(filename[0])
+            self.processUsers(filename[0])  # Pass the selected filename to processUsers
+        else:
+            self.show_popup("No file selected.")
+            self.user_import_screen.file_label.clear()
+
+    def processUsers(self, filename):
+        try:
+            with open(filename, 'r', encoding='utf-8') as f:
+                
+                data = json.load(f) 
+                
+               
+
+        except json.JSONDecodeError as e:
+            self.show_popup(f"Invalid JSON: {str(e)}")
+        except Exception as e:
+            self.show_popup(f"Error reading file: {str(e)}")
+
+
+    def users_list_setup(self):
+        self.user_import_screen.hide()
+        self.users_list_screen = UsersListScreen()
+        self.user_import_screen.close()
 
     def show_popup(self, text):
         msg = QMessageBox()
