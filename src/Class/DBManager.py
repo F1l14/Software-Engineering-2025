@@ -70,7 +70,7 @@ class DBManager:
         except mysql.connector.Error as err:
             return f"Error: {err}"
         else:
-            return "Department created successfully"
+            return "OK"
         finally:
             cursor.close()
     

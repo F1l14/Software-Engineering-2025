@@ -3,6 +3,7 @@ from src.Class.DBManager import DBManager
 from src.Class.Admin import Admin
 from src.Screen.Setup.BusinessCreationScreen import BusinessCreationScreen
 from src.Screen.Setup.DepartmentCreationScreen import DepartmentCreationScreen
+from src.Screen.Setup.UserImportScreen import UserImportScreen
 from PyQt6.QtWidgets import QMessageBox
 from PyQt6.QtWidgets import QFileDialog
 
@@ -29,10 +30,7 @@ class ManageSetupClass:
             self.user_creation_screen.hide()
             self.businessSetup()
             self.user_creation_screen.close()
-            # Here you can redirect to the main application screen or perform other actions
-            # For example, you might want to instantiate and show the main application class
-            # ManageMainClass()  # Uncomment this line if you have a main class to show
-
+            
     def businessSetup(self):
         self.business_creation_screen = BusinessCreationScreen()
         self.business_creation_screen.next_button.clicked.connect(self.createBusiness)
@@ -61,6 +59,30 @@ class ManageSetupClass:
         self.business_creation_screen.hide()
         self.department_creation_screen = DepartmentCreationScreen()
         self.business_creation_screen.close()
+
+        self.department_creation_screen.create_button.clicked.connect(self.createDepartment)
+        self.department_creation_screen.next_button.clicked.connect(self.checkDepartments)
+
+    def createDepartment(self):
+        name = self.department_creation_screen.department_field.toPlainText()
+        if not name:
+            self.show_popup("Department name is required.")
+            return
+        msg = self.__db.createDepartment(name)
+        if msg != "OK":
+            self.show_popup(msg)
+            return
+        
+        self.department_creation_screen.departments_list.addItem(name)
+        self.department_creation_screen.department_field.clear()
+
+    def checkDepartments(self):
+        if self.department_creation_screen.departments_list.count() == 0:
+            self.show_popup("At least one department is required.")
+            return
+        self.department_creation_screen.hide()
+        self.user_import_screen = UserImportScreen()
+        self.department_creation_screen.close()
 
     def show_popup(self, text):
         msg = QMessageBox()

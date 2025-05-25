@@ -5,3 +5,6 @@ class Admin(User):
 
     def createBusiness(self, db, name, owner, logo):
         return db.createBusiness(name, owner, logo)
+
+    def createDepartment(self, db, name):
+        return db.createDepartment(name)
