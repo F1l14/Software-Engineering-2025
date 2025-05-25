@@ -39,6 +39,13 @@
      </widget>
     </item>
     <item>
+     <widget class="QLabel" name="logo_field">
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QPushButton" name="upload_button">
       <property name="text">
        <string>Upload Logo</string>

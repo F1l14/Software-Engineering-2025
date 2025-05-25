@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QMainWindow
 from PyQt6 import uic
 
-class TaskAssignScreen(QMainWindow):
+class DepartmentCreationScreen(QMainWindow):
     def __init__(self):
         super().__init__()
         self.display()
