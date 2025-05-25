@@ -15,9 +15,9 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="2" column="0">
-    <widget class="QPushButton" name="selectTeamSpaceButton">
+    <widget class="QPushButton" name="showTeamSpaceButton">
      <property name="text">
-      <string>Επιλογή</string>
+      <string>Εμφάνιση Χώρου Ομάδας</string>
      </property>
     </widget>
    </item>
@@ -35,7 +35,11 @@
     </widget>
    </item>
    <item row="1" column="0">
-    <widget class="QTableView" name="teamListTableView"/>
+    <widget class="QTableWidget" name="tableWidget">
+     <attribute name="horizontalHeaderStretchLastSection">
+      <bool>true</bool>
+     </attribute>
+    </widget>
    </item>
   </layout>
  </widget>

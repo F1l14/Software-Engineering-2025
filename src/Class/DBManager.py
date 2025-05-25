@@ -270,3 +270,22 @@ class DBManager:
             return f"Error: {err}"
         finally:
             cursor.close()
+    
+    # Use Case 6:
+    def queryTeams(self, username):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("""
+                SELECT 
+                    t.id AS team_id, 
+                    t.name AS team_name 
+                FROM teams t
+                INNER JOIN team_members tm ON t.id = tm.team_id
+                WHERE tm.member = %s
+            """, (username,))
+            result = cursor.fetchall()
+            return result
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
