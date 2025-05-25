@@ -14,7 +14,7 @@ class ProjectCreationScreen(QDialog):
         self.nextButton = self.findChild(QPushButton, "nextButton")
         self.nextButton.clicked.connect(self.submitProjectDetails)
         self.backButton = self.findChild(QPushButton, "backButton")
-        self.backButton.clicked.connect(self.cancel)
+        self.backButton.clicked.connect(self.back)
         self.exec()
 
     def submitProjectDetails(self):
@@ -24,7 +24,7 @@ class ProjectCreationScreen(QDialog):
         self.checkProjectDetails(name, description, deadline)
 
     def checkProjectDetails(self, name, description, deadline):
-
+        projectDetails = [name, description, deadline]
         errors = []
 
         if not name:
@@ -37,8 +37,10 @@ class ProjectCreationScreen(QDialog):
         if errors:
             QMessageBox.warning(self, "Input Error", "\n".join(errors))
             return False
-
+        
+        self.close()
+        self.manage.showAssignProjectScreen(projectDetails)
         return True
 
-    def cancel(self):
+    def back(self):
         self.reject()
