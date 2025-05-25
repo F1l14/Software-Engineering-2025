@@ -12,7 +12,7 @@ class ManageMainClass:
     def progress(self):
         ManageProgressClass()
         
-    def projects(self):
+    def showProjectsScreen(self):
         ManageProjectClass()
 
     def salaries(self):
