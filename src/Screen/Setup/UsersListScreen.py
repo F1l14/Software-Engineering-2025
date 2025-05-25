@@ -6,5 +6,5 @@ class UsersListScreen(QMainWindow):
         super().__init__()
     
     def display(self):
-        uic.loadUi("ui/1_Setup/UserListScreen.ui", self)
+        uic.loadUi("ui/1_Setup/UsersListScreen.ui", self)
         self.show()

@@ -17,7 +17,7 @@ class ManageSetupClass:
 
         self.__db = DBManager()
         
-        self.__users_file=None
+        self.__users_file = None
         self.__logo_data = None
     
     def createAdmin(self):
@@ -40,7 +40,7 @@ class ManageSetupClass:
             
     def businessSetup(self):
         self.business_creation_screen = BusinessCreationScreen()
-        self.business_creation_screen.manage =self
+        self.business_creation_screen.manage = self
         self.business_creation_screen.display()
 
     def createBusiness(self):
@@ -94,8 +94,8 @@ class ManageSetupClass:
     def userImportSetup(self):
         self.department_creation_screen.hide()
         self.user_import_screen = UserImportScreen()
-        self.user_creation_screen.manage = self
-        self.user_creation_screen.display()
+        self.user_import_screen.manage = self
+        self.user_import_screen.display()
         self.department_creation_screen.close()
 
         
@@ -104,7 +104,7 @@ class ManageSetupClass:
         filename = QFileDialog.getOpenFileName(self.business_creation_screen, "Select JSON", "", "JSON Files (*.json)")
         if filename[0]:
             self.user_import_screen.file_label.setText(filename[0])
-            self.__users_file = filename[0]
+            return filename[0]
         else:
             self.show_popup("No file selected.")
             self.user_import_screen.file_label.clear()
@@ -116,6 +116,8 @@ class ManageSetupClass:
                 data = json.load(f) 
                 self.usersListSetup()
                
+                for user in data:
+                    print(user["username"])
 
         except json.JSONDecodeError as e:
             self.show_popup(f"Invalid JSON: {str(e)}")
