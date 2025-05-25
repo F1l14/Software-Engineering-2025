@@ -289,3 +289,22 @@ class DBManager:
             return f"Error: {err}"
         finally:
             cursor.close()
+            
+    def queryTasksOfTeam(self, team_id):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("""
+                SELECT 
+                    t.id AS task_id, 
+                    t.name, 
+                    t.assigned_to, 
+                    t.state 
+                FROM tasks t
+                WHERE t.team_id = %s
+            """, (team_id,))
+            result = cursor.fetchall()
+            return result
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()

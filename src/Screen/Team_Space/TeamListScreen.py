@@ -1,5 +1,6 @@
-from PyQt6.QtWidgets import QDialog, QTableWidget, QTableWidgetItem
+from PyQt6.QtWidgets import QDialog, QTableWidgetItem
 from PyQt6 import uic
+from src.Manage.Team_Space.ManageTeamSpaceClass import ManageTeamSpaceClass
 
 class TeamListScreen(QDialog):
     def __init__(self):
@@ -7,6 +8,8 @@ class TeamListScreen(QDialog):
     
     def display(self, teams):
         uic.loadUi("ui/6_Team_Space/TeamListScreen.ui", self)
+        self.showTeamSpaceButton.clicked.connect(self.showTeamSpace)
+        
         team_ids = [item[0] for item in teams]
         team_names = [item[1] for item in teams]
         # self.tableWidget = self.findChild(QTableWidget, "tableWidget")
@@ -21,3 +24,9 @@ class TeamListScreen(QDialog):
             self.tableWidget.setItem(row, 1, QTableWidgetItem(str(team_name)))
 
         self.exec()
+        
+    def showTeamSpace(self):
+        selected_row = self.tableWidget.currentRow()
+        if selected_row >= 0:
+            team_id = self.tableWidget.item(selected_row, 0).text()
+            ManageTeamSpaceClass(team_id)
