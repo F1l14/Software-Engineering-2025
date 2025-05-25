@@ -26,7 +26,7 @@ class ManageSetupClass:
             self.show_popup("All fields are required.")
             return
 
-        self.admin = Admin(username, firstname, lastname)
+        self.admin = Admin(username)
         msg = self.__db.createUser(username, password, firstname, lastname)
         if msg != "OK":
             self.show_popup(msg)
