@@ -1,4 +1,5 @@
 from src.Screen.Projects.ProjectScreen import ProjectScreen
+from src.Screen.Projects.ProjectCreationScreen import ProjectCreationScreen
 from src.Class.DBManager import DBManager
 
 class ManageProjectClass:
