@@ -1,6 +1,0 @@
-from src.Screen.Setup.UserCreationScreen import UserCreationScreen
-
-class ManageSetupClass:
-    def __init__(self):
-        self.user_creation_screen = UserCreationScreen()
-    

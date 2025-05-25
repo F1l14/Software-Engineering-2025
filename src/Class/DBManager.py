@@ -34,7 +34,7 @@ class DBManager:
         except mysql.connector.Error as err:
             return f"Error: {err}"
         else:
-            return "User created successfully"
+            return "OK"
         finally:
             cursor.close()
 

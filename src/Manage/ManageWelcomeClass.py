@@ -37,4 +37,5 @@ class ManageWelcomeClass:
                 conn.close()
         
     def handle_register(self):
-        self.manage_setup_class = ManageSetupClass()
+        self.welcome_screen.hide()
+        self.managesetup = ManageSetupClass()
