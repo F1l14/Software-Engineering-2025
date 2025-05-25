@@ -41,7 +41,10 @@ class ManageSetupClass:
     def createBusiness(self):
         name = self.business_creation_screen.business_field.toPlainText()
         owner = self.admin.username
-        self.admin.createBusiness(self.__db, name, owner, self.file_data)
+        msg = self.admin.createBusiness(self.__db, name, owner, self.file_data)
+        if msg != "OK":
+            self.show_popup(msg)
+            return
         self.departmentSetup()
 
     def getLogo(self):

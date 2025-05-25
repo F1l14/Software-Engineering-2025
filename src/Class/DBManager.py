@@ -62,19 +62,6 @@ class DBManager:
         finally:
             cursor.close()
 
-
-    def createBusiness(self, name, owner, logo=None):
-        cursor = self.conn.cursor()
-        try:
-            cursor.execute("INSERT INTO business (name, owner, logo) VALUES (%s, %s, %s)", (name, owner, logo))
-            self.conn.commit()
-        except mysql.connector.Error as err:
-            return f"Error: {err}"
-        else:
-            return "Business created successfully"
-        finally:
-            cursor.close()
-
     def createDepartment(self, name):
         cursor = self.conn.cursor()
         try:
