@@ -1,8 +1,8 @@
 from src.Class.User import User
 from src.Class.DBManager import DBManager
 class Employee(User):
-    def __init__(self, username, firstname, lastname):
-        super().__init__(username, firstname, lastname)
+    def __init__(self, username):
+        super().__init__(username)
         
     def completeTask(self, db, task_id):
         return db.completeTask(task_id)

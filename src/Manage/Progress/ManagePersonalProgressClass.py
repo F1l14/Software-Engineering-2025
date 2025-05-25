@@ -5,8 +5,10 @@ from PyQt6.QtWidgets import QMessageBox
 class ManagePersonalProgressClass:
     def __init__(self, username, first_name, last_name, department):
 
-        self.employee = Employee(username, first_name, last_name)
+        self.employee = Employee(username)
         self.evalation = Evaluation()
+        self.employee.firstname = first_name
+        self.employee.lastname = last_name
         self.department = department
         
         self.personal_screen = PersonalProgressScreen()
