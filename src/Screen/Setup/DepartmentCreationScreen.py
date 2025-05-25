@@ -8,4 +8,6 @@ class DepartmentCreationScreen(QMainWindow):
     
     def display(self):
         uic.loadUi("ui/1_Setup/DepartmentCreationScreen.ui", self)
+        self.create_button.clicked.connect(self.manage.createDepartment)
+        self.next_button.clicked.connect(self.manage.checkDepartments)
         self.show()

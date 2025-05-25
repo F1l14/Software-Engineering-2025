@@ -12,8 +12,11 @@ import json
 class ManageSetupClass:
     def __init__(self):
         self.user_creation_screen = UserCreationScreen()
+        self.user_creation_screen.manage = self
+        self.user_creation_screen.display()
+
         self.__db = DBManager()
-        self.user_creation_screen.next_button.clicked.connect(self.createAdmin)
+        
         self.__users_file=None
         self.__logo_data = None
     
@@ -37,8 +40,8 @@ class ManageSetupClass:
             
     def businessSetup(self):
         self.business_creation_screen = BusinessCreationScreen()
-        self.business_creation_screen.next_button.clicked.connect(self.createBusiness)
-        self.business_creation_screen.upload_button.clicked.connect(self.getLogo)
+        self.business_creation_screen.manage =self
+        self.business_creation_screen.display()
 
     def createBusiness(self):
         name = self.business_creation_screen.business_field.toPlainText()
@@ -63,10 +66,11 @@ class ManageSetupClass:
     def departmentSetup(self):
         self.business_creation_screen.hide()
         self.department_creation_screen = DepartmentCreationScreen()
+        self.department_creation_screen.manage = self
+        self.department_creation_screen.display()
         self.business_creation_screen.close()
 
-        self.department_creation_screen.create_button.clicked.connect(self.createDepartment)
-        self.department_creation_screen.next_button.clicked.connect(self.checkDepartments)
+        
 
     def createDepartment(self):
         name = self.department_creation_screen.department_field.toPlainText()
@@ -90,11 +94,11 @@ class ManageSetupClass:
     def userImportSetup(self):
         self.department_creation_screen.hide()
         self.user_import_screen = UserImportScreen()
+        self.user_creation_screen.manage = self
+        self.user_creation_screen.display()
         self.department_creation_screen.close()
 
-        self.user_import_screen.upload_button.clicked.connect(self.importUsers)
-        self.user_import_screen.next_button.clicked.connect(lambda:self.processUsers(self.__users_file))
-        self.user_import_screen.skip_button.clicked.connect(lambda:self.mainScreenSetup(option="skip"))
+        
 
     def importUsers(self):
         filename = QFileDialog.getOpenFileName(self.business_creation_screen, "Select JSON", "", "JSON Files (*.json)")
@@ -122,6 +126,8 @@ class ManageSetupClass:
     def usersListSetup(self):
         self.user_import_screen.hide()
         self.users_list_screen = UsersListScreen()
+        self.users_list_screen.manage = self
+        self.users_list_screen.display()
         self.user_import_screen.close()
 
     def mainScreenSetup(self, option=None):

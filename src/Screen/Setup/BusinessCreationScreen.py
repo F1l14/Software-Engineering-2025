@@ -8,4 +8,6 @@ class BusinessCreationScreen(QMainWindow):
     
     def display(self):
         uic.loadUi("ui/1_Setup/BusinessCreationScreen.ui", self)
+        self.next_button.clicked.connect(self.manage.createBusiness)
+        self.upload_button.clicked.connect(self.manage.getLogo)
         self.show()
