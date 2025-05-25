@@ -91,13 +91,14 @@ class ManageSetupClass:
         self.department_creation_screen.close()
 
         self.user_import_screen.upload_button.clicked.connect(self.importUsers)
-        self.user_import_screen.next_button.clicked.connect(self.users_list_setup)
+        self.user_import_screen.next_button.clicked.connect(self.processUsers(self.file))
+        self.user_import_screen.skip_button.clicked.connect(lambda:self.mainScreenSetup(option="skip"))
 
     def importUsers(self):
         filename = QFileDialog.getOpenFileName(self.business_creation_screen, "Select JSON", "", "JSON Files (*.json)")
         if filename[0]:
             self.user_import_screen.file_label.setText(filename[0])
-            self.processUsers(filename[0])  # Pass the selected filename to processUsers
+            self.file = filename[0]
         else:
             self.show_popup("No file selected.")
             self.user_import_screen.file_label.clear()
@@ -107,7 +108,7 @@ class ManageSetupClass:
             with open(filename, 'r', encoding='utf-8') as f:
                 
                 data = json.load(f) 
-                
+                self.usersListSetup()
                
 
         except json.JSONDecodeError as e:
@@ -116,10 +117,13 @@ class ManageSetupClass:
             self.show_popup(f"Error reading file: {str(e)}")
 
 
-    def users_list_setup(self):
+    def usersListSetup(self):
         self.user_import_screen.hide()
         self.users_list_screen = UsersListScreen()
         self.user_import_screen.close()
+
+    def mainScreenSetup(self, option=None):
+        print("todo")
 
     def show_popup(self, text):
         msg = QMessageBox()
