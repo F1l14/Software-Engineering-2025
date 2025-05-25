@@ -14,6 +14,8 @@ class ManageSetupClass:
         self.user_creation_screen = UserCreationScreen()
         self.__db = DBManager()
         self.user_creation_screen.next_button.clicked.connect(self.createAdmin)
+        self.__users_file=None
+        self.__logo_data = None
     
     def createAdmin(self):
         firstname = self.user_creation_screen.firstname_field.toPlainText()
@@ -41,7 +43,7 @@ class ManageSetupClass:
     def createBusiness(self):
         name = self.business_creation_screen.business_field.toPlainText()
         owner = self.admin.username
-        msg = self.admin.createBusiness(self.__db, name, owner, self.file_data)
+        msg = self.admin.createBusiness(self.__db, name, owner, self.__logo_data)
         if msg != "OK":
             self.show_popup(msg)
             return
@@ -52,7 +54,7 @@ class ManageSetupClass:
         if filename[0]:
             self.business_creation_screen.logo_field.setText(filename[0])
             with open(filename[0], 'rb') as f:
-                self.file_data = f.read()
+                self.__logo_data = f.read()
         else:
             self.show_popup("No file selected.")
             self.business_creation_screen.logo_field.clear()
@@ -91,14 +93,14 @@ class ManageSetupClass:
         self.department_creation_screen.close()
 
         self.user_import_screen.upload_button.clicked.connect(self.importUsers)
-        self.user_import_screen.next_button.clicked.connect(self.processUsers(self.file))
+        self.user_import_screen.next_button.clicked.connect(self.processUsers(self.__users_file))
         self.user_import_screen.skip_button.clicked.connect(lambda:self.mainScreenSetup(option="skip"))
 
     def importUsers(self):
         filename = QFileDialog.getOpenFileName(self.business_creation_screen, "Select JSON", "", "JSON Files (*.json)")
         if filename[0]:
             self.user_import_screen.file_label.setText(filename[0])
-            self.file = filename[0]
+            self.__users_file = filename[0]
         else:
             self.show_popup("No file selected.")
             self.user_import_screen.file_label.clear()
