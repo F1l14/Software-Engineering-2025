@@ -10,5 +10,5 @@ class MainScreen(QMainWindow):
         self.projectsButton.clicked.connect(self.manage.projects)
         self.pushButton.clicked.connect(self.manage.progress)
         self.salariesButton.clicked.connect(self.manage.salaries)
-
+        self.evaluationButton.clicked.connect(self.manage.evaluation)
         self.show()
