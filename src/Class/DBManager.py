@@ -196,8 +196,19 @@ class DBManager:
         except mysql.connector.Error as err:
             return f"Error: {err}"
         finally:
-            cursor.close()       
+            cursor.close()  
             
+    def queryAllDepartments(self):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("SELECT * FROM departments")
+            result = cursor.fetchall()
+            return result
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close() 
+
     # Use Case 3:
     def queryBusinessData(self):
         cursor = self.conn.cursor()
