@@ -12,15 +12,18 @@ class ProjectCreationScreen(QDialog):
         self.descriptionBox = self.findChild(QTextEdit, "descriptionBox")
         self.deadlineBox = self.findChild(QDateTimeEdit, "deadlineBox")
         self.nextButton = self.findChild(QPushButton, "nextButton")
-        self.nextButton.clicked.connect(self.checkProjectDetails)
+        self.nextButton.clicked.connect(self.submitProjectDetails)
         self.backButton = self.findChild(QPushButton, "backButton")
         self.backButton.clicked.connect(self.cancel)
         self.exec()
 
-    def checkProjectDetails(self):
+    def submitProjectDetails(self):
         name = self.nameBox.text().strip()
         description = self.descriptionBox.toPlainText().strip()
         deadline = self.deadlineBox.dateTime().toPyDateTime()
+        self.checkProjectDetails(name, description, deadline)
+
+    def checkProjectDetails(self, name, description, deadline):
 
         errors = []
 
