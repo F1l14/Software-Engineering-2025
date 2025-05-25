@@ -8,6 +8,8 @@ class TeamSpaceScreen(QDialog):
     def display(self, tasks):
         uic.loadUi("ui/6_Team_Space/TeamSpaceScreen.ui", self)
         
+        self.pushButton.clicked.connect(self.showFileSharing)
+        
         tasks_ids = [item[0] for item in tasks]
         tasks_names = [item[1] for item in tasks]
         tasks_assigned_to = [item[2] for item in tasks]
@@ -26,3 +28,6 @@ class TeamSpaceScreen(QDialog):
             self.tasksTableWidget.setItem(row, 3, QTableWidgetItem(str(task_state)))
 
         self.exec()
+
+    def showFileSharing(self):
+        self.manage.showFileSharingScreen()
