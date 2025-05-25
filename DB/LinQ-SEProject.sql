@@ -207,6 +207,7 @@ CREATE TABLE `projects` (
   `name` varchar(80) NOT NULL,
   `description` text NOT NULL,
   `team_id` int(11) DEFAULT NULL,
+  `departments` varchar(80) NOT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `status` enum('unassigned','assigned','completed') NOT NULL DEFAULT 'unassigned',
   `completed_at` datetime DEFAULT NULL,
@@ -221,6 +222,26 @@ INSERT INTO `projects` (`id`, `name`, `description`, `team_id`, `created`, `stat
 (1, 'ERP Εφαρμογή', 'Ανάπτυξη συστήματος ERP για την εταιρεία', 1, '2025-05-22 13:14:27', 'completed', '2025-05-22 16:33:48', '2025-07-15 00:00:00'),
 (2, 'Web Portal Πελατών', 'Δημιουργία διαδραστικού portal για πελάτες', 3, '2025-05-22 13:14:27', 'completed', '2025-05-22 16:33:55', '2025-06-20 00:00:00'),
 (3, 'Σύστημα HR', 'Διαχείριση προσωπικού και αιτήσεων', NULL, '2025-05-22 13:14:27', 'unassigned', NULL, '2025-09-30 00:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `project_departments`
+--
+
+CREATE TABLE `project_departments` (
+  `project_id` INT NOT NULL,
+  `department_name` varchar(80) NOT NULL
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `project_departments`
+--
+
+INSERT INTO `project_tags` (`project`, `tag`) VALUES
+('ERP Εφαρμογή', 'backend'),
+('Web Portal Πελατών', 'frontend'),
+('Σύστημα HR', 'urgent');
 
 -- --------------------------------------------------------
 
@@ -452,6 +473,12 @@ ALTER TABLE `projects`
   ADD KEY `project_team_id` (`team_id`);
 
 --
+-- Indexes for table `projects`
+--
+ALTER TABLE `project_departments`
+  ADD PRIMARY KEY (`project_id, department_name`);
+
+--
 -- Indexes for table `project_tags`
 --
 ALTER TABLE `project_tags`
@@ -615,6 +642,14 @@ ALTER TABLE `notifications`
 --
 ALTER TABLE `projects`
   ADD CONSTRAINT `project_team_id` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `depart` FOREIGN KEY (`departments`) REFERENCES `departments` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `projects`
+--
+ALTER TABLE `project_departments`
+  ADD CONSTRAINT `project_id` FOREIGN KEY (`project_id`) REFERENCES `projects`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `department_name` FOREIGN KEY (`department_name`) REFERENCES `departments`(`name`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `project_tags`
