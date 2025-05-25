@@ -93,7 +93,7 @@ class ManageSetupClass:
         self.department_creation_screen.close()
 
         self.user_import_screen.upload_button.clicked.connect(self.importUsers)
-        self.user_import_screen.next_button.clicked.connect(self.processUsers(self.__users_file))
+        self.user_import_screen.next_button.clicked.connect(lambda:self.processUsers(self.__users_file))
         self.user_import_screen.skip_button.clicked.connect(lambda:self.mainScreenSetup(option="skip"))
 
     def importUsers(self):
