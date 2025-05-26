@@ -36,9 +36,6 @@ class FileSystem:
             import shutil
             destination = os.path.join(directory, os.path.basename(file_path))
             shutil.copy(file_path, destination)
-            print(f"File downloaded to: {destination}")
-        else:
-            print("No directory selected.")
             
     def rename(self, file_path):
         new_name, _ = QFileDialog.getSaveFileName(None, "Rename File", file_path)
