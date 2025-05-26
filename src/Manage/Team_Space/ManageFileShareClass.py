@@ -34,3 +34,7 @@ class ManageFileShareClass:
         from src.Class.FileSystem import FileSystem
         FileSystem().upload(self.team_space_id, file_path, directory)
         self.upload_file_screen.close()
+        
+    def download(self, file_path):
+        from src.Class.FileSystem import FileSystem
+        FileSystem().download(file_path)

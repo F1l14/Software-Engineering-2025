@@ -1,5 +1,6 @@
 from pathlib import Path
-
+from PyQt6.QtWidgets import QFileDialog
+import os
 class FileSystem:
     def __init__(self):
         pass
@@ -25,3 +26,16 @@ class FileSystem:
         target_directory.mkdir(parents=True, exist_ok=True)
         destination_path = target_directory / Path(file_path).name
         copy2(file_path, destination_path)
+        
+    def download(self, file_path):
+        # Prompt user to select a directory
+        directory = QFileDialog.getExistingDirectory(None, "Select Download Directory")
+
+        if directory:
+            # Example: copy file to selected directory
+            import shutil
+            destination = os.path.join(directory, os.path.basename(file_path))
+            shutil.copy(file_path, destination)
+            print(f"File downloaded to: {destination}")
+        else:
+            print("No directory selected.")

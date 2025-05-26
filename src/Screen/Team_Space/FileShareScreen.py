@@ -14,6 +14,7 @@ class FileShareScreen(QDialog):
         self.createDirectoryButton.clicked.connect(self.showCreateDirectory)
         self.uploadButton.clicked.connect(self.showUpload)
         self.treeView.clicked.connect(self.onRowClicked)
+        self.downloadButton.clicked.connect(self.downloadFile)
 
         # Dynamically determine the workspace root
         workspace_root = Path(__file__).resolve().parents[3]  # Adjust the number if needed
@@ -38,4 +39,10 @@ class FileShareScreen(QDialog):
         
     def showUpload(self):
         self.manageFileShare.showUploadWindow(self.selected_path if hasattr(self, 'selected_path') else self.current_directory)
+    
+    def downloadFile(self):
+        if hasattr(self, 'selected_path'):
+            self.manageFileShare.download(self.selected_path)
+        else:
+            print("No file selected for download.")
         
