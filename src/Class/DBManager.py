@@ -233,6 +233,29 @@ class DBManager:
         finally:
             cursor.close()
 
+    def updateProject(self, updated_data):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute(
+                "UPDATE projects SET name = %s, description = %s, deadline = %s, status = %s WHERE id = %s",
+                (
+                    updated_data["name"],
+                    updated_data["description"],
+                    updated_data["deadline"],
+                    updated_data["status"],
+                    updated_data["id"]
+                )
+            )
+
+            self.conn.commit()
+        except mysql.connector.Error as err:
+            self.conn.rollback()
+            return f"Error: {err}"
+        else:
+            return "Project updated successfully"
+        finally:
+            cursor.close()
+
 
     # Use Case 3:
     def queryBusinessData(self):
