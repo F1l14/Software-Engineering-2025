@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QDialog, QTableWidget, QTableWidgetItem
+from PyQt6.QtWidgets import QDialog, QTableWidget, QTableWidgetItem, QMessageBox
 from PyQt6 import uic
 
 class ProjectScreen(QDialog):
@@ -10,6 +10,7 @@ class ProjectScreen(QDialog):
         self.projectList = self.findChild(QTableWidget, "projectList")
         self.showAllProjects()
         self.createProjectButton.clicked.connect(self.manage.showProjectCreation)
+        self.editProjectButton.clicked.connect(self.checkSelection)
         self.exec()
 
     def showAllProjects(self):
@@ -37,5 +38,18 @@ class ProjectScreen(QDialog):
             self.projectList.setItem(row, 6, QTableWidgetItem(str(completed_at)))
             self.projectList.setItem(row, 7, QTableWidgetItem(str(deadline)))
 
+    def checkSelection(self):
+        selected_row = self.projectList.currentRow()
+        if selected_row == -1:
+            QMessageBox.information(self, "No Selection", "Please select a project to edit.")
+            return
 
+        project_data = {
+            "id": self.projectList.item(selected_row, 0).text(),
+            "name": self.projectList.item(selected_row, 1).text(),
+            "description": self.projectList.item(selected_row, 2).text(),
+            "status": self.projectList.item(selected_row, 5).text(),
+            "deadline": self.projectList.item(selected_row, 7).text(),
+        }
 
+        self.manage.showProjectEditScreen(project_data)
