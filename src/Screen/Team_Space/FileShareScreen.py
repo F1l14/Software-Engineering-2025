@@ -11,7 +11,7 @@ class FileShareScreen(QDialog):
     def display(self, team_space_directory=None):
         uic.loadUi("ui/6_Team_Space/FileShareScreen.ui", self)
 
-        self.createDirectoryButton.clicked.connect(self.manageFileShare.createDirectoryScreen)
+        self.createDirectoryButton.clicked.connect(self.showCreateDirectory)
 
         # Dynamically determine the workspace root
         workspace_root = Path(__file__).resolve().parents[3]  # Adjust the number if needed
@@ -27,3 +27,7 @@ class FileShareScreen(QDialog):
         self.treeView.setModel(model)
         self.treeView.setRootIndex(model.index(str(team_space_directory)))
         self.exec()
+        
+    def showCreateDirectory(self):
+        self.manageFileShare.createDirectoryScreen()
+        
