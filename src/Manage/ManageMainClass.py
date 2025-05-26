@@ -15,5 +15,5 @@ class ManageMainClass:
     def showProjectsScreen(self):
         ManageProjectClass()
 
-    def salaries(self):
+    def showEmployeeListScreen(self):
         ManageEmployeeListClass()        

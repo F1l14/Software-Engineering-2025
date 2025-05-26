@@ -9,6 +9,6 @@ class MainScreen(QMainWindow):
         uic.loadUi("ui/MainScreen.ui", self)
         self.projectsButton.clicked.connect(self.manage.showProjectsScreen)
         self.pushButton.clicked.connect(self.manage.progress)
-        self.salariesButton.clicked.connect(self.manage.salaries)
+        self.salariesButton.clicked.connect(self.manage.showEmployeeListScreen)
 
         self.show()
