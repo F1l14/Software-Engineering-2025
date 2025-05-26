@@ -8,6 +8,7 @@ class Session:
         cls._user = username
 
     @classmethod
+
     def getUser(cls):
         return cls._user
 

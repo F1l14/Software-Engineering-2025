@@ -13,12 +13,8 @@ class ManageProjectClass:
         projects = db.queryAllProjects()
         return projects
 
-    
-        projects = db.queryAllProjects()
-        return projects
-
     def showProjectCreation(self):
         self.projectCreation_screen = ProjectCreationScreen()
         self.projectCreation_screen.manage = self
         self.projectCreation_screen.display()
-    
+

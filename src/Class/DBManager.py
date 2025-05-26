@@ -216,6 +216,7 @@ class DBManager:
             return f"Error: {err}"
         finally:
             cursor.close()       
+
     #Use Case 2:
     def queryAllProjects(self):
         cursor = self.conn.cursor()
@@ -227,6 +228,7 @@ class DBManager:
             return f"Error: {err}"
         finally:
             cursor.close()       
+
             
     # Use Case 3:
     def queryBusinessData(self):
