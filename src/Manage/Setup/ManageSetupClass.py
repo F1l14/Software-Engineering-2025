@@ -6,10 +6,10 @@ from src.Screen.Setup.DepartmentCreationScreen import DepartmentCreationScreen
 from src.Screen.Setup.UserImportScreen import UserImportScreen
 from src.Screen.Setup.UsersListScreen import UsersListScreen
 from PyQt6.QtWidgets import QMessageBox
+from PyQt6.QtWidgets import QWidget
 from PyQt6.QtWidgets import QFileDialog
+from PyQt6.QtWidgets import QCheckBox
 from PyQt6.QtCore import Qt
-
-
 from PyQt6.QtWidgets import QTableWidgetItem, QComboBox
 
 import json
@@ -144,11 +144,11 @@ class ManageSetupClass:
             self.show_popup("DB ERROR")
             return
         flat_departments = [item[0] for item in departments]
-        print(flat_departments)
+        # print(flat_departments)
 
         self.users_list_screen.tableWidget.setRowCount(len(data))
-        self.users_list_screen.tableWidget.setColumnCount(4)
-        self.users_list_screen.tableWidget.setHorizontalHeaderLabels(["First Name", "Last Name", "Username", "Department"])
+        self.users_list_screen.tableWidget.setColumnCount(5)
+        self.users_list_screen.tableWidget.setHorizontalHeaderLabels(["First Name", "Last Name", "Username", "Department", "Manager"])
 
 
 
@@ -165,6 +165,7 @@ class ManageSetupClass:
 
             username = QTableWidgetItem(user["username"])
             username.setFlags(username.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            username.setData(Qt.ItemDataRole.UserRole, user["password"])
             self.users_list_screen.tableWidget.setItem(i, 2, username)
 
             # Role combobox
@@ -173,8 +174,49 @@ class ManageSetupClass:
             self.users_list_screen.tableWidget.setCellWidget(i, 3, combo)
 
 
-    def mainScreenSetup(self, option=None):
-        print("todo")
+            
+            role = QCheckBox()
+            self.users_list_screen.tableWidget.setCellWidget(i, 4, role)
+
+    def saveUsers(self):
+        role = None
+        for row in range(self.users_list_screen.tableWidget.rowCount()):
+            firstname = self.users_list_screen.tableWidget.item(row, 0).text()
+            lastname = self.users_list_screen.tableWidget.item(row, 1).text()
+            username = self.users_list_screen.tableWidget.item(row, 2).text()
+            password = self.users_list_screen.tableWidget.item(row, 2).data(Qt.ItemDataRole.UserRole)
+            department = self.users_list_screen.tableWidget.cellWidget(row, 3).currentText()
+            is_manager = self.users_list_screen.tableWidget.cellWidget(row, 4).isChecked()
+
+            if not firstname or not lastname or not username:
+                self.show_popup("All fields are required.")
+                return
+
+           
+            if is_manager:
+                role = "manager"
+            else:
+                role = "employee"
+
+            print(f"Saving user: {firstname} {lastname}, Username: {username}, Department: {department}, Role: {role}")
+            msg = self.__db.createUser(username, password, firstname, lastname, role, department)
+            if msg != "OK":
+                self.show_popup(msg)
+                return
+        
+        self.show_popup("Users saved successfully.")
+        self.finishSetup()
+
+
+    def finishSetup(self):
+        from src.Screen.WelcomeScreen import WelcomeScreen
+        from src.Manage.ManageWelcomeClass import ManageWelcomeClass
+        self.welcome_class = ManageWelcomeClass()
+        self.welcome_screen = WelcomeScreen()
+        self.welcome_screen.manage = self.welcome_class
+        self.welcome_screen.display()
+        self.users_list_screen.hide()
+        self.users_list_screen.close()
 
     def show_popup(self, text):
         msg = QMessageBox()

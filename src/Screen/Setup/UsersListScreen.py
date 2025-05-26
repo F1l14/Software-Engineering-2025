@@ -7,4 +7,5 @@ class UsersListScreen(QMainWindow):
     
     def display(self):
         uic.loadUi("ui/1_Setup/UsersListScreen.ui", self)
+        self.finish_button.clicked.connect(self.manage.saveUsers)
         self.show()

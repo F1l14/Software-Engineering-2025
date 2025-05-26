@@ -26,11 +26,18 @@ class DBManager:
         finally:
             cursor.close()
 
-    def createUser(self, username, password, firstname, lastname):
+    def createUser(self, username, password, firstname, lastname, role=None, department=None):
         cursor = self.conn.cursor()
         try:
             cursor.execute("INSERT INTO users (username, password, firstname, lastname) VALUES (%s, %s, %s, %s)", (username, password, firstname, lastname))
             self.conn.commit()
+
+            if role == "employee":
+                cursor.execute("INSERT INTO employees (username, department) VALUES (%s, %s)", (username, department))
+                self.conn.commit()
+            elif role == "manager":
+                cursor.execute("INSERT INTO managers (username, department) VALUES (%s, %s)", (username, department))
+                self.conn.commit()
         except mysql.connector.Error as err:
             return f"Error: {err}"
         else:
