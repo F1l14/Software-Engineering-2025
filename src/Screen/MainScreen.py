@@ -11,5 +11,6 @@ class MainScreen(QMainWindow):
         self.progressButton.clicked.connect(self.manage.progress)
         self.teamsButton.clicked.connect(self.manage.showTeamsScreen)
         self.salariesButton.clicked.connect(self.manage.salaries)
+        self.tasksButton.clicked.connect(self.manage.showTasksScreen)
 
         self.show()

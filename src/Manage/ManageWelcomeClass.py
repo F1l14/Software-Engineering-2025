@@ -4,6 +4,7 @@ from src.Class.DBManager import DBManager
 from src.Screen.WelcomeScreen import WelcomeScreen
 from src.Manage.ManageMainClass import ManageMainClass
 from PyQt6.QtWidgets import QMessageBox
+from src.Manage.Setup.ManageSetupClass import ManageSetupClass
 class ManageWelcomeClass:
     def __init__(self):
         self.welcome_screen = WelcomeScreen()
@@ -36,3 +37,7 @@ class ManageWelcomeClass:
                 cursor.close()
             if 'conn' in locals() and conn.is_connected():
                 conn.close()
+        
+    def handle_register(self):
+        self.welcome_screen.hide()
+        self.managesetup = ManageSetupClass()
