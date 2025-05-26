@@ -177,7 +177,7 @@ class DBManager:
         except mysql.connector.Error as err:
             return f"Error: {err}"
         else:
-            return "Task assigned successfully"
+            return "OK"
         finally:
             cursor.close()
 
@@ -189,7 +189,7 @@ class DBManager:
         except mysql.connector.Error as err:
             return f"Error: {err}"
         else:
-            return "Task completed successfully"
+            return "OK"
         finally:
             cursor.close()
 

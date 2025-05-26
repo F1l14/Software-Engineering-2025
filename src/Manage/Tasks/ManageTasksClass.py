@@ -8,7 +8,7 @@ from PyQt6.QtWidgets import QMessageBox
 from PyQt6.QtWidgets import QTreeWidgetItem
 from PyQt6.QtCore import Qt
 from src.Class.Session import Session
-from src.Class.User import User
+from src.Class.Employee import Employee
 class ManageTasksClass:
     __db = None
     __user = None
@@ -21,7 +21,7 @@ class ManageTasksClass:
         self.tasks_screen.display()
 
         self.__db = DBManager()
-        self.__user = User(Session.getUser())
+        self.__user = Employee(Session.getUser())
 
         self.getTasks("all")
         self.displayTasks()
@@ -47,12 +47,22 @@ class ManageTasksClass:
         task_id = selected_task.data(Qt.ItemDataRole.UserRole)[0]["task_id"]
         member = selected_member.text()
         mesg=self.__db.assignTask(task_id, member)
-        print(mesg)
+        # print(mesg)
+
+        if mesg != "OK":
+            self.show_popup(mesg)
+            return
+        self.show_popup(f"Task '{selected_task.text()}' assigned to {member} successfully.")
+        self.__db.createNotification(member, "new_task", "You have been assigned a new task: " + selected_task.text())
+
 
         self.assign_tasks_screen.unassigned_list.takeItem(self.assign_tasks_screen.unassigned_list.row(selected_task))
         self.assign_tasks_screen.members_list.clear()
 
     def changeTaskSelection(self):
+        if self.assign_tasks_screen.unassigned_list.selectedItems() == []:
+            self.assign_tasks_screen.members_list.clear()
+            return
         selected_item = self.assign_tasks_screen.unassigned_list.selectedItems()[0]
         hidden_data = selected_item.data(Qt.ItemDataRole.UserRole)
         # print(hidden_data)
@@ -191,7 +201,10 @@ class ManageTasksClass:
 
     def completeTask(self, task_id):
         message = self.__user.completeTask(self.__db, task_id)
-        print(message)
+        if message == "OK":
+            self.show_popup("Task completed successfully.")
+        else:
+            self.show_popup(message)
 
     def createTask(self, team_id, name, assigned_to=None):
         task = self.__user.createTask(self.__db, team_id, name, assigned_to)
