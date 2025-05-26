@@ -1,5 +1,5 @@
 from PyQt6 import uic
-from PyQt6.QtWidgets import QDialog
+from PyQt6.QtWidgets import QDialog, QMessageBox
 
 
 class CreateDirectoryScreen(QDialog):
@@ -14,7 +14,6 @@ class CreateDirectoryScreen(QDialog):
     def createDirectory(self):
         directory_name = self.lineEdit.text().strip()
         if not directory_name:
-            self.errorLabel.setText("Directory name cannot be empty.")
+            QMessageBox.information(self, "Error", "Directory name cannot be empty.")
             return
-        
-        return self.manageCreateDirectory.createDirectory(directory_name)
+        return self.manageCreateDirectory.createDirectory(self.current_directory, directory_name)
