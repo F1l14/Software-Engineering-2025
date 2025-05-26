@@ -308,3 +308,9 @@ class DBManager:
             return f"Error: {err}"
         finally:
             cursor.close()
+
+    def queryEvents(self, team_space_id):
+        pass
+    
+    def queryNoticeboard(self, team_space_id):
+        pass
