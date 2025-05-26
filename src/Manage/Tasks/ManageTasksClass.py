@@ -7,19 +7,21 @@ from PyQt6.QtWidgets import QListWidgetItem
 from PyQt6.QtWidgets import QMessageBox
 from PyQt6.QtWidgets import QTreeWidgetItem
 from PyQt6.QtCore import Qt
+from src.Class.Session import Session
+from src.Class.User import User
 class ManageTasksClass:
     __db = None
     __user = None
     __tasks_list = {}
     __projects_list = {}
 
-    def __init__(self, user):
+    def __init__(self):
         self.tasks_screen = TasksScreen()
         self.tasks_screen.manage = self
         self.tasks_screen.display()
 
         self.__db = DBManager()
-        self.__user = user
+        self.__user = User(Session.getUser())
 
         self.getTasks("all")
         self.displayTasks()

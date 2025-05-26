@@ -3,6 +3,7 @@ from src.Manage.Progress.ManageProgressClass import ManageProgressClass
 from src.Manage.Team_Space.ManageTeamListClass import ManageTeamListClass
 from src.Manage.Projects.ManageProjectClass import ManageProjectClass
 from src.Manage.Salaries.ManageEmployeeListClass import ManageEmployeeListClass
+from src.Manage.Tasks.ManageTasksClass import ManageTasksClass
 
 class ManageMainClass:
     def __init__(self):
@@ -20,4 +21,7 @@ class ManageMainClass:
         ManageProjectClass()
 
     def salaries(self):
-        ManageEmployeeListClass()        
+        ManageEmployeeListClass()
+    
+    def showTasksScreen(self):
+        ManageTasksClass()

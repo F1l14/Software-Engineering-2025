@@ -209,14 +209,12 @@ class ManageSetupClass:
 
 
     def finishSetup(self):
-        from src.Screen.WelcomeScreen import WelcomeScreen
+        import sys
+        from PyQt6.QtWidgets import QApplication
         from src.Manage.ManageWelcomeClass import ManageWelcomeClass
-        self.welcome_class = ManageWelcomeClass()
-        self.welcome_screen = WelcomeScreen()
-        self.welcome_screen.manage = self.welcome_class
-        self.welcome_screen.display()
         self.users_list_screen.hide()
         self.users_list_screen.close()
+        # self.welcome_class = ManageWelcomeClass()
 
     def show_popup(self, text):
         msg = QMessageBox()
