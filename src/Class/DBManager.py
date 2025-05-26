@@ -328,7 +328,7 @@ class DBManager:
             cursor.execute("""
                 SELECT 
                     t.id AS task_id, 
-                    t.name, 
+                    t.task_name, 
                     t.assigned_to, 
                     t.state 
                 FROM tasks t

@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 26, 2025 at 10:35 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: May 27, 2025 at 12:54 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -61,7 +61,17 @@ INSERT INTO `departments` (`name`) VALUES
 ('123'),
 ('asdfasf'),
 ('EEEEEEEEH'),
-('LAAAAA');
+('LAAAAA'),
+('Ανθρώπινο Δυναμικό'),
+('Διοίκηση'),
+('Έρευνα και Ανάπτυξη'),
+('Λογιστήριο'),
+('Μάρκετινγκ'),
+('Νομικό Τμήμα'),
+('Πληροφορική'),
+('Προμήθειες'),
+('Πωλήσεις'),
+('Υποστήριξη');
 
 -- --------------------------------------------------------
 
@@ -90,7 +100,17 @@ CREATE TABLE `employees` (
 --
 
 INSERT INTO `employees` (`username`, `department`) VALUES
-('janesmith', 'asdfasf');
+('anikolaou', 'Πωλήσεις'),
+('epanagiotou', 'Ανθρώπινο Δυναμικό'),
+('gpapadopoulos', 'Πληροφορική'),
+('ivasileiou', 'Προμήθειες'),
+('janesmith', 'asdfasf'),
+('kchatzidaki', 'Νομικό Τμήμα'),
+('kdimetriou', 'Μάρκετινγκ'),
+('mkonstantinou', 'Λογιστήριο'),
+('nstathopoulos', 'Έρευνα και Ανάπτυξη'),
+('santoniou', 'Διοίκηση'),
+('tmichailidis', 'Υποστήριξη');
 
 -- --------------------------------------------------------
 
@@ -132,7 +152,10 @@ CREATE TABLE `managers` (
 --
 
 INSERT INTO `managers` (`username`, `department`) VALUES
-('johndoe', 'asdfasf');
+('epanagiotou', 'Ανθρώπινο Δυναμικό'),
+('johndoe', 'asdfasf'),
+('kdimetriou', 'Μάρκετινγκ'),
+('santoniou', 'Διοίκηση');
 
 -- --------------------------------------------------------
 
@@ -219,6 +242,9 @@ CREATE TABLE `projects` (
 --
 
 INSERT INTO `projects` (`id`, `name`, `description`, `team_id`, `created`, `status`, `completed_at`, `deadline`) VALUES
+(1, 'ERP Εφαρμογή', 'Ανάπτυξη συστήματος ERP για την εταιρεία', 1, '2025-05-22 13:14:27', 'completed', '2025-05-22 16:33:48', '2025-07-15 00:00:00'),
+(2, 'Web Portal Πελατών', 'Δημιουργία διαδραστικού portal για πελάτες', 3, '2025-05-22 13:14:27', 'completed', '2025-05-22 16:33:55', '2025-06-20 00:00:00'),
+(3, 'Σύστημα HR', 'Διαχείριση προσωπικού και αιτήσεων', 2, '2025-05-22 13:14:27', 'assigned', NULL, '2025-09-30 00:00:00'),
 (4, 'NEW_project', 'asdasdfasfd', 5, '2025-05-26 20:22:44', 'unassigned', NULL, '2025-05-26 22:21:54');
 
 -- --------------------------------------------------------
@@ -304,6 +330,9 @@ CREATE TABLE `teams` (
 --
 
 INSERT INTO `teams` (`id`, `name`, `department`, `leader`) VALUES
+(1, 'Ομάδα Ανάπτυξης ERP', 'Έρευνα και Ανάπτυξη', 'nstathopoulos'),
+(2, 'Ομάδα HR', 'Ανθρώπινο Δυναμικό', 'epanagiotou'),
+(3, 'Ομάδα Portal Πελατών', 'Πωλήσεις', 'anikolaou'),
 (5, 'TEAM_A', '123', 'janesmith');
 
 -- --------------------------------------------------------
@@ -322,6 +351,11 @@ CREATE TABLE `team_members` (
 --
 
 INSERT INTO `team_members` (`team_id`, `member`) VALUES
+(1, 'gpapadopoulos'),
+(1, 'nstathopoulos'),
+(2, 'gpapadopoulos'),
+(3, 'kdimetriou'),
+(3, 'mkonstantinou'),
 (5, 'janesmith');
 
 -- --------------------------------------------------------
@@ -354,11 +388,22 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`username`, `password`, `firstname`, `lastname`) VALUES
 ('123', '123', '123', '123'),
+('admin', 'root', 'Αναστάσιος', 'Παπαδόπουλος'),
+('anikolaou', 'root', 'Αντώνης', 'Νικολάου'),
 ('asdfasdf', 'asdfasdf', 'asfdasfd', 'asdfasdf'),
 ('EEEEEEEEH', 'EEEEEEEEH', 'EEEEEEEEH', 'EEEEEEEEH'),
+('epanagiotou', 'root', 'Ελένη', 'Παναγιώτου'),
+('gpapadopoulos', 'root', 'Γιάννης', 'Παπαδόπουλος'),
+('ivasileiou', 'root', 'Ιωάννα', 'Βασιλείου'),
 ('janesmith', 'pass', 'Jane', 'Smith'),
 ('johndoe', 'pass', 'John', 'Doe'),
-('LAAAAA', 'LAAAAA', 'LAAAAA', 'LAAAAA');
+('kchatzidaki', 'root', 'Κατερίνα', 'Χατζηδάκη'),
+('kdimetriou', 'root', 'Κώστας', 'Δημητρίου'),
+('LAAAAA', 'LAAAAA', 'LAAAAA', 'LAAAAA'),
+('mkonstantinou', 'root', 'Μαρία', 'Κωνσταντίνου'),
+('nstathopoulos', 'root', 'Νίκος', 'Σταθόπουλος'),
+('santoniou', 'root', 'Σοφία', 'Αντωνίου'),
+('tmichailidis', 'root', 'Θανάσης', 'Μιχαηλίδης');
 
 --
 -- Indexes for dumped tables
