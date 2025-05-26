@@ -16,3 +16,7 @@ class Employee(User):
     
     def createTask(self, db, team_id, project_id, task_name, assigned_to=None):
         return db.createTask(team_id, project_id, task_name, assigned_to)
+    
+    def getTeams(self):
+        db = DBManager()
+        return db.queryTeams(self.username)
