@@ -208,10 +208,14 @@ class ManageSetupClass:
         self.finishSetup()
 
 
-    def finishSetup(self):
+    def finishSetup(self, option=None):
         from src.Manage.ManageWelcomeClass import ManageWelcomeClass
-        self.users_list_screen.hide()
-        self.users_list_screen.close()
+        if option=="skip":
+            self.user_import_screen.hide()
+            self.user_import_screen.close()
+        else:
+            self.users_list_screen.hide()
+            self.users_list_screen.close()
         self.welcome_class = ManageWelcomeClass()
 
     def show_popup(self, text):

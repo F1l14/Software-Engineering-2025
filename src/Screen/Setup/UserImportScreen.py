@@ -9,7 +9,7 @@ class UserImportScreen(QMainWindow):
         uic.loadUi("ui/1_Setup/UserImportScreen.ui", self)
         self.upload_button.clicked.connect(self.handleFile)
         self.next_button.clicked.connect(lambda:self.manage.processUsers(self.file))
-        self.skip_button.clicked.connect(lambda:self.manage.mainScreenSetup(option="skip"))
+        self.skip_button.clicked.connect(lambda:self.manage.finishSetup("skip"))
         self.show()
     
     def handleFile(self):
