@@ -33,11 +33,30 @@
       </item>
       <item row="3" column="0">
        <widget class="QPushButton" name="salariesButton">
+
         <property name="text">
          <string>Salaries</string>
         </property>
        </widget>
       </item>
+      <item row="2" column="0">
+       <widget class="QPushButton" name="teamsButton">
+        <property name="text">
+         <string>Οι Ομάδες μου</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QPushButton" name="projectsButton">
+        <property name="text">
+         <string>Salaries</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QPushButton" name="tasksButton">
+        <property name="text">
+         <string>Tasks</string>
       <item row="2" column="0">
        <widget class="QPushButton" name="teamsButton">
         <property name="text">

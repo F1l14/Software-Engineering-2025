@@ -26,15 +26,34 @@ class DBManager:
         finally:
             cursor.close()
 
-    def createUser(self, username, password, firstname, lastname):
+    def createUser(self, username, password, firstname, lastname, role=None, department=None):
         cursor = self.conn.cursor()
         try:
             cursor.execute("INSERT INTO users (username, password, firstname, lastname) VALUES (%s, %s, %s, %s)", (username, password, firstname, lastname))
             self.conn.commit()
+
+            if role == "employee":
+                cursor.execute("INSERT INTO employees (username, department) VALUES (%s, %s)", (username, department))
+                self.conn.commit()
+            elif role == "manager":
+                cursor.execute("INSERT INTO managers (username, department) VALUES (%s, %s)", (username, department))
+                self.conn.commit()
         except mysql.connector.Error as err:
             return f"Error: {err}"
         else:
-            return "User created successfully"
+            return "OK"
+        finally:
+            cursor.close()
+
+    def createBusiness(self, name, owner, logo=None):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("INSERT INTO business (name, owner, logo) VALUES (%s, %s, %s)", (name, owner, logo))
+            self.conn.commit()
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        else:
+            return "OK"
         finally:
             cursor.close()
 
@@ -50,19 +69,6 @@ class DBManager:
         finally:
             cursor.close()
 
-
-    def createBusiness(self, name, owner, logo=None):
-        cursor = self.conn.cursor()
-        try:
-            cursor.execute("INSERT INTO business (name, owner, logo) VALUES (%s, %s, %s)", (name, owner, logo))
-            self.conn.commit()
-        except mysql.connector.Error as err:
-            return f"Error: {err}"
-        else:
-            return "Business created successfully"
-        finally:
-            cursor.close()
-
     def createDepartment(self, name):
         cursor = self.conn.cursor()
         try:
@@ -71,7 +77,7 @@ class DBManager:
         except mysql.connector.Error as err:
             return f"Error: {err}"
         else:
-            return "Department created successfully"
+            return "OK"
         finally:
             cursor.close()
     
@@ -123,6 +129,19 @@ class DBManager:
         finally:
             cursor.close()
 
+    def queryDepartments(self):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("SELECT name FROM departments")
+        
+            result = cursor.fetchall()
+            return result
+        except mysql.connector.Error as err:
+            return "ERROR"
+        finally:
+            cursor.close()
+
+
     def queryTasks(self, employee, option, state="pending"):
         cursor = self.conn.cursor(dictionary=True)
         try:
@@ -145,7 +164,7 @@ class DBManager:
         except mysql.connector.Error as err:
             return f"Error: {err}"
         else:
-            return "Task created successfully"
+            return "OK"
         finally:
             cursor.close()
 
@@ -158,7 +177,7 @@ class DBManager:
         except mysql.connector.Error as err:
             return f"Error: {err}"
         else:
-            return "Task assigned successfully"
+            return "OK"
         finally:
             cursor.close()
 
@@ -170,7 +189,7 @@ class DBManager:
         except mysql.connector.Error as err:
             return f"Error: {err}"
         else:
-            return "Task completed successfully"
+            return "OK"
         finally:
             cursor.close()
 
@@ -197,6 +216,19 @@ class DBManager:
             return f"Error: {err}"
         finally:
             cursor.close()       
+
+    #Use Case 2:
+    def queryAllProjects(self):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("SELECT * FROM projects")
+            result = cursor.fetchall()
+            return result
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()       
+
             
     # Use Case 3:
     def queryBusinessData(self):
@@ -270,3 +302,4 @@ class DBManager:
             return f"Error: {err}"
         finally:
             cursor.close()
+
