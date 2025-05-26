@@ -38,3 +38,7 @@ class ManageFileShareClass:
     def download(self, file_path):
         from src.Class.FileSystem import FileSystem
         FileSystem().download(file_path)
+        
+    def rename(self, file_path):
+        from src.Class.FileSystem import FileSystem
+        FileSystem().rename(file_path)

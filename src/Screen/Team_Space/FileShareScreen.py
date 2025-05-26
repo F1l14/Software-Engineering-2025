@@ -15,6 +15,7 @@ class FileShareScreen(QDialog):
         self.uploadButton.clicked.connect(self.showUpload)
         self.treeView.clicked.connect(self.onRowClicked)
         self.downloadButton.clicked.connect(self.downloadFile)
+        self.renameButton.clicked.connect(self.renameFile)
 
         # Dynamically determine the workspace root
         workspace_root = Path(__file__).resolve().parents[3]  # Adjust the number if needed
@@ -45,4 +46,6 @@ class FileShareScreen(QDialog):
             self.manageFileShare.download(self.selected_path)
         else:
             print("No file selected for download.")
-        
+    
+    def renameFile(self):
+        self.manageFileShare.rename(self.selected_path if hasattr(self, 'selected_path') else self.current_directory)        
