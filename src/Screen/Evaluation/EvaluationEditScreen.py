@@ -17,8 +17,8 @@ class EvaluationEditScreen(QDialog):
         self.addQuestionButton.clicked.connect(self.manage.add_question)
         self.editButton.clicked.connect(self.manage.edit_selected_question)
         self.deleteButton.clicked.connect(self.manage.delete_selected_question)
-        self.readyFormButton.clicked.connect(self.manage.ready_form)
-
+        self.readyFormButton.clicked.connect(self.manage.submitQuestionsList)
+        self.cancelEvalButton.clicked.connect(self.manage.cancelEvaluation)
         self.questionsTable.setColumnCount(2)
         self.questionsTable.setHorizontalHeaderLabels(["Question", "Answers"])
         self.questionsTable.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)

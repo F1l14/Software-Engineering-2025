@@ -3,13 +3,22 @@ from src.Screen.Evaluation.EvaluationEditScreen import EvaluationEditScreen
 from src.Screen.Evaluation.QuestionEditScreen import QuestionEditScreen
 from src.Screen.Evaluation.EvaluationCheckScreen import EvaluationCheckScreen
 from src.Class.DBManager import DBManager
-from PyQt6.QtWidgets import QTableWidgetItem
+from src.Class.Evaluation import Evaluation
+from src.Class.EvaluationQuestion import EvaluationQuestion
+from PyQt6.QtWidgets import QTableWidgetItem,QMessageBox
 class ManageEvalFormClass:
     def __init__(self):
         self.eval_form_screen = EvaluationFormatScreen()
         self.eval_form_screen.manage = self
         self.eval_form_screen.display()
-      
+
+    def show_popup(self, title, message):
+        msg_box = QMessageBox()
+        msg_box.setWindowTitle(title)
+        msg_box.setText(message)
+        msg_box.setIcon(QMessageBox.Icon.Information)  # or Warning, Critical, etc.
+        msg_box.setStandardButtons(QMessageBox.StandardButton.Ok)
+        msg_box.exec()
 
     def cancel(self):
         self.eval_form_screen.close()
@@ -59,14 +68,14 @@ class ManageEvalFormClass:
             
             self.editing_row = -1
         else:
-            print("Question or answers cannot be empty.")
+            self.show_popup("Error", "Please fill in both question and answers before saving.")
 
 
     def edit_selected_question(self):
         selected_row = self.eval_edit_screen.questionsTable.currentRow()
         self.editing_row = selected_row
         if selected_row < 0:
-            print("No row selected")
+            self.show_popup("Error", "No row selected")
             return
         
         question_item = self.eval_edit_screen.questionsTable.item(selected_row, 0)
@@ -86,13 +95,18 @@ class ManageEvalFormClass:
     def delete_selected_question(self):
         selected_row = self.eval_edit_screen.questionsTable.currentRow()
         if selected_row < 0:
-            print("No row selected")
+            self.show_popup("Error", "No row selected")
             return
         
         self.eval_edit_screen.questionsTable.removeRow(selected_row)
         self.eval_edit_screen.reload()
-       
-    def ready_form(self):
+    
+    def cancelEvaluation(self):
+        self.eval_edit_screen.close()
+        self.eval_form_screen.close()
+        self.eval_check_screen.close()
+
+    def submitQuestionsList(self):
         self.eval_edit_screen.hide()
         self.eval_form_screen.close()
         self.eval_check_screen = EvaluationCheckScreen()
@@ -106,7 +120,7 @@ class ManageEvalFormClass:
 
         if self.eval_edit_screen.eval_type_text == "Managers":
             _, eval_id  = db.saveEvaluationForm('eval_for_managers', start_date, end_date)
-
+            eval_form = Evaluation('eval_for_managers', start_date, end_date)
             row_count = self.eval_edit_screen.questionsTable.rowCount()
             for row in range(row_count):
                 question_item = self.eval_edit_screen.questionsTable.item(row, 0)
@@ -115,6 +129,7 @@ class ManageEvalFormClass:
                 question_text = question_item.text() if question_item else ""
                 answers = [a.strip() for a in answers_item.text().split(",")] if answers_item else []
                 db.saveQuestion(eval_id, question_text, answers)
+                evalQuestion = EvaluationQuestion(eval_form, question_text, answers)
             employees = db.queryAllEmployees()
             for employee in employees:
                 username = employee[0]  
@@ -130,11 +145,13 @@ class ManageEvalFormClass:
                 question_text = question_item.text() if question_item else ""
                 answers = [a.strip() for a in answers_item.text().split(",")] if answers_item else []
                 db.saveQuestion(eval_id, question_text, answers)
+                evalQuestion = EvaluationQuestion(eval_form, question_text, answers)
             managers = db.queryAllManagers()
             for manager in managers:
                 username = manager[0]
                 db.createNotification(username, "Evaluation", "A new evaluation form has been published. Please check your evaluations section.")
         db.close()
+        self.show_popup("Success", "Evaluation form published successfully.")
         self.eval_check_screen.close()
         self.eval_form_screen.close()
         self.eval_edit_screen.close()

@@ -35,6 +35,11 @@
      <height>41</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">font: 11pt &quot;Segoe UI&quot;;
+background-color: rgb(220, 220, 220);
+color: rgb(0, 0, 0);</string>
+   </property>
    <property name="text">
     <string>Publish</string>
    </property>
@@ -93,6 +98,11 @@
      <width>121</width>
      <height>41</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 11pt &quot;Segoe UI&quot;;
+background-color: rgb(220, 220, 220);
+color: rgb(0, 0, 0);</string>
    </property>
    <property name="text">
     <string>Edit Form</string>

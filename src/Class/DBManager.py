@@ -261,7 +261,8 @@ class DBManager:
             return f"Error: {err}"
         finally:
             cursor.close()
-    
+            
+    #Use Case 5:
     def saveEvaluationForm(self, type, start_date, end_date):
             cursor = self.conn.cursor()
 
@@ -297,5 +298,40 @@ class DBManager:
             return [row[0] for row in result]
         except mysql.connector.Error as err:
             return f"Error: {err}"
+        finally:
+            cursor.close()
+
+    def queryEvaluationForm(self, type):
+        cursor = self.conn.cursor()
+        try:
+                cursor.execute("""
+                    SELECT 
+                        f.id AS form_id,
+                        q.question_text,
+                        q.answers
+                    FROM evaluation_forms f
+                    JOIN evaluation_questions q ON f.id = q.eval_id
+                    WHERE f.type = %s
+                    AND f.id = (
+                        SELECT MAX(id)
+                        FROM evaluation_forms
+                        WHERE type = %s
+                    )
+                """, (type,type))
+                return cursor.fetchall()
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+    
+    def saveEvaluationAnswers(self, eval_id, username, answers):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("INSERT INTO evaluation_answers (eval_id, username, answers) VALUES (%s, %s, %s)", (eval_id, username, ','.join(answers)))
+            self.conn.commit()
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        else:
+            return "Answers saved successfully"
         finally:
             cursor.close()
