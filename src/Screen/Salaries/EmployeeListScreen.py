@@ -9,6 +9,7 @@ class EmployeeListScreen(QDialog):
         uic.loadUi("ui/7_Salaries/EmployeeListScreen.ui", self)
         self.salaryList = self.findChild(QTableWidget, "employeeSalaryList")
         self.showEmployeeSalariesList()
+        self.bonusButton.clicked.connect(self.manage.showBonus)
         self.exec()
 
     def showEmployeeSalariesList(self):
