@@ -10,9 +10,14 @@ class Session:
         cls.classifyUser()
 
     @classmethod
-
     def getUser(cls):
         return cls._user
+    
+    @classmethod
+    def getRole(cls):
+        if cls._role is None:
+            cls.classifyUser()
+        return cls._role
 
     @classmethod
     def clear(cls):

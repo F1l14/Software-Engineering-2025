@@ -1,5 +1,6 @@
 from PyQt6.QtWidgets import QMainWindow
 from PyQt6 import uic
+from src.Class.Session import Session
 
 class MainScreen(QMainWindow):
     def __init__(self):
@@ -12,5 +13,11 @@ class MainScreen(QMainWindow):
         self.teamsButton.clicked.connect(self.manage.showTeamsScreen)
         self.salariesButton.clicked.connect(self.manage.salaries)
         self.tasksButton.clicked.connect(self.manage.showTasksScreen)
+        
+        if Session.getRole() != "admin":
+            self.progressButton.setVisible(False)
+        
+        if Session.getRole() == "employee":
+            self.projectsButton.setVisible(False)
 
         self.show()
