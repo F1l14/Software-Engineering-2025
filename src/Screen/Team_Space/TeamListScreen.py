@@ -8,7 +8,7 @@ class TeamListScreen(QDialog):
     
     def display(self, teams):
         uic.loadUi("ui/6_Team_Space/TeamListScreen.ui", self)
-        self.showTeamSpaceButton.clicked.connect(self.showTeamSpace)
+        self.showTeamSpaceButton.clicked.connect(self.manage.showTeamSpace)
         
         team_ids = [item[0] for item in teams]
         team_names = [item[1] for item in teams]
@@ -25,8 +25,3 @@ class TeamListScreen(QDialog):
 
         self.exec()
         
-    def showTeamSpace(self):
-        selected_row = self.tableWidget.currentRow()
-        if selected_row >= 0:
-            team_id = self.tableWidget.item(selected_row, 0).text()
-            ManageTeamSpaceClass(team_id)
