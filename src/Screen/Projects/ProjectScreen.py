@@ -9,6 +9,7 @@ class ProjectScreen(QDialog):
         uic.loadUi("ui/2_Projects/ProjectScreen.ui", self)
         self.projectList = self.findChild(QTableWidget, "projectList")
         self.showAllProjects()
+
         self.createProjectButton.clicked.connect(self.manage.showProjectCreation)
         self.editProjectButton.clicked.connect(self.checkSelection)
         self.exec()

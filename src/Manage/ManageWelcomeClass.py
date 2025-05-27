@@ -1,8 +1,10 @@
 import mysql.connector
+from src.Class.Session import Session
 from src.Class.DBManager import DBManager
 from src.Screen.WelcomeScreen import WelcomeScreen
 from src.Manage.ManageMainClass import ManageMainClass
 from PyQt6.QtWidgets import QMessageBox
+from src.Manage.Setup.ManageSetupClass import ManageSetupClass
 class ManageWelcomeClass:
     def __init__(self):
         self.welcome_screen = WelcomeScreen()
@@ -23,6 +25,7 @@ class ManageWelcomeClass:
             if result and result[0] == password:
                 QMessageBox.information(self.welcome_screen, "Success", "Login successful!")
                 self.welcome_screen.accept()
+                Session.setUser(username)
                 ManageMainClass()
             else:
                 self.welcome_screen.statusLabel.setText("Invalid username or password.")
@@ -34,3 +37,7 @@ class ManageWelcomeClass:
                 cursor.close()
             if 'conn' in locals() and conn.is_connected():
                 conn.close()
+        
+    def handle_register(self):
+        self.welcome_screen.hide()
+        self.managesetup = ManageSetupClass()
