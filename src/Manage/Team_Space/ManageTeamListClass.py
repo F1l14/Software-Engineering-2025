@@ -11,7 +11,7 @@ class ManageTeamListClass:
         teams = self.employee.getTeams()
         self.team_screen.display(teams)
 
-    def showTeamSpace(self):
+    def showTeamSpaceScreen(self):
         selected_row = self.team_screen.tableWidget.currentRow()
         if selected_row >= 0:
             team_id = self.team_screen.tableWidget.item(selected_row, 0).text()
