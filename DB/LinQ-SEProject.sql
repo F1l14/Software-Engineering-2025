@@ -78,24 +78,25 @@ CREATE TABLE `department_notices` (
 
 CREATE TABLE `employees` (
   `username` varchar(80) NOT NULL,
-  `department` varchar(80) NOT NULL
+  `department` varchar(80) NOT NULL,
+  `salary` float(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `employees`
 --
 
-INSERT INTO `employees` (`username`, `department`) VALUES
-('anikolaou', 'Πωλήσεις'),
-('epanagiotou', 'Ανθρώπινο Δυναμικό'),
-('gpapadopoulos', 'Πληροφορική'),
-('ivasileiou', 'Προμήθειες'),
-('kchatzidaki', 'Νομικό Τμήμα'),
-('kdimetriou', 'Μάρκετινγκ'),
-('mkonstantinou', 'Λογιστήριο'),
-('nstathopoulos', 'Έρευνα και Ανάπτυξη'),
-('santoniou', 'Διοίκηση'),
-('tmichailidis', 'Υποστήριξη');
+INSERT INTO `employees` (`username`, `department`, `salary`) VALUES
+('anikolaou', 'Πωλήσεις', 3400.00),
+('epanagiotou', 'Ανθρώπινο Δυναμικό', 3200.00),
+('gpapadopoulos', 'Πληροφορική', 3700.00),
+('ivasileiou', 'Προμήθειες', 3100.00),
+('kchatzidaki', 'Νομικό Τμήμα', 3600.00),
+('kdimetriou', 'Μάρκετινγκ', 3300.00),
+('mkonstantinou', 'Λογιστήριο', 3550.00),
+('nstathopoulos', 'Έρευνα και Ανάπτυξη', 4000.00),
+('santoniou', 'Διοίκηση', 3800.00),
+('tmichailidis', 'Υποστήριξη', 3000.00);
 
 -- --------------------------------------------------------
 
@@ -371,7 +372,7 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`username`, `password`, `firstname`, `lastname`) VALUES
+INSERT INTO users (username, password, firstname, lastname) VALUES
 ('admin', 'root', 'Αναστάσιος', 'Παπαδόπουλος'),
 ('anikolaou', 'root', 'Αντώνης', 'Νικολάου'),
 ('epanagiotou', 'root', 'Ελένη', 'Παναγιώτου'),
@@ -384,37 +385,6 @@ INSERT INTO `users` (`username`, `password`, `firstname`, `lastname`) VALUES
 ('santoniou', 'root', 'Σοφία', 'Αντωνίου'),
 ('tmichailidis', 'root', 'Θανάσης', 'Μιχαηλίδης');
 
--- --------------------------------------------------------
-
---
--- Table structure for table `users`
---
-
-CREATE TABLE `users` (
-  `username` varchar(80) NOT NULL,
-  `password` varchar(80) NOT NULL,
-  `position` varchar(80) NOT NULL,
-  `firstname` varchar(80) NOT NULL,
-  `lastname` varchar(80) NOT NULL,
-  `email` varchar(80) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`username`, `password`, `position`, `firstname`, `lastname`, `email`) VALUES
-('admin', 'root', 'admin', 'Αναστάσιος', 'Παπαδόπουλος', 'admin@example.com'),
-('anikolaou', 'root', 'manager', 'Αντώνης', 'Νικολάου', 'anikolaou@example.com'),
-('epanagiotou', 'root', 'employee', 'Ελένη', 'Παναγιώτου', 'epanagiotou@example.com'),
-('gpapadopoulos', 'root', 'employee', 'Γιάννης', 'Παπαδόπουλος', 'gpapadopoulos@example.com'),
-('ivasileiou', 'root', 'employee', 'Ιωάννα', 'Βασιλείου', 'ivasileiou@example.com'),
-('kchatzidaki', 'root', 'employee', 'Κατερίνα', 'Χατζηδάκη', 'kchatzidaki@example.com'),
-('kdimetriou', 'root', 'employee', 'Κώστας', 'Δημητρίου', 'kdimetriou@example.com'),
-('mkonstantinou', 'root', 'employee', 'Μαρία', 'Κωνσταντίνου', 'mkonstantinou@example.com'),
-('nstathopoulos', 'root', 'employee', 'Νίκος', 'Σταθόπουλος', 'nstathopoulos@example.com'),
-('santoniou', 'root', 'employee', 'Σοφία', 'Αντωνίου', 'santoniou@example.com'),
-('tmichailidis', 'root', 'employee', 'Θανάσης', 'Μιχαηλίδης', 'tmichailidis@example.com');
 
 
 --

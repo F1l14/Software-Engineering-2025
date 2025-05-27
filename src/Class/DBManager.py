@@ -329,3 +329,15 @@ class DBManager:
             return f"Error: {err}"
         finally:
             cursor.close()
+
+    # Use Case 3:
+    def queryEmployeeSalaries(self):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("SELECT username, salary FROM employees")
+            result = cursor.fetchall()
+            return result
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
