@@ -292,7 +292,7 @@ class DBManager:
     def querryAllManagers(self):
         cursor = self.conn.cursor()
         try:
-            cursor.execute("SELECT username FROM users WHERE role = 'manager'")
+            cursor.execute("SELECT username FROM users INNER JOIN managers ON users.username = managers.username")
             result = cursor.fetchall()
             return [row[0] for row in result]
         except mysql.connector.Error as err:
