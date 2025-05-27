@@ -2,6 +2,7 @@ from src.Screen.Evaluation.EvaluationFormatScreen import EvaluationFormatScreen
 from src.Screen.Evaluation.EvaluationEditScreen import EvaluationEditScreen
 from src.Screen.Evaluation.QuestionEditScreen import QuestionEditScreen
 from src.Screen.Evaluation.EvaluationCheckScreen import EvaluationCheckScreen
+from src.Class.DBManager import DBManager
 from PyQt6.QtWidgets import QTableWidgetItem
 class ManageEvalFormClass:
     def __init__(self):
@@ -97,3 +98,41 @@ class ManageEvalFormClass:
         self.eval_check_screen = EvaluationCheckScreen()
         self.eval_check_screen.manage = self
         self.eval_check_screen.display(self.eval_edit_screen.questionsTable)
+
+    def publish_form(self):
+        db = DBManager()
+        db.connect()
+        if self.eval_edit_screen.eval_type_text == "Managers":
+            eval_id = db.saveEvaluationForm('eval_for_managers', self.eval_check_screen.startDateTime, self.eval_check_screen.endDateTime)
+
+            row_count = self.eval_edit_screen.questionsTable.rowCount()
+            for row in range(row_count):
+                question_item = self.eval_edit_screen.questionsTable.item(row, 0)
+                answers_item = self.eval_edit_screen.questionsTable.item(row, 1)
+
+                question_text = question_item.text() if question_item else ""
+                answers = [a.strip() for a in answers_item.text().split(",")] if answers_item else []
+                db.saveQuestion(eval_id, question_text, answers)
+            employees = db.queryAllEmployees()
+            for employee in employees:
+                username = employee[0]  # Get the username from the tuple
+                db.createNotification(username, eval_id, "Evaluation", "A new evaluation form has been published. Please check your evaluations section.")
+        elif self.eval_edit_screen.eval_type_text == "Employees":
+            eval_id = db.saveEvaluationForm('eval_for_employees', self.eval_check_screen.startDateTime, self.eval_check_screen.endDateTime)
+
+            row_count = self.eval_edit_screen.questionsTable.rowCount()
+            for row in range(row_count):
+                question_item = self.eval_edit_screen.questionsTable.item(row, 0)
+                answers_item = self.eval_edit_screen.questionsTable.item(row, 1)
+
+                question_text = question_item.text() if question_item else ""
+                answers = [a.strip() for a in answers_item.text().split(",")] if answers_item else []
+                db.saveQuestion(eval_id, question_text, answers)
+            managers = db.querryAllManagers()
+            for manager in managers:
+                username = manager[0]  # Get the username from the tuple
+                db.createNotification(username, eval_id, "Evaluation", "A new evaluation form has been published. Please check your evaluations section.")
+        db.close()
+        self.eval_check_screen.close()
+        self.eval_form_screen.close()
+        self.eval_edit_screen.close()

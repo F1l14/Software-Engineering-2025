@@ -11,6 +11,8 @@ class EvaluationCheckScreen(QDialog):
         self.editFormButton.clicked.connect(self.manage.eval_edit_screen.show)
         self.editFormButton.clicked.connect(self.hide)
 
+        self.publishFormButton.clicked.connect(self.manage.publish_form)
+
         #Form Preview
         self.questionsContainer.setStyleSheet("background-color: white;")
         layout = QVBoxLayout(self.questionsContainer)

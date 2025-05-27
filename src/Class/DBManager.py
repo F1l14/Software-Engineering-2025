@@ -256,6 +256,45 @@ class DBManager:
                 "projects": project_progress,
                 "tasks": task_progress
             }
+        
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+    
+    def saveEvaluationForm(self, type, start_date, end_date):
+            cursor = self.conn.cursor()
+
+            try:
+                cursor.execute("INSERT INTO evaluation_forms (type, start_date, end_date) VALUES (%s, %s, %s)", (type, start_date, end_date))
+                self.conn.commit()
+            except mysql.connector.Error as err:
+                return f"Error: {err}"
+            else:
+                eval_id = cursor.lastrowid
+                return "Evaluation saved successfully", eval_id
+            finally:
+                cursor.close()
+
+    def saveQuestion(self, eval_id, question_text, answers):
+            cursor = self.conn.cursor()
+
+            try:
+                cursor.execute("INSERT INTO evaluation_questions (eval_id, question_text, answers) VALUES (%s, %s, %s)", (eval_id, question_text, ','.join(answers)))
+                self.conn.commit()
+            except mysql.connector.Error as err:
+                return f"Error: {err}"
+            else:
+                return "Question saved successfully"
+            finally:
+                cursor.close()
+    
+    def querryAllManagers(self):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("SELECT username FROM users WHERE role = 'manager'")
+            result = cursor.fetchall()
+            return [row[0] for row in result]
         except mysql.connector.Error as err:
             return f"Error: {err}"
         finally:
