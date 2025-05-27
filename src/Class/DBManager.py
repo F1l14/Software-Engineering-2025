@@ -9,6 +9,7 @@ class DBManager:
             use_pure=True
         )
 
+
     def  close(self):
         self.conn.close()
 
@@ -80,7 +81,7 @@ class DBManager:
             return "OK"
         finally:
             cursor.close()
-    
+
 
     def createTeam(self, name, department, leader):
         cursor = self.conn.cursor()
@@ -168,7 +169,7 @@ class DBManager:
         finally:
             cursor.close()
 
-    
+
     def assignTask(self, task_id, assigned_to):
         cursor = self.conn.cursor()
         try:
@@ -258,7 +259,7 @@ class DBManager:
                                 users.username, users.firstname, users.lastname, employees.department
                             FROM users 
                             INNER JOIN employees ON users.username = employees.username
-                           """)
+                            """)
             result = cursor.fetchall()
             return result
         except mysql.connector.Error as err:
@@ -304,23 +305,24 @@ class DBManager:
             cursor.close()
 
 
-#-----------------Use case 4-----------------------
-def queryMessages(self, username):
-    cursor = self.conn.cursor(dictionary=True)
-    try:
-        cursor.execute("""
-            SELECT id, user_1, user_2, name 
-            FROM messages_history 
-            WHERE user_1 = %s OR user_2 = %s
-            ORDER BY id DESC
-        """, (username, username))
-        return cursor.fetchall()
-    except mysql.connector.Error as err:
-        return f"Error: {err}"
-    finally:
-        cursor.close()
-    
-    # Use Case 6:
+    #-----------------Use case 4-----------------------
+    def queryMessages(self, username):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("""
+                SELECT id, name, user_1, user_2
+                FROM messages_history
+                WHERE user_1 = %s OR user_2 = %s
+                ORDER BY id DESC
+            """, (username, username))
+            return cursor.fetchall()
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+
+
+    #-------------------- Use Case 6-----------------
     def queryTeams(self, username):
         cursor = self.conn.cursor()
         try:
@@ -338,6 +340,7 @@ def queryMessages(self, username):
             return f"Error: {err}"
         finally:
             cursor.close()
+            
             
     def queryTasksOfTeam(self, team_id):
         cursor = self.conn.cursor()
@@ -360,6 +363,6 @@ def queryMessages(self, username):
 
     def queryEvents(self, team_space_id):
         pass
-    
+
     def queryNoticeboard(self, team_space_id):
         pass

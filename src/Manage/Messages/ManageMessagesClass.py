@@ -1,5 +1,6 @@
 from src.Screen.Messages.MessagesScreen import MessagesScreen
 from src.Class.DBManager import DBManager
+from src.Class.Session import Session
 
 class ManageMessagesClass:
     def __init__(self):
@@ -8,7 +9,9 @@ class ManageMessagesClass:
 
         self.message_screen.display()
 
-    def getUserChats(self):
+    def getMessages(self):
         db = DBManager()
-        user_email = "user@example.com"  #θα αλλάζει ανά session
-        return db.queryUserChats(user_email)
+        self.username = Session.getUser()
+        return db.queryMessages(self.username)
+
+    

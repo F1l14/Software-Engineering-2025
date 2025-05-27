@@ -166,6 +166,7 @@ INSERT INTO `managers` (`username`, `department`) VALUES
 CREATE TABLE `messages` (
   `id` int(11) NOT NULL,
   `history_id` int(11) NOT NULL,
+  `username` varchar(80) NOT NULL,
   `from_user` varchar(80) NOT NULL,
   `to_user` varchar(80) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -177,12 +178,13 @@ CREATE TABLE `messages` (
 --
 
 CREATE TABLE `messages_history` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL PRIMARY KEY,
   `name` varchar(80) NOT NULL,
   `user_1` varchar(80) NOT NULL,
   `user_2` varchar(80) NOT NULL,
   `history` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`history`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+ NOT NULL CHECK (JSON_VALID(`history`);
 
 -- --------------------------------------------------------
 

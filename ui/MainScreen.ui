@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>798</width>
-    <height>508</height>
+    <height>794</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,17 +24,17 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="0">
-       <widget class="QPushButton" name="projectsButton">
-        <property name="text">
-         <string>Projects</string>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="0">
        <widget class="QPushButton" name="progressButton">
         <property name="text">
          <string> Πρόοδος</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QPushButton" name="tasksButton">
+        <property name="text">
+         <string>Tasks</string>
         </property>
        </widget>
       </item>
@@ -45,10 +45,17 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QPushButton" name="tasksButton">
+      <item row="0" column="0">
+       <widget class="QPushButton" name="projectsButton">
         <property name="text">
-         <string>Tasks</string>
+         <string>Projects</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QPushButton" name="messageSelect">
+        <property name="text">
+         <string>Messages</string>
         </property>
        </widget>
       </item>
@@ -62,7 +69,7 @@
      <x>0</x>
      <y>0</y>
      <width>798</width>
-     <height>30</height>
+     <height>33</height>
     </rect>
    </property>
   </widget>

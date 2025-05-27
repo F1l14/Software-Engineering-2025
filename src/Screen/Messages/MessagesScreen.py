@@ -1,12 +1,13 @@
-from PyQt6.QtWidgets import QDialog, QListWidget, QPushButton, QLabel
+from PyQt6.QtWidgets import QMainWindow, QListWidget, QPushButton, QLabel
 from PyQt6 import uic
+from src.Class.Session import Session
 
-class MessagesScreen(QDialog):
+class MessagesScreen(QMainWindow):
     def __init__(self):
         super().__init__()
 
     def display(self):
-        uic.loadUi("src/ui/4_Messages/MessagesScreen.ui", self)
+        uic.loadUi("ui/4_Messages/MessagesScreen.ui", self)
 
         # Σύνδεση UI αντικειμένων
         self.messagesList = self.findChild(QListWidget, "messagesList")
@@ -25,9 +26,12 @@ class MessagesScreen(QDialog):
         # Εδώ μπορεί να ανοίξει νέο παράθυρο για δημιουργία συνομιλίας
 
     def showMessages(self):
-        messages = self.manage.getUserChats()  #σύνδεση με DBManager
+        messages = self.manage.getMessages()  #σύνδεση με DBManager
+        current_user = Session.getUser()
         self.messagesList.clear()
 
         for chat in messages:
-            display_name = f"{chat['name']} ({chat['user_1']} - {chat['user_2']})"
-            self.messagesList.addItem(display_name)
+            for chat in messages:
+                other_user = chat["user_2"] if chat["user_1"] == current_user else chat["user_1"]
+                display_name = f"{chat['name']} ({other_user})"
+                self.messagesList.addItem(display_name)
