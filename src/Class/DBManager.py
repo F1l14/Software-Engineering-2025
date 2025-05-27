@@ -302,6 +302,23 @@ class DBManager:
             return f"Error: {err}"
         finally:
             cursor.close()
+
+
+#-----------------Use case 4-----------------------
+def queryMessages(self, username):
+    cursor = self.conn.cursor(dictionary=True)
+    try:
+        cursor.execute("""
+            SELECT id, user_1, user_2, name 
+            FROM messages_history 
+            WHERE user_1 = %s OR user_2 = %s
+            ORDER BY id DESC
+        """, (username, username))
+        return cursor.fetchall()
+    except mysql.connector.Error as err:
+        return f"Error: {err}"
+    finally:
+        cursor.close()
     
     # Use Case 6:
     def queryTeams(self, username):
