@@ -232,8 +232,8 @@ class DBManager:
         cursor = self.conn.cursor()
         try:
             cursor.execute(
-                "INSERT INTO projects (name, description, deadline) VALUES (%s, %s, %s)",
-                (projectDetails[0], projectDetails[1], projectDetails[2])
+                "INSERT INTO projects (name, description, deadline, value) VALUES (%s, %s, %s, %s)",
+                (projectDetails[0], projectDetails[1], projectDetails[2], projectDetails[3])
             )
             project_id = cursor.lastrowid  
 
@@ -256,12 +256,12 @@ class DBManager:
         cursor = self.conn.cursor()
         try:
             cursor.execute(
-                "UPDATE projects SET name = %s, description = %s, deadline = %s, status = %s WHERE id = %s",
+                "UPDATE projects SET name = %s, description = %s, deadline = %s, value = %s WHERE id = %s",
                 (
                     updated_data["name"],
                     updated_data["description"],
                     updated_data["deadline"],
-                    updated_data["status"],
+                    updated_data["value"],
                     updated_data["id"]
                 )
             )
@@ -354,6 +354,17 @@ class DBManager:
         cursor = self.conn.cursor()
         try:
             cursor.execute("SELECT username, salary FROM employees")
+            result = cursor.fetchall()
+            return result
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+
+    def checkBonusState(self):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("SELECT state FROM bonus_state")
             result = cursor.fetchall()
             return result
         except mysql.connector.Error as err:

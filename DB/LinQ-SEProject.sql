@@ -110,7 +110,8 @@ INSERT INTO `employees` (`username`, `department`, `salary`) VALUES
 ('mkonstantinou', 'Λογιστήριο', 3550.00),
 ('nstathopoulos', 'Έρευνα και Ανάπτυξη', 4000.00),
 ('santoniou', 'Διοίκηση', 3800.00),
-('tmichailidis', 'Υποστήριξη', 3000.00);
+('tmichailidis', 'Υποστήριξη', 3000.00),
+('janesmith', 'Νομικό Τμήμα', 1000.00);
 
 -- --------------------------------------------------------
 
@@ -234,18 +235,19 @@ CREATE TABLE `projects` (
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `status` enum('unassigned','assigned','completed') NOT NULL DEFAULT 'unassigned',
   `completed_at` datetime DEFAULT NULL,
-  `deadline` datetime NOT NULL
+  `deadline` datetime NOT NULL,
+  `value` FLOAT NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `projects`
 --
 
-INSERT INTO `projects` (`id`, `name`, `description`, `team_id`, `created`, `status`, `completed_at`, `deadline`) VALUES
-(1, 'ERP Εφαρμογή', 'Ανάπτυξη συστήματος ERP για την εταιρεία', 1, '2025-05-22 13:14:27', 'completed', '2025-05-22 16:33:48', '2025-07-15 00:00:00'),
-(2, 'Web Portal Πελατών', 'Δημιουργία διαδραστικού portal για πελάτες', 3, '2025-05-22 13:14:27', 'completed', '2025-05-22 16:33:55', '2025-06-20 00:00:00'),
-(3, 'Σύστημα HR', 'Διαχείριση προσωπικού και αιτήσεων', 2, '2025-05-22 13:14:27', 'assigned', NULL, '2025-09-30 00:00:00'),
-(4, 'NEW_project', 'asdasdfasfd', 5, '2025-05-26 20:22:44', 'unassigned', NULL, '2025-05-26 22:21:54');
+INSERT INTO `projects` (`id`, `name`, `description`, `team_id`, `created`, `status`, `completed_at`, `deadline`, `value`) VALUES
+(1, 'ERP Εφαρμογή', 'Ανάπτυξη συστήματος ERP για την εταιρεία', 1, '2025-05-22 13:14:27', 'completed', '2025-05-22 16:33:48', '2025-07-15 00:00:00', 45000.00),
+(2, 'Web Portal Πελατών', 'Δημιουργία διαδραστικού portal για πελάτες', 3, '2025-05-22 13:14:27', 'completed', '2025-05-22 16:33:55', '2025-06-20 00:00:00', 238000.00),
+(3, 'Σύστημα HR', 'Διαχείριση προσωπικού και αιτήσεων', 2, '2025-05-22 13:14:27', 'assigned', NULL, '2025-09-30 00:00:00', 1200000.00),
+(4, 'NEW_project', 'asdasdfasfd', 5, '2025-05-26 20:22:44', 'unassigned', NULL, '2025-05-26 22:21:54', 69000.00);
 
 -- --------------------------------------------------------
 
@@ -388,6 +390,23 @@ CREATE TABLE `team_notices` (
   `notice_id` int(11) NOT NULL,
   `team_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bonus_state`
+--
+
+CREATE TABLE `bonus_state` (
+  `state` ENUM('active', 'inactive') NOT NULL DEFAULT 'inactive' 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `bonus_state`
+--
+
+INSERT INTO `bonus_state` (`state`) VALUES
+('inactive');
 
 -- --------------------------------------------------------
 

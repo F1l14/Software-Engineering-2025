@@ -12,7 +12,7 @@ class ProjectEditScreen(QDialog):
         self.nameBox = self.findChild(QLineEdit, "nameBox")
         self.descriptionBox = self.findChild(QTextEdit, "descriptionBox")
         self.deadlineBox = self.findChild(QDateTimeEdit, "deadlineBox")
-        self.statusBox = self.findChild(QLineEdit, "statusBox")
+        self.valueBox = self.findChild(QLineEdit, "valueBox")
         self.updateButton = self.findChild(QPushButton, "updateButton")
         self.updateButton.clicked.connect(self.update)
         self.cancelButton = self.findChild(QPushButton, "cancelButton")
@@ -28,15 +28,15 @@ class ProjectEditScreen(QDialog):
         deadline_dt = datetime.strptime(self.project_data["deadline"], "%Y-%m-%d %H:%M:%S")
         self.deadlineBox.setDateTime(deadline_dt)
 
-        self.statusBox.setText(self.project_data["status"])
+        self.valueBox.setText(self.project_data["value"])
 
     def update(self):
         name = self.nameBox.text().strip()
         description = self.descriptionBox.toPlainText().strip()
         deadline = self.deadlineBox.dateTime().toString("yyyy-MM-dd HH:mm:ss").strip()
-        status = self.statusBox.text().strip()
+        value = self.valueBox.text().strip()
 
-        if not name or not description or not deadline or not status:
+        if not name or not description or not deadline or not value:
             QMessageBox.warning(self, "Validation Error", "All fields must be filled out.")
             return
 
@@ -45,7 +45,7 @@ class ProjectEditScreen(QDialog):
             "name": name,
             "description": description,
             "deadline": deadline,
-            "status": status
+            "value": value
         }
 
         self.manage.updateProjectDetails(updated_data)

@@ -1,4 +1,5 @@
 from src.Screen.Salaries.EmployeeListScreen import EmployeeListScreen
+from src.Manage.Salaries.ManageBonusClass import ManageBonusClass
 from src.Class.DBManager import DBManager
 
 class ManageEmployeeListClass:
@@ -11,3 +12,6 @@ class ManageEmployeeListClass:
         db = DBManager()
         salaries = db.queryEmployeeSalaries()
         return salaries
+    
+    def showBonus(self):
+        ManageBonusClass()
