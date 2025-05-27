@@ -4,18 +4,28 @@ from PyQt6 import uic
 class QuestionEditScreen(QDialog):
     def __init__(self):
         super().__init__()
+        
 
-    def display(self):
+    def display(self, question_text="", answers=None):
         uic.loadUi("ui/5_Evaluation/QuestionEditScreen.ui", self)
-        self.backButton.clicked.connect(self.manage.cancel_question)
-
+        self.setWindowTitle("Question Edit")
         self.answersLayout = QVBoxLayout(self.answersList)
         self.answersList.setLayout(self.answersLayout)
 
+        self.backButton.clicked.connect(self.manage.cancel_question)
         self.addAnswerButton.clicked.connect(self.add_answer)
         self.saveQuestionButton.clicked.connect(self.manage.save_question)
-        self.add_answer()  
+
+        if question_text:
+            self.questionText.setText(question_text)
+        if answers:
+            for ans in answers:
+                field = QLineEdit()
+                field.setText(ans)
+                self.answersLayout.addWidget(field)
+
         self.exec()
+
 
     def add_answer(self):
         answer_field = QLineEdit()
@@ -33,14 +43,4 @@ class QuestionEditScreen(QDialog):
         return question, answers
     
 
-def set_data(self, question_text: str, answers: list[str]):
-    self.questionText.setPlainText(question_text)
-
-    # Clear existing answer fields
-    for i in reversed(range(self.answersLayout.count())):
-        self.answersLayout.itemAt(i).widget().setParent(None)
-
-    for ans in answers:
-        field = QLineEdit()
-        field.setText(ans)
-        self.answersLayout.addWidget(field)
+   
