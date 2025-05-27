@@ -8,6 +8,26 @@ class DBManager:
             database=database,
             use_pure=True
         )
+        
+    def classifyUser(self, username):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("""
+                SELECT 'employee' AS role FROM employees WHERE username = %s
+                UNION
+                SELECT 'manager' AS role FROM managers WHERE username = %s
+                UNION
+                SELECT 'admin' AS role FROM business WHERE owner = %s
+            """, (username, username, username))
+            result = cursor.fetchone()
+            if result:
+                return result[0]
+            else:
+                return None
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
 
     def  close(self):
         self.conn.close()
