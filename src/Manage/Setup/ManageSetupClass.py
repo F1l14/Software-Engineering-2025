@@ -50,6 +50,8 @@ class ManageSetupClass:
 
     def createBusiness(self):
         name = self.business_creation_screen.business_field.toPlainText()
+        if not name:
+            self.show_popup("Enter a business name")
         owner = self.admin.username
         msg = self.admin.createBusiness(self.__db, name, owner, self.__logo_data)
         if msg != "OK":
