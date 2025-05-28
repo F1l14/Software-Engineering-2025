@@ -7,47 +7,64 @@ from PyQt6.QtWidgets import QListWidgetItem
 from PyQt6.QtWidgets import QMessageBox
 from PyQt6.QtWidgets import QTreeWidgetItem
 from PyQt6.QtCore import Qt
+from src.Class.Session import Session
+from src.Class.Employee import Employee
 class ManageTasksClass:
     __db = None
     __user = None
     __tasks_list = {}
     __projects_list = {}
 
-    def __init__(self, user):
+    def __init__(self):
         self.tasks_screen = TasksScreen()
+        self.tasks_screen.manage = self
+        self.tasks_screen.display()
 
         self.__db = DBManager()
-        self.__user = user
+        self.__user = Employee(Session.getUser())
 
         self.getTasks("all")
         self.displayTasks()
-        self.tasks_screen.create_button.clicked.connect(self.newCreateTaskScreen)
-        self.tasks_screen.assign_task_button.clicked.connect(self.newAssignTaskScreen)
-        self.tasks_screen.refresh_button.clicked.connect(lambda: (self.getTasks("all"), self.displayTasks()))
+        
     
     def newAssignTaskScreen(self):
         self.assign_tasks_screen = TaskAssignScreen()
+        self.assign_tasks_screen.manage = self
+        self.assign_tasks_screen.display()
+
         self.getTasks("unassigned")
         self.displayTasks("unassigned")
-        self.assign_tasks_screen.unassigned_list.itemSelectionChanged.connect(self.changeTaskSelection)
-        self.assign_tasks_screen.submit_assign_button.clicked.connect(self.assignTask)
+        # self.assign_tasks_screen.unassigned_list.itemSelectionChanged.connect(self.changeTaskSelection)
+        # self.assign_tasks_screen.submit_assign_button.clicked.connect(self.assignTask)
 
     def assignTask(self):
-        selected_task = self.assign_tasks_screen.unassigned_list.selectedItems()[0]
-        selected_member = self.assign_tasks_screen.members_list.selectedItems()[0]
+        selected_task = self.assign_tasks_screen.unassigned_list.selectedItems()
+        selected_member = self.assign_tasks_screen.members_list.selectedItems()
 
         if not selected_task or not selected_member:
             self.show_popup("Please select a task and a member to assign the task.")
             return
+        selected_task = selected_task[0]
+        selected_member = selected_member[0]
         task_id = selected_task.data(Qt.ItemDataRole.UserRole)[0]["task_id"]
         member = selected_member.text()
         mesg=self.__db.assignTask(task_id, member)
-        print(mesg)
+        # print(mesg)
+
+        if mesg != "OK":
+            self.show_popup(mesg)
+            return
+        self.show_popup(f"Task '{selected_task.text()}' assigned to {member} successfully.")
+        self.__db.createNotification(member, "new_task", "You have been assigned a new task: " + selected_task.text())
+
 
         self.assign_tasks_screen.unassigned_list.takeItem(self.assign_tasks_screen.unassigned_list.row(selected_task))
         self.assign_tasks_screen.members_list.clear()
 
     def changeTaskSelection(self):
+        if self.assign_tasks_screen.unassigned_list.selectedItems() == []:
+            self.assign_tasks_screen.members_list.clear()
+            return
         selected_item = self.assign_tasks_screen.unassigned_list.selectedItems()[0]
         hidden_data = selected_item.data(Qt.ItemDataRole.UserRole)
         # print(hidden_data)
@@ -64,8 +81,10 @@ class ManageTasksClass:
 
     def newCreateTaskScreen(self):
         self.create_task_screen = TaskCreationScreen()
+        self.create_task_screen.manage = self
+        self.create_task_screen.display()
         self.addProjectsToTree()
-        self.create_task_screen.submit_button.clicked.connect(self.submitNewTask)
+        # self.create_task_screen.submit_button.clicked.connect(self.submitNewTask)
     
 
     def submitNewTask(self):
@@ -88,11 +107,16 @@ class ManageTasksClass:
                 self.show_popup("Please enter a task name.")
                 return
             
-            mesg=self.__user.createTask(self.__db,
+            msg=self.__user.createTask(self.__db,
                 member.data(0, Qt.ItemDataRole.UserRole)["team_id"],
                 member.data(0, Qt.ItemDataRole.UserRole)["project_id"],
                 task_name
             )
+            if msg != "OK":
+                self.show_popup(msg)
+                return
+            self.show_popup("Task created successfully.")
+            
             # print(mesg["db_message"])
         
     def addProjectsToTree(self):
@@ -179,7 +203,10 @@ class ManageTasksClass:
 
     def completeTask(self, task_id):
         message = self.__user.completeTask(self.__db, task_id)
-        print(message)
+        if message == "OK":
+            self.show_popup("Task completed successfully.")
+        else:
+            self.show_popup(message)
 
     def createTask(self, team_id, name, assigned_to=None):
         task = self.__user.createTask(self.__db, team_id, name, assigned_to)

@@ -7,8 +7,11 @@ class MainScreen(QMainWindow):
     
     def display(self):
         uic.loadUi("ui/MainScreen.ui", self)
-        self.projectsButton.clicked.connect(self.manage.projects)
-        self.pushButton.clicked.connect(self.manage.progress)
+        self.projectsButton.clicked.connect(self.manage.showProjectsScreen)
+        self.progressButton.clicked.connect(self.manage.progress)
+        self.teamsButton.clicked.connect(self.manage.showTeamsScreen)
         self.salariesButton.clicked.connect(self.manage.salaries)
         self.evaluationButton.clicked.connect(self.manage.evaluation)
+        self.tasksButton.clicked.connect(self.manage.showTasksScreen)
+
         self.show()

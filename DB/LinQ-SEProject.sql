@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 22, 2025 at 05:07 PM
+-- Generation Time: May 27, 2025 at 12:54 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -30,8 +30,18 @@ SET time_zone = "+00:00";
 CREATE TABLE `business` (
   `name` varchar(80) NOT NULL,
   `owner` varchar(80) NOT NULL,
-  `logo` blob NOT NULL
+  `logo` longblob DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `business`
+--
+
+INSERT INTO `business` (`name`, `owner`, `logo`) VALUES
+('123', '123', NULL),
+('asdfasdf', 'asdfasdf', NULL),
+('EEEEEEEEH', 'EEEEEEEEH', NULL),
+('LAAAAA', 'LAAAAA', NULL);
 
 -- --------------------------------------------------------
 
@@ -48,6 +58,10 @@ CREATE TABLE `departments` (
 --
 
 INSERT INTO `departments` (`name`) VALUES
+('123'),
+('asdfasf'),
+('EEEEEEEEH'),
+('LAAAAA'),
 ('Ανθρώπινο Δυναμικό'),
 ('Διοίκηση'),
 ('Έρευνα και Ανάπτυξη'),
@@ -90,6 +104,7 @@ INSERT INTO `employees` (`username`, `department`) VALUES
 ('epanagiotou', 'Ανθρώπινο Δυναμικό'),
 ('gpapadopoulos', 'Πληροφορική'),
 ('ivasileiou', 'Προμήθειες'),
+('janesmith', 'asdfasf'),
 ('kchatzidaki', 'Νομικό Τμήμα'),
 ('kdimetriou', 'Μάρκετινγκ'),
 ('mkonstantinou', 'Λογιστήριο'),
@@ -138,6 +153,7 @@ CREATE TABLE `managers` (
 
 INSERT INTO `managers` (`username`, `department`) VALUES
 ('epanagiotou', 'Ανθρώπινο Δυναμικό'),
+('johndoe', 'asdfasf'),
 ('kdimetriou', 'Μάρκετινγκ'),
 ('santoniou', 'Διοίκηση');
 
@@ -190,11 +206,19 @@ CREATE TABLE `notices` (
 CREATE TABLE `notifications` (
   `id` int(11) NOT NULL,
   `user` varchar(80) NOT NULL,
-  `type` enum('placeholder') NOT NULL,
+  `type` enum('new_task') NOT NULL,
   `body` text NOT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `opened` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `notifications`
+--
+
+INSERT INTO `notifications` (`id`, `user`, `type`, `body`, `created`, `opened`) VALUES
+(1, 'janesmith', 'new_task', 'You have been assigned a new task: SSSS', '2025-05-26 20:30:01', 0),
+(2, 'janesmith', 'new_task', 'You have been assigned a new task: HHH', '2025-05-26 20:33:43', 0);
 
 -- --------------------------------------------------------
 
@@ -220,7 +244,8 @@ CREATE TABLE `projects` (
 INSERT INTO `projects` (`id`, `name`, `description`, `team_id`, `created`, `status`, `completed_at`, `deadline`) VALUES
 (1, 'ERP Εφαρμογή', 'Ανάπτυξη συστήματος ERP για την εταιρεία', 1, '2025-05-22 13:14:27', 'completed', '2025-05-22 16:33:48', '2025-07-15 00:00:00'),
 (2, 'Web Portal Πελατών', 'Δημιουργία διαδραστικού portal για πελάτες', 3, '2025-05-22 13:14:27', 'completed', '2025-05-22 16:33:55', '2025-06-20 00:00:00'),
-(3, 'Σύστημα HR', 'Διαχείριση προσωπικού και αιτήσεων', NULL, '2025-05-22 13:14:27', 'unassigned', NULL, '2025-09-30 00:00:00');
+(3, 'Σύστημα HR', 'Διαχείριση προσωπικού και αιτήσεων', 2, '2025-05-22 13:14:27', 'assigned', NULL, '2025-09-30 00:00:00'),
+(4, 'NEW_project', 'asdasdfasfd', 5, '2025-05-26 20:22:44', 'unassigned', NULL, '2025-05-26 22:21:54');
 
 -- --------------------------------------------------------
 
@@ -272,10 +297,20 @@ INSERT INTO `tags` (`name`) VALUES
 CREATE TABLE `tasks` (
   `id` int(11) NOT NULL,
   `team_id` int(11) NOT NULL,
-  `name` varchar(80) NOT NULL,
-  `assigned_to` varchar(80) NOT NULL,
+  `project` int(11) NOT NULL,
+  `task_name` varchar(80) NOT NULL,
+  `assigned_to` varchar(80) DEFAULT NULL,
   `state` enum('pending','completed') NOT NULL DEFAULT 'pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tasks`
+--
+
+INSERT INTO `tasks` (`id`, `team_id`, `project`, `task_name`, `assigned_to`, `state`) VALUES
+(17, 5, 4, 'NEW_TASK', 'janesmith', 'completed'),
+(18, 5, 4, 'SSSS', 'janesmith', 'completed'),
+(19, 5, 4, 'HHH', 'janesmith', 'completed');
 
 -- --------------------------------------------------------
 
@@ -297,7 +332,8 @@ CREATE TABLE `teams` (
 INSERT INTO `teams` (`id`, `name`, `department`, `leader`) VALUES
 (1, 'Ομάδα Ανάπτυξης ERP', 'Έρευνα και Ανάπτυξη', 'nstathopoulos'),
 (2, 'Ομάδα HR', 'Ανθρώπινο Δυναμικό', 'epanagiotou'),
-(3, 'Ομάδα Portal Πελατών', 'Πωλήσεις', 'anikolaou');
+(3, 'Ομάδα Portal Πελατών', 'Πωλήσεις', 'anikolaou'),
+(5, 'TEAM_A', '123', 'janesmith');
 
 -- --------------------------------------------------------
 
@@ -317,9 +353,10 @@ CREATE TABLE `team_members` (
 INSERT INTO `team_members` (`team_id`, `member`) VALUES
 (1, 'gpapadopoulos'),
 (1, 'nstathopoulos'),
-(2, 'epanagiotou'),
+(2, 'gpapadopoulos'),
 (3, 'kdimetriou'),
-(3, 'mkonstantinou');
+(3, 'mkonstantinou'),
+(5, 'janesmith');
 
 -- --------------------------------------------------------
 
@@ -341,10 +378,8 @@ CREATE TABLE `team_notices` (
 CREATE TABLE `users` (
   `username` varchar(80) NOT NULL,
   `password` varchar(80) NOT NULL,
-  `position` varchar(80) NOT NULL,
   `firstname` varchar(80) NOT NULL,
-  `lastname` varchar(80) NOT NULL,
-  `email` varchar(80) NOT NULL
+  `lastname` varchar(80) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -352,13 +387,19 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`username`, `password`, `firstname`, `lastname`) VALUES
+('123', '123', '123', '123'),
 ('admin', 'root', 'Αναστάσιος', 'Παπαδόπουλος'),
 ('anikolaou', 'root', 'Αντώνης', 'Νικολάου'),
+('asdfasdf', 'asdfasdf', 'asfdasfd', 'asdfasdf'),
+('EEEEEEEEH', 'EEEEEEEEH', 'EEEEEEEEH', 'EEEEEEEEH'),
 ('epanagiotou', 'root', 'Ελένη', 'Παναγιώτου'),
 ('gpapadopoulos', 'root', 'Γιάννης', 'Παπαδόπουλος'),
 ('ivasileiou', 'root', 'Ιωάννα', 'Βασιλείου'),
+('janesmith', 'pass', 'Jane', 'Smith'),
+('johndoe', 'pass', 'John', 'Doe'),
 ('kchatzidaki', 'root', 'Κατερίνα', 'Χατζηδάκη'),
 ('kdimetriou', 'root', 'Κώστας', 'Δημητρίου'),
+('LAAAAA', 'LAAAAA', 'LAAAAA', 'LAAAAA'),
 ('mkonstantinou', 'root', 'Μαρία', 'Κωνσταντίνου'),
 ('nstathopoulos', 'root', 'Νίκος', 'Σταθόπουλος'),
 ('santoniou', 'root', 'Σοφία', 'Αντωνίου'),
@@ -470,7 +511,8 @@ ALTER TABLE `tags`
 ALTER TABLE `tasks`
   ADD PRIMARY KEY (`id`,`team_id`),
   ADD KEY `task_team_id` (`team_id`),
-  ADD KEY `task_assigned_member` (`assigned_to`);
+  ADD KEY `task_assigned_member` (`assigned_to`),
+  ADD KEY `task_project_id` (`project`);
 
 --
 -- Indexes for table `teams`
@@ -532,25 +574,25 @@ ALTER TABLE `notices`
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `projects`
 --
 ALTER TABLE `projects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `teams`
 --
 ALTER TABLE `teams`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables
@@ -627,6 +669,7 @@ ALTER TABLE `project_tags`
 --
 ALTER TABLE `tasks`
   ADD CONSTRAINT `task_assigned_member` FOREIGN KEY (`assigned_to`) REFERENCES `team_members` (`member`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `task_project_id` FOREIGN KEY (`project`) REFERENCES `projects` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `task_team_id` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
