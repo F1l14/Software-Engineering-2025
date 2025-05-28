@@ -1,13 +1,13 @@
 from PyQt6.QtWidgets import QDialog, QHeaderView
 from PyQt6 import uic
 
-class EvaluationFillingScreenManager(QDialog):
+class ManagerEmployeeListScreen(QDialog):
     def __init__(self):
         super().__init__()
         
 
     def display(self):
-        uic.loadUi("src/Screen/Evaluation/ui/ManagerEmployeeListScreen.ui", self)
+        uic.loadUi("ui/5_Evaluation/ManagerEmployeeListScreen.ui", self)
 
         self.employeesTable.setColumnCount(2)
         self.employeesTable.setHorizontalHeaderLabels(["Employee", "Answered"])

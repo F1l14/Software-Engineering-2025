@@ -6,7 +6,7 @@ class ManagePersonalProgressClass:
     def __init__(self, username, first_name, last_name, department):
 
         self.employee = Employee(username)
-        self.evalation = Evaluation()
+        # self.evalation = Evaluation()
         self.employee.firstname = first_name
         self.employee.lastname = last_name
         self.department = department

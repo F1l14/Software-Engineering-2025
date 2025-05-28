@@ -29,4 +29,3 @@ class Session:
             return
         db = DBManager()
         cls._role = db.classifyUser(cls._user)
-        print(f"User {cls._user} classified as {cls._role}")

@@ -1,6 +1,5 @@
 from src.Screen.Evaluation.EvaluationFillingScreenEmployee import EvaluationFillingScreenEmployee
 from src.Screen.Evaluation.ManagerEmployeeListScreen import ManagerEmployeeListScreen
-from src.Manage.ManageWelcomeClass import ManageWelcomeClass
 from PyQt6.QtWidgets import  QRadioButton, QMessageBox
 from src.Class.DBManager import DBManager
 class ManageFormAnswerClass:
