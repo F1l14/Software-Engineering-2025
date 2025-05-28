@@ -1,11 +1,20 @@
 from src.Screen.Evaluation.EvaluationFillingScreenEmployee import EvaluationFillingScreenEmployee
+from src.Screen.Evaluation.ManagerEmployeeListScreen import ManagerEmployeeListScreen
+from src.Manage.ManageWelcomeClass import ManageWelcomeClass
 from PyQt6.QtWidgets import  QRadioButton, QMessageBox
 from src.Class.DBManager import DBManager
 class ManageFormAnswerClass:
     def __init__(self):
-        self.eval_filling_screen = EvaluationFillingScreenEmployee()
-        self.eval_filling_screen.manage = self
-        self.eval_filling_screen.display()
+        db = DBManager()
+        user_type = db.queryUserType("current_user")
+        if user_type == "manager":
+            self.eval_filling_screen = ManagerEmployeeListScreen()
+            self.eval_filling_screen.manage = self
+            self.eval_filling_screen.display("manager")
+        elif user_type == "employee":
+            self.eval_filling_screen = EvaluationFillingScreenEmployee()
+            self.eval_filling_screen.manage = self
+            self.eval_filling_screen.display()
 
     def show_popup(self, title, message):
         msg_box = QMessageBox()
@@ -18,8 +27,8 @@ class ManageFormAnswerClass:
     def cancel(self):
         self.eval_filling_screen.close()
 
-    def submit_answers(self):
-        
+    def submit_answers_manager(self):
+
         # Collect answers from the form
         answers = []
         for i in range(self.eval_filling_screen.formToAnswer.layout().count()):

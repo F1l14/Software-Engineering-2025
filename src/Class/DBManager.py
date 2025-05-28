@@ -335,3 +335,32 @@ class DBManager:
             return "Answers saved successfully"
         finally:
             cursor.close()
+
+    def queryUserType(self, username):
+        cursor = self.conn.cursor()
+        try:
+            
+            if username == "admin":
+                return "admin"
+
+            
+            cursor.execute("SELECT 1 FROM managers WHERE username = %s", (username,))
+            is_manager = cursor.fetchone() is not None
+
+            if is_manager:
+                return "manager"
+
+            
+            cursor.execute("SELECT 1 FROM employees WHERE username = %s", (username,))
+            is_employee = cursor.fetchone() is not None
+
+            if is_employee:
+                return "employee"
+
+            return "unknown"  
+
+        except mysql.connector.Error as err:
+            print(f"Error: {err}")
+            return None
+        finally:
+            cursor.close()

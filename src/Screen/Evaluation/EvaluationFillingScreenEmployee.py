@@ -11,7 +11,7 @@ class EvaluationFillingScreenEmployee(QDialog):
 
         self.submitAnswersButton.setEnabled(False)
         self.cancelButton.clicked.connect(self.manage.cancel)
-        self.submitAnswersButton.clicked.connect(self.manage.submit_answers)
+        self.submitAnswersButton.clicked.connect(self.manage.submit_answers_manager)
 
         db = DBManager()
         questions_data = db.queryEvaluationForm("eval_for_managers")  
