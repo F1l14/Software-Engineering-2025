@@ -347,6 +347,10 @@ class DBManager:
             cursor.execute("SELECT username FROM users INNER JOIN managers ON users.username = managers.username")
             result = cursor.fetchall()
             return [row[0] for row in result]
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
 
     
     # Use Case 6:
