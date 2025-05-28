@@ -117,6 +117,9 @@ class ManageSetupClass:
             self.user_import_screen.file_label.clear()
 
     def processUsers(self, filename):
+        if not filename:
+            self.show_popup("No users file selected")
+            return
         try:
             with open(filename, 'r', encoding='utf-8') as f:
                 
