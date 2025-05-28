@@ -6,6 +6,7 @@ from src.Manage.Salaries.ManageEmployeeListClass import ManageEmployeeListClass
 from src.Manage.Evaluation.ManageEvalFormClass import ManageEvalFormClass
 from src.Manage.Evaluation.ManageFormAnswerClass import ManageFormAnswerClass
 from src.Class.DBManager import DBManager
+from src.Class.Session import Session
 from src.Manage.Tasks.ManageTasksClass import ManageTasksClass
 
 class ManageMainClass:
@@ -27,14 +28,15 @@ class ManageMainClass:
         ManageEmployeeListClass()        
 
     def evaluation(self):
+        user = Session.getUser()
         db = DBManager()
-        user_type = db.queryUserType("current_user")
+        user_type = db.queryUserType(user)
         if user_type == "admin":
             ManageEvalFormClass()
         else:
             ManageFormAnswerClass()
 
-        ManageEmployeeListClass()
+    
     
     def showTasksScreen(self):
         ManageTasksClass()
