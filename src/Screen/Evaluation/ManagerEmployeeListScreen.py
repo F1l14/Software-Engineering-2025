@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QDialog, QHeaderView
 from PyQt6 import uic
 
-class EvaluationFillingScreenManager(QDialog):
+class ManagerEmployeeListScreen(QDialog):
     def __init__(self):
         super().__init__()
         

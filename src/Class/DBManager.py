@@ -327,6 +327,10 @@ class DBManager:
             cursor.execute("SELECT username FROM users INNER JOIN managers ON users.username = managers.username")
             result = cursor.fetchall()
             return [row[0] for row in result]
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
 
     
     # Use Case 6:
@@ -353,14 +357,15 @@ class DBManager:
         try:
                 cursor.execute("""
                     SELECT 
-                        f.id AS form_id,
+                        f.eval_id AS form_id,
+                        q.question_id AS question_id,
                         q.question_text,
                         q.answers
                     FROM evaluation_forms f
-                    JOIN evaluation_questions q ON f.id = q.eval_id
+                    JOIN evaluation_questions q ON f.eval_id = q.eval_id
                     WHERE f.type = %s
-                    AND f.id = (
-                        SELECT MAX(id)
+                    AND f.eval_id = (
+                        SELECT MAX(eval_id)
                         FROM evaluation_forms
                         WHERE type = %s
                     )
@@ -370,16 +375,26 @@ class DBManager:
             return f"Error: {err}"
         finally:
             cursor.close()
-    
-    def saveEvaluationAnswers(self, eval_id, username, answers):
+
+    def saveEvaluationAnswer(self, eval_id, username, question_id, answer):
         cursor = self.conn.cursor()
         try:
-            cursor.execute("INSERT INTO evaluation_answers (eval_id, username, answers) VALUES (%s, %s, %s)", (eval_id, username, ','.join(answers)))
+
+            # Find users manager of the employee based on his department
+            cursor.execute("""
+                SELECT m.username
+                FROM managers m
+                INNER JOIN employees e ON m.department = e.department
+                WHERE e.username = %s
+            """, (username,))
+            manager = cursor.fetchone()
+
+            cursor.execute("INSERT INTO evaluation_answers (eval_id, username, eval_for, question_id, answers) VALUES (%s, %s, %s, %s, %s)", (eval_id, username, manager, question_id, answer))
             self.conn.commit()
         except mysql.connector.Error as err:
             return f"Error: {err}"
         else:
-            return "Answers saved successfully"
+            return "Answer saved successfully"
         finally:
             cursor.close()
 
