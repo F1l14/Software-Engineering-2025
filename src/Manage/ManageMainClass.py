@@ -3,6 +3,9 @@ from src.Manage.Progress.ManageProgressClass import ManageProgressClass
 from src.Manage.Team_Space.ManageTeamListClass import ManageTeamListClass
 from src.Manage.Projects.ManageProjectClass import ManageProjectClass
 from src.Manage.Salaries.ManageEmployeeListClass import ManageEmployeeListClass
+from src.Manage.Evaluation.ManageEvalFormClass import ManageEvalFormClass
+from src.Manage.Evaluation.ManageFormAnswerClass import ManageFormAnswerClass
+from src.Class.DBManager import DBManager
 from src.Manage.Tasks.ManageTasksClass import ManageTasksClass
 
 class ManageMainClass:
@@ -21,6 +24,16 @@ class ManageMainClass:
         ManageProjectClass()
 
     def salaries(self):
+        ManageEmployeeListClass()        
+
+    def evaluation(self):
+        db = DBManager()
+        user_type = db.queryUserType("current_user")
+        if user_type == "admin":
+            ManageEvalFormClass()
+        else:
+            ManageFormAnswerClass()
+
         ManageEmployeeListClass()
     
     def showTasksScreen(self):

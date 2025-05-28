@@ -287,10 +287,47 @@ class DBManager:
                 "projects": project_progress,
                 "tasks": task_progress
             }
+        
         except mysql.connector.Error as err:
             return f"Error: {err}"
         finally:
             cursor.close()
+
+    #Use Case 5:
+    def saveEvaluationForm(self, type, start_date, end_date):
+            cursor = self.conn.cursor()
+
+            try:
+                cursor.execute("INSERT INTO evaluation_forms (type, start_date, end_date) VALUES (%s, %s, %s)", (type, start_date, end_date))
+                self.conn.commit()
+            except mysql.connector.Error as err:
+                return f"Error: {err}"
+            else:
+                eval_id = cursor.lastrowid
+                return "Evaluation saved successfully", eval_id
+            finally:
+                cursor.close()
+
+    def saveQuestion(self, eval_id, question_text, answers):
+            cursor = self.conn.cursor()
+
+            try:
+                cursor.execute("INSERT INTO evaluation_questions (eval_id, question_text, answers) VALUES (%s, %s, %s)", (eval_id, question_text, ','.join(answers)))
+                self.conn.commit()
+            except mysql.connector.Error as err:
+                return f"Error: {err}"
+            else:
+                return "Question saved successfully"
+            finally:
+                cursor.close()
+    
+    def querryAllManagers(self):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("SELECT username FROM users INNER JOIN managers ON users.username = managers.username")
+            result = cursor.fetchall()
+            return [row[0] for row in result]
+
     
     # Use Case 6:
     def queryTeams(self, username):
@@ -310,6 +347,71 @@ class DBManager:
             return f"Error: {err}"
         finally:
             cursor.close()
+
+    def queryEvaluationForm(self, type):
+        cursor = self.conn.cursor()
+        try:
+                cursor.execute("""
+                    SELECT 
+                        f.id AS form_id,
+                        q.question_text,
+                        q.answers
+                    FROM evaluation_forms f
+                    JOIN evaluation_questions q ON f.id = q.eval_id
+                    WHERE f.type = %s
+                    AND f.id = (
+                        SELECT MAX(id)
+                        FROM evaluation_forms
+                        WHERE type = %s
+                    )
+                """, (type,type))
+                return cursor.fetchall()
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+    
+    def saveEvaluationAnswers(self, eval_id, username, answers):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("INSERT INTO evaluation_answers (eval_id, username, answers) VALUES (%s, %s, %s)", (eval_id, username, ','.join(answers)))
+            self.conn.commit()
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        else:
+            return "Answers saved successfully"
+        finally:
+            cursor.close()
+
+    def queryUserType(self, username):
+        cursor = self.conn.cursor()
+        try:
+            
+            if username == "admin":
+                return "admin"
+
+            
+            cursor.execute("SELECT 1 FROM managers WHERE username = %s", (username,))
+            is_manager = cursor.fetchone() is not None
+
+            if is_manager:
+                return "manager"
+
+            
+            cursor.execute("SELECT 1 FROM employees WHERE username = %s", (username,))
+            is_employee = cursor.fetchone() is not None
+
+            if is_employee:
+                return "employee"
+
+            return "unknown"  
+
+        except mysql.connector.Error as err:
+            print(f"Error: {err}")
+            return None
+        finally:
+            cursor.close()
+
             
     def queryTasksOfTeam(self, team_id):
         cursor = self.conn.cursor()
