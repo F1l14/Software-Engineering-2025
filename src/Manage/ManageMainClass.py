@@ -4,6 +4,8 @@ from src.Manage.Team_Space.ManageTeamListClass import ManageTeamListClass
 from src.Manage.Projects.ManageProjectClass import ManageProjectClass
 from src.Manage.Salaries.ManageEmployeeListClass import ManageEmployeeListClass
 from src.Manage.Tasks.ManageTasksClass import ManageTasksClass
+from src.Class.DBManager import DBManager
+from src.Class.Session import Session
 
 class ManageMainClass:
     def __init__(self):
@@ -18,7 +20,10 @@ class ManageMainClass:
         ManageTeamListClass()
         
     def showProjectsScreen(self):
-        ManageProjectClass()
+        user = Session.getUser()
+        db = DBManager()
+        user_type = db.queryUserType(user)
+        ManageProjectClass(user_type)
 
     def showEmployeeListScreen(self):
         ManageEmployeeListClass()        
