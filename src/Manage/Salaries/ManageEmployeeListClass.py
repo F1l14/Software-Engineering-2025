@@ -15,3 +15,8 @@ class ManageEmployeeListClass:
     
     def showBonus(self):
         ManageBonusClass()
+
+    def editList(self, updated_data):
+        db = DBManager()
+        message = db.updateSalariesList(updated_data)
+        print(message)
