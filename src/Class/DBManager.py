@@ -82,7 +82,7 @@ class DBManager:
             cursor.close()
     
 
-    def createTeam(self, name, department, leader):
+    """def createTeam(self, name, department, leader):
         cursor = self.conn.cursor()
         try:
             cursor.execute("INSERT INTO teams (name, department, leader) VALUES (%s, %s, %s)", (name, department, leader))
@@ -93,7 +93,7 @@ class DBManager:
         else:
             return "Team created successfully"
         finally:
-            cursor.close()
+            cursor.close()"""
 
     def newMember(self, team_id, member):
         cursor = self.conn.cursor()
@@ -216,7 +216,54 @@ class DBManager:
             return f"Error: {err}"
         finally:
             cursor.close()  
+
+    def queryMyProjects(self, username):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("""
+                SELECT projects.*
+                FROM projects
+                LEFT JOIN project_departments ON projects.id = project_departments.project_id
+                LEFT JOIN departments ON departments.name = project_departments.department_name
+                LEFT JOIN managers ON departments.name = managers.department
+                WHERE managers.username = %s
+            """, (username,))
             
+            result = cursor.fetchall()
+            return result
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()  
+
+    def queryProjectTeams(self, project_data, manager):
+        project_id = project_data['id']  
+
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("""
+                SELECT DISTINCT teams.*
+                FROM teams
+                LEFT JOIN project_departments 
+                ON TRIM(LOWER(teams.department)) = TRIM(LOWER(project_departments.department_name))
+                WHERE project_departments.project_id = %s
+                OR TRIM(LOWER(teams.department)) = (
+                    SELECT TRIM(LOWER(department))
+                    FROM managers
+                    WHERE username = %s
+                );
+            """, (project_id, manager))
+            
+            result = cursor.fetchall()
+            print("Teams found:", result)
+            return result
+        except mysql.connector.Error as err:
+            print("Error:", err)
+            return []
+        finally:
+            cursor.close()
+
+ 
     def queryAllDepartments(self):
         cursor = self.conn.cursor()
         try:
@@ -227,6 +274,27 @@ class DBManager:
             return f"Error: {err}"
         finally:
             cursor.close() 
+
+    def queryAvailableEmployees(self):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("""
+                SELECT e.username
+                FROM employees e
+                WHERE e.username NOT IN (
+                    SELECT member FROM team_members
+                )
+                AND e.username NOT IN (
+                    SELECT username FROM managers
+                )
+            """)
+            result = cursor.fetchall()
+            return result
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+ 
 
     def createProject(self, selected_names, projectDetails):
         cursor = self.conn.cursor()
@@ -251,6 +319,39 @@ class DBManager:
             return "Project created and departments assigned successfully"
         finally:
             cursor.close()
+
+    def createTeam(self, selected_members, selected_leader, name, username):
+        cursor = self.conn.cursor()
+        try:
+      
+            cursor.execute("SELECT department FROM managers WHERE username = %s", (username,))
+            result = cursor.fetchone()
+            if not result:
+                return "Manager not found."
+            department = result[0]
+
+            cursor.execute(
+                "INSERT INTO teams (name, department, leader) VALUES (%s, %s, %s)",
+                (name, department, selected_leader)
+            )
+
+            team_id = cursor.lastrowid
+
+            for member in selected_members:
+                cursor.execute(
+                    "INSERT INTO team_members (team_id, member) VALUES (%s, %s)",
+                    (team_id, member)
+                )
+
+            self.conn.commit()
+        except mysql.connector.Error as err:
+            self.conn.rollback()
+            return f"Error: {err}"
+        else:
+            return "Team created successfully"
+        finally:
+            cursor.close()
+
 
     def updateProject(self, updated_data):
         cursor = self.conn.cursor()
@@ -365,12 +466,115 @@ class DBManager:
         cursor = self.conn.cursor()
         try:
             cursor.execute("SELECT state FROM bonus_state")
-            result = cursor.fetchall()
-            return result
+            result = cursor.fetchone()  # Use fetchone instead of fetchall
+            return result[0] if result else None
         except mysql.connector.Error as err:
             return f"Error: {err}"
         finally:
             cursor.close()
+
+
+    def createBonusDetails(self, badget_numbers, perc1, perc2):
+        cursor = self.conn.cursor(dictionary=True)
+        try:
+            
+            for i in range(len(badget_numbers)):
+                cursor.execute(
+                    "INSERT INTO bonus_setup (category_value, manager_bonus_percentage, employee_bonus_percentage) VALUES (%s, %s, %s)",
+                    (badget_numbers[i], perc1[i], perc2[i])
+                )
+
+            cursor.execute("UPDATE bonus_state SET state = 'active'")
+
+            self.conn.commit()
+        except mysql.connector.Error as err:
+            self.conn.rollback()
+            return f"Error: {err}"
+        else:
+            return "Bonus setup saved and activated successfully"
+        finally:
+            cursor.close()
+
+    def queryBonusBoardDetails(self):
+        cursor = self.conn.cursor(dictionary=True)
+        try:
+            # 1. Load bonus setup (ordered by threshold)
+            cursor.execute("SELECT category_value, manager_bonus_percentage, employee_bonus_percentage FROM bonus_setup ORDER BY category_value ASC")
+            bonus_setup = cursor.fetchall()
+
+            # 2. Get project value for each department
+            cursor.execute("SELECT pd.department_name, SUM(p.value) AS total_value FROM project_departments pd JOIN projects p ON pd.project_id = p.id GROUP BY pd.department_name")
+            dept_project_values = {row["department_name"]: row["total_value"] for row in cursor.fetchall()}
+
+            # 3. Load employees
+            cursor.execute("SELECT username, department, salary FROM employees")
+            employees = cursor.fetchall()
+
+            # 4. Load managers
+            cursor.execute("SELECT username FROM managers")
+            manager_usernames = {row["username"] for row in cursor.fetchall()}
+
+            bonus_board_results = []
+
+            # 5. Calculate bonuses
+            for emp in employees:
+                username = emp["username"]
+                department = emp["department"]
+                salary = emp["salary"]
+                role = "manager" if username in manager_usernames else "employee"
+                project_value = dept_project_values.get(department, 0)
+
+                # Determine bonus percentage from bonus_setup
+                bonus_percentage = 0.0
+                for setup in bonus_setup:
+                    if project_value < setup["category_value"]:
+                        bonus_percentage = setup["manager_bonus_percentage"] if role == "manager" else setup["employee_bonus_percentage"]
+                        break
+                else:
+                    # Use last row if value exceeds all thresholds
+                    last = bonus_setup[-1]
+                    bonus_percentage = last["manager_bonus_percentage"] if role == "manager" else last["employee_bonus_percentage"]
+
+                bonus_amount = round(salary * (bonus_percentage / 100.0), 2)
+
+                bonus_board_results.append({
+                    "username": username,
+                    "role": role,
+                    "salary": salary,
+                    "bonus": bonus_amount
+                })
+
+            return (bonus_board_results, bonus_setup)
+
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+
+    def updateSalariesList(self, updated_data):
+        try:
+            cursor = self.conn.cursor()
+
+            update_query = "UPDATE employees SET salary = %s WHERE username = %s"
+
+            # Convert to (salary, username) tuples for query execution
+            update_values = [(salary, username) for username, salary in updated_data]
+
+            cursor.executemany(update_query, update_values)
+            self.conn.commit()
+
+            print(f"{cursor.rowcount} salaries updated successfully.")
+            return "Salaries updated successfully."
+
+        except mysql.connector.Error as err:
+            print(f"Error: {err}")
+            return f"Database error: {err}"
+
+        finally:
+            cursor.close()
+
+        
+
 
     ###       
     def queryTasksOfTeam(self, team_id):
@@ -397,3 +601,33 @@ class DBManager:
     
     def queryNoticeboard(self, team_space_id):
         pass
+
+
+    def queryUserType(self, username):
+        cursor = self.conn.cursor()
+        try:
+
+            if username == "admin":
+                return "admin"
+
+
+            cursor.execute("SELECT 1 FROM managers WHERE username = %s", (username,))
+            is_manager = cursor.fetchone() is not None
+
+            if is_manager:
+                return "manager"
+
+
+            cursor.execute("SELECT 1 FROM employees WHERE username = %s", (username,))
+            is_employee = cursor.fetchone() is not None
+
+            if is_employee:
+                return "employee"
+
+            return "unknown"
+
+        except mysql.connector.Error as err:
+            print(f"Error: {err}")
+            return None
+        finally:
+            cursor.close()   
