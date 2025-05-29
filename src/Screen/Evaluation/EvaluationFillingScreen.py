@@ -1,20 +1,25 @@
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QFrame, QLabel, QRadioButton, QButtonGroup
 from PyQt6 import uic
 from src.Class.DBManager import DBManager
+from src.Class.Session import Session
 
-class EvaluationFillingScreenEmployee(QDialog):
-    def __init__(self):
+class EvaluationFillingScreen(QDialog):
+    def __init__(self, evaluation_for:str):
         super().__init__()
+        self.evaluation_for = evaluation_for
 
     def display(self):
         uic.loadUi("ui/5_Evaluation/EvaluationFillingScreenEmployee.ui", self)
 
         #self.submitAnswersButton.setEnabled(False)
         self.cancelButton.clicked.connect(self.manage.cancel)
-        self.submitAnswersButton.clicked.connect(self.manage.submit_answers_for_manager)
+        self.submitAnswersButton.clicked.connect(self.manage.submit_answers)
 
         db = DBManager()
-        self.questions_data = db.queryEvaluationForm("eval_for_managers")  
+        if Session.getRole() == "employee":
+            self.questions_data = db.queryEvaluationForm("eval_for_managers")  
+        elif Session.getRole() == "manager":
+            self.questions_data = db.queryEvaluationForm("eval_for_employees")
         self.form_id = self.questions_data[0][0] if self.questions_data else None
         if isinstance(self.questions_data, str):
             self.manage.show_popup("Error", self.questions_data)

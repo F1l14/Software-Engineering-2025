@@ -1,6 +1,7 @@
 from PyQt6.QtWidgets import QMainWindow
 from PyQt6 import uic
 from src.Class.Session import Session
+from src.Class.DBManager import DBManager
 
 class MainScreen(QMainWindow):
     def __init__(self):
@@ -20,5 +21,14 @@ class MainScreen(QMainWindow):
         
         if Session.getRole() == "employee":
             self.projectsButton.setVisible(False)
-
+        if Session.getRole() == "admin":
+            self.evaluationButton.setEnabled(True)
+        else: 
+            if DBManager().isEvaluationActive(Session.getRole()):
+                self.evaluationButton.setEnabled(True)
+            else:
+                self.evaluationButton.setEnabled(False)
+                self.evaluationButton.setToolTip("No evaluation period is currently active.")
         self.show()
+    
+    

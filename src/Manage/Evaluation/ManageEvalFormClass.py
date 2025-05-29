@@ -6,6 +6,7 @@ from src.Class.DBManager import DBManager
 from src.Class.Evaluation import Evaluation
 from src.Class.EvaluationQuestion import EvaluationQuestion
 from PyQt6.QtWidgets import QTableWidgetItem,QMessageBox
+from datetime import datetime
 class ManageEvalFormClass:
     def __init__(self):
         self.eval_form_screen = EvaluationFormatScreen()
@@ -117,7 +118,12 @@ class ManageEvalFormClass:
         db = DBManager()
         start_date = self.eval_check_screen.startDateTime.dateTime().toPyDateTime()
         end_date = self.eval_check_screen.endDateTime.dateTime().toPyDateTime()
-
+        if start_date >= end_date:
+            self.show_popup("Error", "Publish date must be before end date.")
+            return
+        '''elif start_date < datetime.now():
+            self.show_popup("Error", "Publish date must be in the future.")
+            return'''
         if self.eval_edit_screen.eval_type_text == "Managers":
             _, eval_id  = db.saveEvaluationForm('eval_for_managers', start_date, end_date)
             eval_form = Evaluation('eval_for_managers', start_date, end_date)
@@ -136,7 +142,7 @@ class ManageEvalFormClass:
                 db.createNotification(username, "Evaluation", "A new evaluation form has been published. Please check your evaluations section.")
         elif self.eval_edit_screen.eval_type_text == "Employees":
             __, eval_id = db.saveEvaluationForm('eval_for_employees', start_date, end_date)
-
+            eval_form = Evaluation('eval_for_employees', start_date, end_date)
             row_count = self.eval_edit_screen.questionsTable.rowCount()
             for row in range(row_count):
                 question_item = self.eval_edit_screen.questionsTable.item(row, 0)

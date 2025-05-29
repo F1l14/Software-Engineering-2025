@@ -341,7 +341,7 @@ class DBManager:
             finally:
                 cursor.close()
     
-    def querryAllManagers(self):
+    def queryAllManagers(self):
         cursor = self.conn.cursor()
         try:
             cursor.execute("SELECT username FROM users INNER JOIN managers ON users.username = managers.username")
@@ -396,20 +396,10 @@ class DBManager:
         finally:
             cursor.close()
 
-    def saveEvaluationAnswer(self, eval_id, username, question_id, answer):
+    def saveEvaluationAnswer(self, eval_id, username, eval_for, question_id, answer):
         cursor = self.conn.cursor()
         try:
-
-            # Find users manager of the employee based on his department
-            cursor.execute("""
-                SELECT m.username
-                FROM managers m
-                INNER JOIN employees e ON m.department = e.department
-                WHERE e.username = %s
-            """, (username,))
-            manager = cursor.fetchone()
-
-            cursor.execute("INSERT INTO evaluation_answers (eval_id, username, eval_for, question_id, answers) VALUES (%s, %s, %s, %s, %s)", (eval_id, username, manager, question_id, answer))
+            cursor.execute("INSERT INTO evaluation_answers (eval_id, username, eval_for, question_id, answers) VALUES (%s, %s, %s, %s, %s)", (eval_id, username, eval_for, question_id, answer))
             self.conn.commit()
         except mysql.connector.Error as err:
             return f"Error: {err}"
@@ -417,37 +407,82 @@ class DBManager:
             return "Answer saved successfully"
         finally:
             cursor.close()
-
-    def queryUserType(self, username):
+            
+    def queryManagerEmployees(self, manager_username):
         cursor = self.conn.cursor()
         try:
-            
-            if username == "admin":
-                return "admin"
-
-            
-            cursor.execute("SELECT 1 FROM managers WHERE username = %s", (username,))
-            is_manager = cursor.fetchone() is not None
-
-            if is_manager:
-                return "manager"
-
-            
-            cursor.execute("SELECT 1 FROM employees WHERE username = %s", (username,))
-            is_employee = cursor.fetchone() is not None
-
-            if is_employee:
-                return "employee"
-
-            return "unknown"  
-
+            cursor.execute("""
+                SELECT e.username, u.firstname, u.lastname
+                FROM employees e
+                INNER JOIN users u ON e.username = u.username
+                INNER JOIN managers m ON e.department = m.department
+                WHERE m.username = %s
+            """, (manager_username,))
+            result = cursor.fetchall()
+            return result
         except mysql.connector.Error as err:
-            print(f"Error: {err}")
-            return None
+            return f"Error: {err}"
         finally:
             cursor.close()
 
+    def queryManager(self, username):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("SELECT m.username FROM managers m INNER JOIN employees e ON m.department = e.department WHERE e.username = %s", (username,))
+            result = cursor.fetchone()
+            if result:
+                return result[0]
+            else:
+                return None
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+
+    def getEvaluationEndDate(self):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("SELECT end_date FROM evaluation_forms ORDER BY eval_id DESC LIMIT 1")
+            result = cursor.fetchone()
+            if result:
+                return result[0]
+            else:
+                return None
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+
+    def isEvaluationActive(self, user_type):
+        cursor = self.conn.cursor()
+        try:
+            eval_type = 'eval_for_employees' if user_type == 'manager' else 'eval_for_managers'
+
+            cursor.execute("""
+                SELECT COUNT(*) FROM evaluation_forms 
+                WHERE type = %s AND NOW() BETWEEN start_date AND end_date
+            """, (eval_type,))
+            result = cursor.fetchone()
+            if result[0] > 0:
+                return True
+            else:
+                return False
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
             
+    def employeeHasAnswered(self, username):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("SELECT COUNT(*) FROM evaluation_answers WHERE username = %s", (username,))
+            result = cursor.fetchone()
+            return result[0] > 0
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+
     def queryTasksOfTeam(self, team_id):
         cursor = self.conn.cursor()
         try:
