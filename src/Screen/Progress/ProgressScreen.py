@@ -1,5 +1,6 @@
 from PyQt6.QtWidgets import QDialog, QTableWidgetItem, QTableWidget, QLineEdit, QPushButton
 from PyQt6 import uic
+from matplotlib.ticker import MaxNLocator
 import matplotlib.pyplot as plt
 
 
@@ -32,6 +33,7 @@ class ProgressScreen(QDialog):
 
         plt.figure(figsize=(8, 5))
         plt.bar(months, project_counts, color='skyblue')
+        plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
         plt.xlabel('Month')
         plt.ylabel('Completed Projects')
         plt.title('Number of Completed Projects per Month')
