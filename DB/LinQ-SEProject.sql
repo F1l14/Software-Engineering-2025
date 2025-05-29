@@ -140,6 +140,19 @@ CREATE TABLE `events` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `bonus_setup`
+--
+
+CREATE TABLE `bonus_setup` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `category_value` FLOAT NOT NULL,  
+  `manager_bonus_percentage` FLOAT NOT NULL,  
+  `employee_bonus_percentage` FLOAT NOT NULL 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `managers`
 --
 
@@ -154,7 +167,6 @@ CREATE TABLE `managers` (
 
 INSERT INTO `managers` (`username`, `department`) VALUES
 ('epanagiotou', 'Ανθρώπινο Δυναμικό'),
-('johndoe', 'asdfasf'),
 ('kdimetriou', 'Μάρκετινγκ'),
 ('santoniou', 'Διοίκηση');
 
@@ -267,6 +279,9 @@ CREATE TABLE `project_departments` (
 INSERT INTO `project_departments` (`project_id`, `department_name`) VALUES
 ('2', 'Διοίκηση'),
 ('1', 'Διοίκηση'),
+('3', 'Ανθρώπινο Δυναμικό'),
+('3', 'Έρευνα και Ανάπτυξη'),
+('2', 'Ανθρώπινο Δυναμικό'),
 ('2', 'Πληροφορική');
 
 -- --------------------------------------------------------
