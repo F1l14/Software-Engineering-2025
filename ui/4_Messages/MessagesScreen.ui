@@ -27,7 +27,7 @@
      <string>ΣΥΝΟΜΙΛΙΕΣ</string>
     </property>
    </widget>
-   <widget class="QListWidget" name="messagesListWidget">
+   <widget class="QListWidget" name="messagesList">
     <property name="geometry">
      <rect>
       <x>30</x>

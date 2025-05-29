@@ -14,16 +14,15 @@ class MessagesScreen(QMainWindow):
         self.newChatButton = self.findChild(QPushButton, "newChatButton")
         self.messagesLabel = self.findChild(QLabel, "messagesLabel")
 
-        self.newChatButton.clicked.connect(self.handleNewChat)
+        self.newChatButton.clicked.connect(self.newChat)
 
         # Δημιουργεί δυναμική λίστα συνομιλιών
         self.showMessages()
 
-        self.exec()
+        self.show()
 
-    def handleNewChat(self): #newChatSelect(self)
-        print("Ο χρήστης πάτησε 'Νέα Συνομιλία'")
-        # Εδώ μπορεί να ανοίξει νέο παράθυρο για δημιουργία συνομιλίας
+    def newChat(self):
+        self.manage.newChat()
 
     def showMessages(self):
         messages = self.manage.getMessages()  #σύνδεση με DBManager
@@ -31,7 +30,6 @@ class MessagesScreen(QMainWindow):
         self.messagesList.clear()
 
         for chat in messages:
-            for chat in messages:
-                other_user = chat["user_2"] if chat["user_1"] == current_user else chat["user_1"]
-                display_name = f"{chat['name']} ({other_user})"
-                self.messagesList.addItem(display_name)
+            other_user = chat["user_2"] if chat["user_1"] == current_user else chat["user_1"]
+            display_name = f"{chat['name']} ({other_user})"
+            self.messagesList.addItem(display_name)

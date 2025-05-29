@@ -321,6 +321,25 @@ class DBManager:
         finally:
             cursor.close()
 
+    def queryReceiver(self, searchText):
+        cursor = self.conn.cursor(dictionary=True)  #για να επιστρέψει λεξικό
+        try:
+            search_pattern = f"%{searchText}%"
+            query = """
+                SELECT username, firstname, lastname 
+                FROM users 
+                WHERE username LIKE %s OR firstname LIKE %s OR lastname LIKE %s
+            """
+            cursor.execute(query, (search_pattern, search_pattern, search_pattern))
+            results = cursor.fetchall()
+            return results  # Επιστρέφει λίστα από λεξικά
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+
+
+
 
     #-------------------- Use Case 6-----------------
     def queryTeams(self, username):

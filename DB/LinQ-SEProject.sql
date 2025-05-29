@@ -168,8 +168,9 @@ CREATE TABLE `messages` (
   `history_id` int(11) NOT NULL,
   `username` varchar(80) NOT NULL,
   `from_user` varchar(80) NOT NULL,
-  `to_user` varchar(80) NOT NULL
+  `to_user` varchar(80) NOT NULL 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 
 -- --------------------------------------------------------
 
@@ -182,9 +183,21 @@ CREATE TABLE `messages_history` (
   `name` varchar(80) NOT NULL,
   `user_1` varchar(80) NOT NULL,
   `user_2` varchar(80) NOT NULL,
-  `history` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`history`))
+  `history` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL 
+  CHECK (json_valid(`history`))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
  NOT NULL CHECK (JSON_VALID(`history`);
+
+INSERT INTO messages_history (name, user_1, user_2, history) VALUES
+('Συνομιλία Jane και John', 'janesmith', 'johndoe', JSON_ARRAY(
+    JSON_OBJECT('from', 'janesmith', 'to', 'johndoe', 'message', 'Γεια σου John!', 'timestamp', '2025-05-26 12:00:00'),
+    JSON_OBJECT('from', 'johndoe', 'to', 'janesmith', 'message', 'Γεια σου Jane!', 'timestamp', '2025-05-26 12:01:00')
+)),
+('Συνομιλία Jane και Μαρία', 'janesmith', 'mkonstantinou', JSON_ARRAY(
+    JSON_OBJECT('from', 'janesmith', 'to', 'mkonstantinou', 'message', 'Καλημέρα!', 'timestamp', '2025-05-26 10:00:00'),
+    JSON_OBJECT('from', 'mkonstantinou', 'to', 'janesmith', 'message', 'Καλημέρα και σε σένα!', 'timestamp', '2025-05-26 10:01:00')
+));
+
 
 -- --------------------------------------------------------
 
