@@ -9,7 +9,7 @@ class EvaluationFillingScreen(QDialog):
         self.evaluation_for = evaluation_for
 
     def display(self):
-        uic.loadUi("ui/5_Evaluation/EvaluationFillingScreenEmployee.ui", self)
+        uic.loadUi("ui/5_Evaluation/EvaluationFillingScreen.ui", self)
 
         #self.submitAnswersButton.setEnabled(False)
         self.cancelButton.clicked.connect(self.manage.cancel)
