@@ -79,6 +79,9 @@ color: rgb(0, 0, 0);</string>
      <height>25</height>
     </rect>
    </property>
+   <property name="displayFormat">
+    <string>d MMM yyyy HH:mm</string>
+   </property>
   </widget>
   <widget class="QDateTimeEdit" name="endDateTime">
    <property name="geometry">
@@ -88,6 +91,12 @@ color: rgb(0, 0, 0);</string>
      <width>194</width>
      <height>25</height>
     </rect>
+   </property>
+   <property name="correctionMode">
+    <enum>QAbstractSpinBox::CorrectionMode::CorrectToNearestValue</enum>
+   </property>
+   <property name="displayFormat">
+    <string>d MMM yyyy HH:mm</string>
    </property>
   </widget>
   <widget class="QPushButton" name="editFormButton">
@@ -125,8 +134,8 @@ color: rgb(0, 0, 0);</string>
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>699</width>
-      <height>449</height>
+      <width>701</width>
+      <height>451</height>
      </rect>
     </property>
    </widget>

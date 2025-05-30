@@ -65,9 +65,9 @@ class ManageFormAnswerClass:
                     all_success = False
 
         if all_success:
-            self.eval_manager_list_screen.close()
             self.show_popup("Success", "All answers submitted successfully.")
-            self.eval_manager_list_screen.display()
+            if Session.getRole() == "manager":
+                self.eval_manager_list_screen.loadTable()
         else:
             self.show_popup("Error", result)
 

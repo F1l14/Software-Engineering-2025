@@ -7,6 +7,7 @@ class EvaluationFillingScreen(QDialog):
     def __init__(self, evaluation_for:str):
         super().__init__()
         self.evaluation_for = evaluation_for
+        print(f"EvaluationFillingScreen initialized for {evaluation_for}")
 
     def display(self):
         uic.loadUi("ui/5_Evaluation/EvaluationFillingScreen.ui", self)

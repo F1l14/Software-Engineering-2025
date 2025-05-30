@@ -69,7 +69,7 @@ class ManageLeavesClass:
             self.db.createNotification(
                 employee, 
                 "Leave Request Answer",
-                f"Your leave request from {start_date} to {end_date} has been accepted by {self.user.name}."
+                f"Your leave request from {start_date} to {end_date} has been accepted by {self.user}."
             )
             Leave(employee, start_date, end_date)
             self.show_popup("Success", "Leave request accepted successfully.")

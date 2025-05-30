@@ -21,13 +21,18 @@ class ManagerEmployeeListScreen(QDialog):
 
         end_date = DBManager().getEvaluationEndDate()
         self.endDateLabel.setText(end_date.strftime("%d/%m/%Y %H:%M"))
+        self.loadTable()
+        self.exec()
         
-
+    def loadTable(self):
         db = DBManager()
         self.employeesList = db.queryManagerEmployees(self.manage.user)
         if isinstance(self.employeesList, list) and not self.employeesList:
             self.manage.show_popup("Error", "No employees found for this manager.")
             return
+
+        self.employeesTable.setRowCount(0)
+        self.employeesTable.clearContents()
         
         for employee in self.employeesList:
             self.employeesTable.insertRow(self.employeesTable.rowCount())
@@ -40,6 +45,5 @@ class ManagerEmployeeListScreen(QDialog):
             if not result:
                 self.employeesTable.itemClicked.connect(self.manage.employee_evaluation_show)
 
-        self.exec()
     
     
