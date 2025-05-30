@@ -1,4 +1,6 @@
 import mysql.connector
+import json
+
 
 class DBManager:
     def __init__(self, host="localhost", user="root", password="", database="LinQ-SEProject"):
@@ -29,6 +31,7 @@ class DBManager:
             return f"Error: {err}"
         finally:
             cursor.close()
+
 
     def  close(self):
         self.conn.close()
@@ -101,7 +104,7 @@ class DBManager:
             return "OK"
         finally:
             cursor.close()
-    
+
 
     """def createTeam(self, name, department, leader):
         cursor = self.conn.cursor()
@@ -189,7 +192,7 @@ class DBManager:
         finally:
             cursor.close()
 
-    
+
     def assignTask(self, task_id, assigned_to):
         cursor = self.conn.cursor()
         try:
@@ -425,7 +428,7 @@ class DBManager:
                                 users.username, users.firstname, users.lastname, employees.department
                             FROM users 
                             INNER JOIN employees ON users.username = employees.username
-                           """)
+                            """)
             result = cursor.fetchall()
             return result
         except mysql.connector.Error as err:
@@ -471,6 +474,24 @@ class DBManager:
         finally:
             cursor.close()
 
+
+
+    #-----------------Use case 4-----------------------
+    def queryMessages(self, username):
+        cursor = self.conn.cursor(dictionary=True)
+        try:
+            cursor.execute("""
+                SELECT id, name, user_1, user_2
+                FROM messages_history
+                WHERE user_1 = %s OR user_2 = %s
+                ORDER BY id DESC
+            """, (username, username))
+            return cursor.fetchall()
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+
     # Use Case 7:
     def queryEmployeeSalaries(self):
         cursor = self.conn.cursor()
@@ -478,6 +499,26 @@ class DBManager:
             cursor.execute("SELECT username, salary FROM employees")
             result = cursor.fetchall()
             return result
+
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+
+
+    #Αναζήτηση receiver για δημιουργία συνομιλίας
+    def queryReceiver(self, searchText):
+        cursor = self.conn.cursor(dictionary=True)  #για να επιστρέψει λεξικό
+        try:
+            search_pattern = f"%{searchText}%"
+            query = """
+                SELECT username, firstname, lastname 
+                FROM users 
+                WHERE username LIKE %s OR firstname LIKE %s OR lastname LIKE %s
+            """
+            cursor.execute(query, (search_pattern, search_pattern, search_pattern))
+            results = cursor.fetchall()
+            return results  # Επιστρέφει λίστα από λεξικά
         except mysql.connector.Error as err:
             return f"Error: {err}"
         finally:
@@ -489,6 +530,72 @@ class DBManager:
             cursor.execute("SELECT state FROM bonus_state")
             result = cursor.fetchone()  # Use fetchone instead of fetchall
             return result[0] if result else None
+
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+
+
+    #Απόκτηση chat ID
+    def get_chat_id(self, user1, user2):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("""
+                SELECT id FROM messages_history
+                WHERE (user_1 = %s AND user_2 = %s) OR (user_1 = %s AND user_2 = %s)
+            """, (user1, user2, user2, user1))
+            result = cursor.fetchone()
+            return result[0] if result else None
+        finally:
+            cursor.close()
+
+    #Δημιουργία Νέας Συνομιλίας
+    def create_chat(self, name, user1, user2):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("""
+                INSERT INTO messages_history (name, user_1, user_2, history)
+                VALUES (%s, %s, %s, '[]')
+            """, (name, user1, user2))
+            self.conn.commit()
+            return cursor.lastrowid
+        finally:
+            cursor.close()
+
+    #Ιστορικό Συνομιλίας
+    def get_chat_history(self, chat_id):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("SELECT history FROM messages_history WHERE id = %s", (chat_id,))
+            result = cursor.fetchone()
+            if result:
+                return json.loads(result[0])
+            return []
+        finally:
+            cursor.close()
+
+    #Εισαγωγή νέου μηνύματος
+    def insert_message(self, chat_id, message_obj):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("SELECT history FROM messages_history WHERE id = %s", (chat_id,))
+            result = cursor.fetchone()
+            if not result:
+                return
+            history = json.loads(result[0])
+            history.append(message_obj)
+            cursor.execute("UPDATE messages_history SET history = %s WHERE id = %s", (json.dumps(history), chat_id))
+            self.conn.commit()
+        finally:
+            cursor.close()
+
+    #Απόκτηση χρήστη
+    def get_user_by_username(self, username):
+        cursor = self.conn.cursor(dictionary=True)
+        try:
+            cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
+            return cursor.fetchone()
         except mysql.connector.Error as err:
             return f"Error: {err}"
         finally:
@@ -533,6 +640,7 @@ class DBManager:
             return f"Error: {err}"
         finally:
             cursor.close()
+
 
 
     
@@ -655,6 +763,7 @@ class DBManager:
         finally:
             cursor.close()
             
+
     def employeeHasAnswered(self, username):
         cursor = self.conn.cursor()
         try:
@@ -785,11 +894,7 @@ class DBManager:
 
         finally:
             cursor.close()
-
-        
-
-
-    ###       
+            
     def queryTasksOfTeam(self, team_id):
         cursor = self.conn.cursor()
         try:
@@ -811,9 +916,26 @@ class DBManager:
 
     def queryEvents(self, team_space_id):
         pass
-    
+
     def queryNoticeboard(self, team_space_id):
         pass
+
+
+
+    #-----------------Use case 10-----------------------
+    def queryAvailableNotices(self):
+        cursor = self.conn.cursor(dictionary=True)
+        try:
+            cursor.execute("""
+               SELECT id, title, type, created
+                FROM notices
+                ORDER BY id DESC
+            """)
+            return cursor.fetchall()
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
 
     #USE CASE 9
     def queryUserLeaveRequests(self, username):
@@ -831,6 +953,47 @@ class DBManager:
         finally:
             cursor.close()
 
+
+
+    def loadNotice(self):
+        cursor = self.conn.cursor(dictionary=True)
+        try:
+            cursor.execute(""" 
+                SELECT title, type, created, body 
+                FROM notices 
+                WHERE id = %s
+            """,  (self.notice_id,))
+            notice = cursor.fetchone()
+            if notice:
+                if self.titleLabel:
+                    self.titleLabel.setText(notice.get("title", ""))
+                if self.typeLabel:
+                    self.typeLabel.setText(notice.get("type", ""))
+                if self.createdLabel:
+                    created = notice.get("created")
+                    if created and hasattr(created, "strftime"):
+                        self.createdLabel.setText(created.strftime("%Y-%m-%d %H:%M"))
+                    else:
+                        self.createdLabel.setText(str(created) if created else "")
+                if self.bodyLabel:
+                    self.bodyLabel.setText(notice.get("body", ""))
+        finally:
+            cursor.close()
+
+    def insertNotice(self, notice_type, title, body):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("""
+                INSERT INTO notices (type, title, body)
+                VALUES (%s, %s, %s)
+            """, (notice_type, title, body))
+            self.conn.commit()
+        except Exception as e:
+            self.conn.rollback()
+            raise e
+        finally:
+            cursor.close()
+            
     def insertLeaveRequest(self, user, start_date, end_date, reason):
         cursor = self.conn.cursor()
         try:
@@ -984,3 +1147,4 @@ class DBManager:
             return None
         finally:
             cursor.close()   
+
