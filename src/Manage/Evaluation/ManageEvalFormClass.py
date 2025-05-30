@@ -24,20 +24,12 @@ class ManageEvalFormClass:
     def cancel(self):
         self.eval_form_screen.close()
 
-    def selectFormatType(self, type: str):
-        if type == "manager":
-            eval_type_text = "Managers"
-            self.eval_edit_screen = EvaluationEditScreen(eval_type_text)
-            self.eval_edit_screen.manage = self
-            self.eval_edit_screen.display()
-            self.eval_form_screen.close()
-        elif type == "employee":
-            eval_type_text = "Employees"
-            self.eval_edit_screen = EvaluationEditScreen(eval_type_text)
-            self.eval_edit_screen.manage = self
-            self.eval_edit_screen.display()
-            self.eval_form_screen.close()
-    
+    def showEvaluationEditScreen(self, type: str):
+        self.eval_edit_screen = EvaluationEditScreen(type)
+        self.eval_edit_screen.manage = self
+        self.eval_edit_screen.display()
+        self.eval_form_screen.close()
+        
 
     def add_question(self):
         self.question_edit_screen = QuestionEditScreen()
@@ -105,7 +97,6 @@ class ManageEvalFormClass:
     def cancelEvaluation(self):
         self.eval_edit_screen.close()
         self.eval_form_screen.close()
-        self.eval_check_screen.close()
 
     def submitQuestionsList(self):
         self.eval_edit_screen.hide()

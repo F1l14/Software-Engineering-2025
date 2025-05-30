@@ -5,6 +5,8 @@ from src.Manage.Projects.ManageProjectClass import ManageProjectClass
 from src.Manage.Salaries.ManageEmployeeListClass import ManageEmployeeListClass
 from src.Manage.Evaluation.ManageEvalFormClass import ManageEvalFormClass
 from src.Manage.Evaluation.ManageFormAnswerClass import ManageFormAnswerClass
+from src.Manage.Leaves.ManageLeaveRequestsClass import ManageLeaveRequestsClass
+from src.Manage.Leaves.ManageLeavesClass import ManageLeavesClass
 from src.Class.DBManager import DBManager
 from src.Class.Session import Session
 from src.Manage.Tasks.ManageTasksClass import ManageTasksClass
@@ -16,6 +18,13 @@ class ManageMainClass:
         self.main_screen.manage = self
         self.main_screen.display()
         
+    def show_popup(self, title, message):
+        msg_box = QMessageBox()
+        msg_box.setWindowTitle(title)
+        msg_box.setText(message)
+        msg_box.setIcon(QMessageBox.Icon.Information)  # or Warning, Critical, etc.
+        msg_box.setStandardButtons(QMessageBox.StandardButton.Ok)
+        msg_box.exec()
 
     def progress(self):
         ManageProgressClass()
@@ -29,8 +38,10 @@ class ManageMainClass:
     def salaries(self):
         ManageEmployeeListClass()        
 
-    def evaluation(self):
+    def showEvaluationFormatWindow(self):
         user_type = Session.getRole()
+        
+
         if user_type == "admin":
             ManageEvalFormClass()
         else:
@@ -44,10 +55,10 @@ class ManageMainClass:
     def showTasksScreen(self):
         ManageTasksClass()
 
-    def show_popup(self, title, message):
-        msg_box = QMessageBox()
-        msg_box.setWindowTitle(title)
-        msg_box.setText(message)
-        msg_box.setIcon(QMessageBox.Icon.Information)  # or Warning, Critical, etc.
-        msg_box.setStandardButtons(QMessageBox.StandardButton.Ok)
-        msg_box.exec()
+    def showLeavesMenu(self):
+        user_type = Session.getRole()
+        if user_type == "manager":
+            ManageLeavesClass()
+        else:
+            ManageLeaveRequestsClass()
+        

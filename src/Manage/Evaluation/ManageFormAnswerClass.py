@@ -8,9 +8,9 @@ class ManageFormAnswerClass:
         self.user = Session.getUser()
         user_type = Session.getRole()
         if user_type == "manager":
-            self.eval_filling_screen = ManagerEmployeeListScreen()
-            self.eval_filling_screen.manage = self
-            self.eval_filling_screen.display()
+            self.eval_manager_list_screen = ManagerEmployeeListScreen()
+            self.eval_manager_list_screen.manage = self
+            self.eval_manager_list_screen.display()
         elif user_type == "employee":
             manager = DBManager().queryManager(self.user)
             self.eval_filling_screen = EvaluationFillingScreen(manager)
@@ -26,7 +26,10 @@ class ManageFormAnswerClass:
         msg_box.exec()
 
     def cancel(self):
-        self.eval_filling_screen.close()
+        self.eval_filling_screen.hide()
+    
+    def back(self):
+        self.eval_manager_list_screen.close()
 
     def submit_answers(self):
         db = DBManager()
@@ -61,7 +64,9 @@ class ManageFormAnswerClass:
                     all_success = False
 
         if all_success:
+            self.eval_manager_list_screen.close()
             self.show_popup("Success", "All answers submitted successfully.")
+            self.eval_manager_list_screen.display()
         else:
             self.show_popup("Error", result)
 
@@ -71,7 +76,7 @@ class ManageFormAnswerClass:
 
     def employee_evaluation_show(self,item):
         row = item.row()
-        first_col_item = self.eval_filling_screen.employeesTable.item(row, 0)
+        first_col_item = self.eval_manager_list_screen.employeesTable.item(row, 0)
         employee_name = first_col_item.text() if first_col_item else None
         if not employee_name:
             self.show_popup("Error", "No employee selected.")

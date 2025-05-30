@@ -13,22 +13,25 @@ class MainScreen(QMainWindow):
         self.progressButton.clicked.connect(self.manage.progress)
         self.teamsButton.clicked.connect(self.manage.showTeamsScreen)
         self.salariesButton.clicked.connect(self.manage.salaries)
-        self.evaluationButton.clicked.connect(self.manage.evaluation)
+        self.evaluationButton.clicked.connect(self.manage.showEvaluationFormatWindow)
         self.tasksButton.clicked.connect(self.manage.showTasksScreen)
+        self.leavesButton.clicked.connect(self.manage.showLeavesMenu)
         
         if Session.getRole() != "admin":
             self.progressButton.setVisible(False)
-        
+            
         if Session.getRole() == "employee":
             self.projectsButton.setVisible(False)
         if Session.getRole() == "admin":
             self.evaluationButton.setEnabled(True)
+            self.leavesButton.setVisible(False)
         else: 
             if DBManager().isEvaluationActive(Session.getRole()):
                 self.evaluationButton.setEnabled(True)
             else:
                 self.evaluationButton.setEnabled(False)
                 self.evaluationButton.setToolTip("No evaluation period is currently active.")
+        
         self.show()
     
     

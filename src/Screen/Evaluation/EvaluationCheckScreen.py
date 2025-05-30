@@ -4,16 +4,17 @@ from PyQt6 import uic
 class EvaluationCheckScreen(QDialog):
     def __init__(self):
         super().__init__()
-
-    def display(self,source_table):
+        
+    def display(self, source_table):
         uic.loadUi("ui/5_Evaluation/EvaluationCheckScreen.ui", self)
         self.setWindowTitle("Evaluation Check")
         self.editFormButton.clicked.connect(self.manage.eval_edit_screen.show)
         self.editFormButton.clicked.connect(self.hide)
 
         self.publishFormButton.clicked.connect(self.manage.publish_form)
+        
 
-        #Form Preview
+    
         self.questionsContainer.setStyleSheet("background-color: white;")
         layout = QVBoxLayout(self.questionsContainer)
 
@@ -21,6 +22,7 @@ class EvaluationCheckScreen(QDialog):
         for row in range(row_count):
             question_item = source_table.item(row, 0)
             answers_item = source_table.item(row, 1)
+            
 
             if not question_item or not answers_item:
                 continue
@@ -70,9 +72,6 @@ class EvaluationCheckScreen(QDialog):
 
         layout.addStretch()
         self.questionsContainer.setLayout(layout)
-        #end Form Preview
         self.exec()
 
-
    
-        

@@ -17,7 +17,7 @@ class ManagerEmployeeListScreen(QDialog):
         self.employeesTable.setHorizontalHeaderLabels(["Employee", "Answered"])
         self.employeesTable.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.employeesTable.verticalHeader().setDefaultSectionSize(40)
-        self.cancelButton.clicked.connect(self.manage.cancel)
+        self.backButton.clicked.connect(self.manage.back)
 
         end_date = DBManager().getEvaluationEndDate()
         self.endDateLabel.setText(end_date.strftime("%d/%m/%Y %H:%M"))
@@ -32,7 +32,6 @@ class ManagerEmployeeListScreen(QDialog):
         for employee in self.employeesList:
             self.employeesTable.insertRow(self.employeesTable.rowCount())
             self.employeesTable.setItem(self.employeesTable.rowCount()-1, 0, QTableWidgetItem(employee[0]))
-            db = DBManager()
             conn = db.conn
             cursor = conn.cursor()
             cursor.execute("SELECT 1 FROM evaluation_answers WHERE eval_for = %s AND username = %s", (employee[0], self.manage.user))
@@ -42,3 +41,5 @@ class ManagerEmployeeListScreen(QDialog):
                 self.employeesTable.itemClicked.connect(self.manage.employee_evaluation_show)
 
         self.exec()
+    
+    
