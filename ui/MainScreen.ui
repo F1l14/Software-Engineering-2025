@@ -18,6 +18,13 @@
     <item row="0" column="0">
      <layout class="QGridLayout" name="gridLayout">
       <item row="4" column="0">
+       <widget class="QPushButton" name="evaluationButton">
+        <property name="text">
+         <string>Evaluation</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
        <widget class="QPushButton" name="salariesButton">
         <property name="text">
          <string>Salaries</string>
@@ -31,10 +38,10 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QPushButton" name="progressButton">
+      <item row="4" column="0">
+       <widget class="QPushButton" name="tasksButton">
         <property name="text">
-         <string> Πρόοδος</string>
+         <string>Tasks</string>
         </property>
        </widget>
       </item>
@@ -45,17 +52,17 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QPushButton" name="tasksButton">
+      <item row="1" column="0">
+       <widget class="QPushButton" name="progressButton">
         <property name="text">
-         <string>Tasks</string>
+         <string> Πρόοδος</string>
         </property>
        </widget>
       </item>
       <item row="3" column="0">
-       <widget class="QPushButton" name="evaluationButton">
+       <widget class="QPushButton" name="taskButton">
         <property name="text">
-         <string>Evaluation</string>
+         <string>Tasks</string>
         </property>
        </widget>
       </item>
