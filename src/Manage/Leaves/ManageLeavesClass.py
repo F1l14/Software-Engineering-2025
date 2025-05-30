@@ -80,7 +80,7 @@ class ManageLeavesClass:
     def declineRequestReasonScreen(self):
         self.leave_request_declined_screen = LeaveRequestDeclinedScreen()
         self.leave_request_declined_screen.manage = self
-        self.leave_request_declined_screen.show()
+        self.leave_request_declined_screen.display()
 
     def declineRequest(self, employee, start_date, end_date, decline_reason):
         start_date_format = datetime.strptime(start_date, '%d/%m/%Y').date()
