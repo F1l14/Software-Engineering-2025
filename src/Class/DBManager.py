@@ -487,6 +487,10 @@ class DBManager:
                 ORDER BY id DESC
             """, (username, username))
             return cursor.fetchall()
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
 
     # Use Case 7:
     def queryEmployeeSalaries(self):
@@ -515,6 +519,10 @@ class DBManager:
             cursor.execute(query, (search_pattern, search_pattern, search_pattern))
             results = cursor.fetchall()
             return results  # Επιστρέφει λίστα από λεξικά
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
 
     def checkBonusState(self):
         cursor = self.conn.cursor()
@@ -588,6 +596,10 @@ class DBManager:
         try:
             cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
             return cursor.fetchone()
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
 
 
     #USE CASE 5:
@@ -920,6 +932,10 @@ class DBManager:
                 ORDER BY id DESC
             """)
             return cursor.fetchall()
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
 
     #USE CASE 9
     def queryUserLeaveRequests(self, username):
