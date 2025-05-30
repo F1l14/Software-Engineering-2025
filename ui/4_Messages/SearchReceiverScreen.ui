@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>969</width>
-    <height>488</height>
+    <width>912</width>
+    <height>424</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,8 +17,8 @@
    <widget class="QLineEdit" name="searchBar">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>150</y>
+      <x>20</x>
+      <y>140</y>
       <width>481</width>
       <height>31</height>
      </rect>
@@ -31,7 +31,7 @@
     <property name="geometry">
      <rect>
       <x>170</x>
-      <y>260</y>
+      <y>220</y>
       <width>151</width>
       <height>71</height>
      </rect>
@@ -43,8 +43,8 @@
    <widget class="QComboBox" name="filterComboBox">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>50</y>
+      <x>30</x>
+      <y>40</y>
       <width>141</width>
       <height>24</height>
      </rect>
@@ -53,8 +53,8 @@
    <widget class="QRadioButton" name="nameRadioButton">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>130</y>
+      <x>20</x>
+      <y>120</y>
       <width>141</width>
       <height>20</height>
      </rect>
@@ -66,8 +66,8 @@
    <widget class="QRadioButton" name="tagRadioButton">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>30</y>
+      <x>30</x>
+      <y>20</y>
       <width>151</width>
       <height>20</height>
      </rect>
@@ -79,8 +79,8 @@
    <widget class="QListWidget" name="showResultList">
     <property name="geometry">
      <rect>
-      <x>630</x>
-      <y>40</y>
+      <x>560</x>
+      <y>30</y>
       <width>321</width>
       <height>171</height>
      </rect>
@@ -89,8 +89,8 @@
    <widget class="QLabel" name="searchResultsLabel">
     <property name="geometry">
      <rect>
-      <x>630</x>
-      <y>20</y>
+      <x>560</x>
+      <y>10</y>
       <width>151</width>
       <height>16</height>
      </rect>
@@ -102,8 +102,8 @@
    <widget class="QPushButton" name="createButton">
     <property name="geometry">
      <rect>
-      <x>820</x>
-      <y>340</y>
+      <x>770</x>
+      <y>230</y>
       <width>111</width>
       <height>71</height>
      </rect>
@@ -118,7 +118,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>969</width>
+     <width>912</width>
      <height>33</height>
     </rect>
    </property>

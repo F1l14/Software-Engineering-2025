@@ -19,13 +19,14 @@ class SearchReceiverScreen(QMainWindow):
         self.nameRadioButton.toggled.connect(self.updateInputFields)
         self.tagRadioButton.toggled.connect(self.updateInputFields)
         self.searchButton.clicked.connect(self.onSearchClicked)
+        self.createButton.clicked.connect(self.onCreateClicked)
 
         # Αρχικές ρυθμίσεις
         self.searchBar.setEnabled(False)
         self.filterComboBox.setEnabled(False)
         self.createButton.setEnabled(False)
 
-        self.manageSearch = None  # Θα συνδεθεί εξωτερικά
+        self.manageSearch = None  
 
     def updateInputFields(self):
         if self.nameRadioButton.isChecked():
@@ -59,5 +60,12 @@ class SearchReceiverScreen(QMainWindow):
             username = user['username']
             item_text = f"{full_name} ({username})"
             self.showResultList.addItem(item_text)
-            
         self.createButton.setEnabled(True)
+
+    def onCreateClicked(self):
+        if self.manageSearch:
+            self.manageSearch.showChat()     
+
+        
+
+

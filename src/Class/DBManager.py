@@ -1,4 +1,6 @@
 import mysql.connector
+import json
+
 class DBManager:
     def __init__(self, host="localhost", user="root", password="", database="LinQ-SEProject"):
         self.conn = mysql.connector.connect(
@@ -307,7 +309,7 @@ class DBManager:
 
     #-----------------Use case 4-----------------------
     def queryMessages(self, username):
-        cursor = self.conn.cursor()
+        cursor = self.conn.cursor(dictionary=True)
         try:
             cursor.execute("""
                 SELECT id, name, user_1, user_2
@@ -321,6 +323,7 @@ class DBManager:
         finally:
             cursor.close()
 
+    #Αναζήτηση receiver για δημιουργία συνομιλίας
     def queryReceiver(self, searchText):
         cursor = self.conn.cursor(dictionary=True)  #για να επιστρέψει λεξικό
         try:
@@ -338,10 +341,70 @@ class DBManager:
         finally:
             cursor.close()
 
+    #Απόκτηση chat ID
+    def get_chat_id(self, user1, user2):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("""
+                SELECT id FROM messages_history
+                WHERE (user_1 = %s AND user_2 = %s) OR (user_1 = %s AND user_2 = %s)
+            """, (user1, user2, user2, user1))
+            result = cursor.fetchone()
+            return result[0] if result else None
+        finally:
+            cursor.close()
+
+    #Δημιουργία Νέας Συνομιλίας
+    def create_chat(self, name, user1, user2):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("""
+                INSERT INTO messages_history (name, user_1, user_2, history)
+                VALUES (%s, %s, %s, '[]')
+            """, (name, user1, user2))
+            self.conn.commit()
+            return cursor.lastrowid
+        finally:
+            cursor.close()
+
+    #Ιστορικό Συνομιλίας
+    def get_chat_history(self, chat_id):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("SELECT history FROM messages_history WHERE id = %s", (chat_id,))
+            result = cursor.fetchone()
+            if result:
+                return json.loads(result[0])
+            return []
+        finally:
+            cursor.close()
+
+    #Εισαγωγή νέου μηνύματος
+    def insert_message(self, chat_id, message_obj):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("SELECT history FROM messages_history WHERE id = %s", (chat_id,))
+            result = cursor.fetchone()
+            if not result:
+                return
+            history = json.loads(result[0])
+            history.append(message_obj)
+            cursor.execute("UPDATE messages_history SET history = %s WHERE id = %s", (json.dumps(history), chat_id))
+            self.conn.commit()
+        finally:
+            cursor.close()
+
+    #Απόκτηση χρήστη
+    def get_user_by_username(self, username):
+        cursor = self.conn.cursor(dictionary=True)
+        try:
+            cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
+            return cursor.fetchone()
+        finally:
+            cursor.close()
 
 
-
-    #-------------------- Use Case 6-----------------
+#-------------------- Use Case 6-----------------
     def queryTeams(self, username):
         cursor = self.conn.cursor()
         try:

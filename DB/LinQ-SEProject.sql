@@ -112,6 +112,7 @@ INSERT INTO `employees` (`username`, `department`) VALUES
 ('santoniou', 'Διοίκηση'),
 ('tmichailidis', 'Υποστήριξη');
 
+
 -- --------------------------------------------------------
 
 --
@@ -420,6 +421,7 @@ INSERT INTO `users` (`username`, `password`, `firstname`, `lastname`) VALUES
 ('santoniou', 'root', 'Σοφία', 'Αντωνίου'),
 ('tmichailidis', 'root', 'Θανάσης', 'Μιχαηλίδης');
 
+
 --
 -- Indexes for dumped tables
 --
@@ -479,13 +481,15 @@ ALTER TABLE `messages`
   ADD PRIMARY KEY (`id`),
   ADD KEY `message_history_id` (`history_id`),
   ADD KEY `message_from_user` (`from_user`),
-  ADD KEY `message_to_user` (`to_user`);
+  ADD KEY `message_to_user` (`to_user`),
+  MODIFY COLUMN id INT AUTO_INCREMENT PRIMARY KEY;
 
 --
 -- Indexes for table `messages_history`
 --
-ALTER TABLE `messages_history`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE messages_history 
+MODIFY COLUMN id INT AUTO_INCREMENT PRIMARY KEY;
+
 
 --
 -- Indexes for table `notices`
