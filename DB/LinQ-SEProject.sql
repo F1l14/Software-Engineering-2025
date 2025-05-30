@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 30, 2025 at 03:42 PM
+-- Generation Time: May 30, 2025 at 08:47 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -33,16 +33,6 @@ CREATE TABLE `bonus_setup` (
   `manager_bonus_percentage` float NOT NULL,
   `employee_bonus_percentage` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `bonus_setup`
---
-
-INSERT INTO `bonus_setup` (`id`, `category_value`, `manager_bonus_percentage`, `employee_bonus_percentage`) VALUES
-(1, 23121, 1, 2),
-(2, 1313120, 2, 3),
-(3, 2313320, 3, 4),
-(4, 323232000, 5, 5);
 
 -- --------------------------------------------------------
 
@@ -78,10 +68,7 @@ CREATE TABLE `business` (
 --
 
 INSERT INTO `business` (`name`, `owner`, `logo`) VALUES
-('123', '123', NULL),
-('asdfasdf', 'asdfasdf', NULL),
-('EEEEEEEEH', 'EEEEEEEEH', NULL),
-('LAAAAA', 'LAAAAA', NULL);
+('Linq', 'admin', NULL);
 
 -- --------------------------------------------------------
 
@@ -98,10 +85,6 @@ CREATE TABLE `departments` (
 --
 
 INSERT INTO `departments` (`name`) VALUES
-('123'),
-('asdfasf'),
-('EEEEEEEEH'),
-('LAAAAA'),
 ('Ανθρώπινο Δυναμικό'),
 ('Διοίκηση'),
 ('Έρευνα και Ανάπτυξη'),
@@ -112,6 +95,17 @@ INSERT INTO `departments` (`name`) VALUES
 ('Προμήθειες'),
 ('Πωλήσεις'),
 ('Υποστήριξη');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `department_notices`
+--
+
+CREATE TABLE `department_notices` (
+  `notice_id` int(11) NOT NULL,
+  `department` varchar(80) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -129,13 +123,11 @@ CREATE TABLE `employees` (
 -- Dumping data for table `employees`
 --
 
-
 INSERT INTO `employees` (`username`, `department`, `salary`) VALUES
 ('anikolaou', 'Πωλήσεις', 3400),
 ('epanagiotou', 'Ανθρώπινο Δυναμικό', 3200),
 ('gpapadopoulos', 'Πληροφορική', 3700),
 ('ivasileiou', 'Προμήθειες', 3100),
-('janesmith', 'Νομικό Τμήμα', 1000),
 ('kchatzidaki', 'Διοίκηση', 3600),
 ('kdimetriou', 'Μάρκετινγκ', 3300),
 ('mkonstantinou', 'Λογιστήριο', 3550),
@@ -184,7 +176,6 @@ CREATE TABLE `employee_leave_request` (
 
 INSERT INTO `employee_leave_request` (`leave_request_id`, `user`, `start_date`, `end_date`, `reason`, `state`, `decline_reason`) VALUES
 (2, 'kchatzidaki', '2026-01-01', '2026-01-04', 'Διακοπάρες', 'Accepted', NULL);
-
 
 -- --------------------------------------------------------
 
@@ -291,7 +282,6 @@ CREATE TABLE `managers` (
 
 INSERT INTO `managers` (`username`, `department`) VALUES
 ('epanagiotou', 'Ανθρώπινο Δυναμικό'),
-('johndoe', 'asdfasf'),
 ('santoniou', 'Διοίκηση');
 
 -- --------------------------------------------------------
@@ -303,11 +293,9 @@ INSERT INTO `managers` (`username`, `department`) VALUES
 CREATE TABLE `messages` (
   `id` int(11) NOT NULL,
   `history_id` int(11) NOT NULL,
-  `username` varchar(80) NOT NULL,
   `from_user` varchar(80) NOT NULL,
-  `to_user` varchar(80) NOT NULL 
+  `to_user` varchar(80) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
 
 -- --------------------------------------------------------
 
@@ -316,25 +304,20 @@ CREATE TABLE `messages` (
 --
 
 CREATE TABLE `messages_history` (
-  `id` int(11) NOT NULL PRIMARY KEY,
+  `id` int(11) NOT NULL,
   `name` varchar(80) NOT NULL,
   `user_1` varchar(80) NOT NULL,
   `user_2` varchar(80) NOT NULL,
-  `history` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL 
-  CHECK (json_valid(`history`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
- NOT NULL CHECK (JSON_VALID(`history`);
+  `history` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`history`))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO messages_history (name, user_1, user_2, history) VALUES
-('Συνομιλία Jane και John', 'janesmith', 'johndoe', JSON_ARRAY(
-    JSON_OBJECT('from', 'janesmith', 'to', 'johndoe', 'message', 'Γεια σου John!', 'timestamp', '2025-05-26 12:00:00'),
-    JSON_OBJECT('from', 'johndoe', 'to', 'janesmith', 'message', 'Γεια σου Jane!', 'timestamp', '2025-05-26 12:01:00')
-)),
-('Συνομιλία Jane και Μαρία', 'janesmith', 'mkonstantinou', JSON_ARRAY(
-    JSON_OBJECT('from', 'janesmith', 'to', 'mkonstantinou', 'message', 'Καλημέρα!', 'timestamp', '2025-05-26 10:00:00'),
-    JSON_OBJECT('from', 'mkonstantinou', 'to', 'janesmith', 'message', 'Καλημέρα και σε σένα!', 'timestamp', '2025-05-26 10:01:00')
-));
+--
+-- Dumping data for table `messages_history`
+--
 
+INSERT INTO `messages_history` (`id`, `name`, `user_1`, `user_2`, `history`) VALUES
+(1, 'Συνομιλία 123 και gpapadopoulos', '123', 'gpapadopoulos', '[{\"from\": \"123\", \"to\": \"gpapadopoulos\", \"message\": \"\\u039a\\u03b1\\u03bb\\u03b7\\u03c3\\u03c0\\u03ad\\u03c1\\u03b1\", \"timestamp\": \"2025-05-30 19:35:41\"}]'),
+(2, 'Συνομιλία gpapadopoulos και gpapadopoulos', 'gpapadopoulos', 'gpapadopoulos', '[]');
 
 -- --------------------------------------------------------
 
@@ -343,18 +326,19 @@ INSERT INTO messages_history (name, user_1, user_2, history) VALUES
 --
 
 CREATE TABLE `notices` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `type` enum('business','department','team') NOT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
-  `body` text NOT NULL
+  `body` text NOT NULL,
+  `title` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO notices (type, title, body) VALUES
-('business', 'Στρατηγική 2025', 'Το πλάνο για το 2025 παρουσιάζεται την Τρίτη.'),
-('department', 'Αλλαγή Ωραρίου', 'Το νέο ωράριο ισχύει από 1η Ιουνίου.'),
-('team', 'Ομαδική Συνάντηση', 'Συνάντηση ομάδας στις 14:00 στην αίθουσα Δ.'),
-('business', 'Νέα Συνεργασία', 'Ξεκινάμε συνεργασία με την εταιρεία X.'),
-('team', 'Ανασκόπηση Sprint', 'Η ανασκόπηση sprint θα γίνει Παρασκευή.');
+--
+-- Dumping data for table `notices`
+--
+
+INSERT INTO `notices` (`id`, `type`, `created`, `body`, `title`) VALUES
+(1, 'business', '2025-05-30 16:25:11', '1234', '1234');
 
 -- --------------------------------------------------------
 
@@ -370,14 +354,6 @@ CREATE TABLE `notifications` (
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `opened` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `notifications`
---
-
-INSERT INTO `notifications` (`id`, `user`, `type`, `body`, `created`, `opened`) VALUES
-(1, 'janesmith', 'new_task', 'You have been assigned a new task: SSSS', '2025-05-26 20:30:01', 0),
-(2, 'janesmith', 'new_task', 'You have been assigned a new task: HHH', '2025-05-26 20:33:43', 0);
 
 -- --------------------------------------------------------
 
@@ -403,11 +379,9 @@ CREATE TABLE `projects` (
 
 INSERT INTO `projects` (`id`, `name`, `description`, `team_id`, `created`, `status`, `completed_at`, `deadline`, `value`) VALUES
 (1, 'ERP Εφαρμογή', 'Ανάπτυξη συστήματος ERP για την εταιρεία', 1, '2025-05-22 10:14:27', 'completed', '2025-05-22 16:33:48', '2025-07-15 00:00:00', 45000),
-(2, 'Web Portal Πελατών', 'Δημιουργία διαδραστικού portal για πελάτες', 3, '2025-05-22 10:14:27', 'completed', '2025-05-22 16:33:55', '2025-06-20 00:00:00', 238000),
+(2, 'Web Portal Πελατών', 'Δημιουργία διαδραστικού portal για πελάτες', 3, '2025-05-22 10:14:27', 'assigned', NULL, '2025-06-20 00:00:00', 238000),
 (3, 'Σύστημα HR', 'Διαχείριση προσωπικού και αιτήσεων', 2, '2025-05-22 10:14:27', 'assigned', NULL, '2025-09-30 00:00:00', 1200000),
-(4, 'NEW_project', 'asdasdfasfd', 5, '2025-05-26 17:22:44', 'unassigned', NULL, '2025-05-26 22:21:54', 69000),
-(5, '123', '123', NULL, '2025-05-30 10:35:46', 'unassigned', NULL, '2026-01-01 00:00:00', 1000000),
-(6, '1234', '1234', NULL, '2025-05-30 10:51:03', 'unassigned', NULL, '2026-01-01 00:00:00', 1234);
+(4, 'NEW_project', 'example description', 5, '2025-05-26 17:22:44', 'unassigned', NULL, '2025-05-26 22:21:54', 69000);
 
 -- --------------------------------------------------------
 
@@ -512,8 +486,7 @@ CREATE TABLE `teams` (
 
 INSERT INTO `teams` (`id`, `name`, `department`, `leader`) VALUES
 (1, 'Ομάδα Ανάπτυξης ERP', 'Έρευνα και Ανάπτυξη', 'nstathopoulos'),
-(3, 'Ομάδα Portal Πελατών', 'Πωλήσεις', 'anikolaou'),
-(6, '1234', 'Διοίκηση', 'anikolaou');
+(3, 'Ομάδα Portal Πελατών', 'Πωλήσεις', 'anikolaou');
 
 -- --------------------------------------------------------
 
@@ -533,12 +506,22 @@ CREATE TABLE `team_members` (
 INSERT INTO `team_members` (`team_id`, `member`) VALUES
 (1, 'gpapadopoulos'),
 (1, 'nstathopoulos'),
+(3, 'anikolaou'),
 (3, 'mkonstantinou'),
 (6, 'gpapadopoulos'),
 (6, 'kchatzidaki'),
 (6, 'tmichailidis');
 
+-- --------------------------------------------------------
 
+--
+-- Table structure for table `team_notices`
+--
+
+CREATE TABLE `team_notices` (
+  `notice_id` int(11) NOT NULL,
+  `team_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -558,24 +541,17 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`username`, `password`, `firstname`, `lastname`) VALUES
-('123', '123', '123', '123'),
 ('admin', 'root', 'Αναστάσιος', 'Παπαδόπουλος'),
 ('anikolaou', 'root', 'Αντώνης', 'Νικολάου'),
-('asdfasdf', 'asdfasdf', 'asfdasfd', 'asdfasdf'),
-('EEEEEEEEH', 'EEEEEEEEH', 'EEEEEEEEH', 'EEEEEEEEH'),
 ('epanagiotou', 'root', 'Ελένη', 'Παναγιώτου'),
 ('gpapadopoulos', 'root', 'Γιάννης', 'Παπαδόπουλος'),
 ('ivasileiou', 'root', 'Ιωάννα', 'Βασιλείου'),
-('janesmith', 'pass', 'Jane', 'Smith'),
-('johndoe', 'pass', 'John', 'Doe'),
 ('kchatzidaki', 'root', 'Κατερίνα', 'Χατζηδάκη'),
 ('kdimetriou', 'root', 'Κώστας', 'Δημητρίου'),
-('LAAAAA', 'LAAAAA', 'LAAAAA', 'LAAAAA'),
 ('mkonstantinou', 'root', 'Μαρία', 'Κωνσταντίνου'),
 ('nstathopoulos', 'root', 'Νίκος', 'Σταθόπουλος'),
 ('santoniou', 'root', 'Σοφία', 'Αντωνίου'),
 ('tmichailidis', 'root', 'Θανάσης', 'Μιχαηλίδης');
-
 
 --
 -- Indexes for dumped tables
@@ -586,6 +562,12 @@ INSERT INTO `users` (`username`, `password`, `firstname`, `lastname`) VALUES
 --
 ALTER TABLE `bonus_setup`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `bonus_state`
+--
+ALTER TABLE `bonus_state`
+  ADD PRIMARY KEY (`state`);
 
 --
 -- Indexes for table `business`
@@ -600,6 +582,12 @@ ALTER TABLE `business`
 ALTER TABLE `departments`
   ADD PRIMARY KEY (`name`);
 
+--
+-- Indexes for table `department_notices`
+--
+ALTER TABLE `department_notices`
+  ADD PRIMARY KEY (`notice_id`,`department`),
+  ADD KEY `dep_notice_depname` (`department`);
 
 --
 -- Indexes for table `employees`
@@ -670,15 +658,13 @@ ALTER TABLE `messages`
   ADD PRIMARY KEY (`id`),
   ADD KEY `message_history_id` (`history_id`),
   ADD KEY `message_from_user` (`from_user`),
-  ADD KEY `message_to_user` (`to_user`),
-  MODIFY COLUMN id INT AUTO_INCREMENT PRIMARY KEY;
+  ADD KEY `message_to_user` (`to_user`);
 
 --
 -- Indexes for table `messages_history`
 --
-ALTER TABLE messages_history 
-MODIFY COLUMN id INT AUTO_INCREMENT PRIMARY KEY;
-
+ALTER TABLE `messages_history`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `notices`
@@ -737,6 +723,12 @@ ALTER TABLE `team_members`
   ADD PRIMARY KEY (`team_id`,`member`),
   ADD KEY `member_employee` (`member`);
 
+--
+-- Indexes for table `team_notices`
+--
+ALTER TABLE `team_notices`
+  ADD PRIMARY KEY (`notice_id`,`team_id`),
+  ADD KEY `team_notice_teamid` (`team_id`);
 
 --
 -- Indexes for table `users`
@@ -788,13 +780,13 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT for table `messages_history`
 --
 ALTER TABLE `messages_history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `notices`
 --
 ALTER TABLE `notices`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `notifications`
@@ -829,6 +821,13 @@ ALTER TABLE `teams`
 --
 ALTER TABLE `business`
   ADD CONSTRAINT `business_owner_user` FOREIGN KEY (`owner`) REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `department_notices`
+--
+ALTER TABLE `department_notices`
+  ADD CONSTRAINT `dep_notice_depname` FOREIGN KEY (`department`) REFERENCES `departments` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `dep_notice_id` FOREIGN KEY (`notice_id`) REFERENCES `notices` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `employees`
@@ -902,29 +901,12 @@ ALTER TABLE `notifications`
 ALTER TABLE `project_tags`
   ADD CONSTRAINT `project_tags_tag` FOREIGN KEY (`tag`) REFERENCES `tags` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-
---
--- Constraints for table `tasks`
---
-ALTER TABLE `tasks`
-  ADD CONSTRAINT `task_assigned_member` FOREIGN KEY (`assigned_to`) REFERENCES `team_members` (`member`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `task_project_id` FOREIGN KEY (`project`) REFERENCES `projects` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `task_team_id` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `teams`
---
-ALTER TABLE `teams`
-  ADD CONSTRAINT `team_department` FOREIGN KEY (`department`) REFERENCES `departments` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `team_leader_employee` FOREIGN KEY (`leader`) REFERENCES `employees` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
-
 --
 -- Constraints for table `team_members`
 --
 ALTER TABLE `team_members`
-  ADD CONSTRAINT `member_employee` FOREIGN KEY (`member`) REFERENCES `employees` (`username`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `members_team_id` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
+  ADD CONSTRAINT `member_employee_username` FOREIGN KEY (`member`) REFERENCES `employees` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
