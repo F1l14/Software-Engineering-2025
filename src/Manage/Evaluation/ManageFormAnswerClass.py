@@ -25,6 +25,7 @@ class ManageFormAnswerClass:
         msg_box.setStandardButtons(QMessageBox.StandardButton.Ok)
         msg_box.exec()
 
+
     def cancel(self):
         self.eval_filling_screen.hide()
     

@@ -616,7 +616,7 @@ class DBManager:
         finally:
             cursor.close()
 
-    def acceptRequest(self, employee, start_date, end_date):
+    def saveRequest(self, employee, start_date, end_date):
         cursor = self.conn.cursor()
         try:
             cursor.execute("""
@@ -635,7 +635,7 @@ class DBManager:
         finally:
             cursor.close()
 
-    def declineRequest(self, employee, start_date, end_date, decline_reason):
+    def saveDeclinedRequest(self, employee, start_date, end_date, decline_reason):
         cursor = self.conn.cursor()
         try:
             cursor.execute("""

@@ -57,14 +57,14 @@ class ManageLeavesClass:
             self.leave_selected_management_screen.display(employee, start_date, end_date, reason)
             self.leave_request_management_screen.close()
             otherEmployees = self.db.checkSameDateRequests(employee, start_date, end_date)
-            self.leave_selected_management_screen.setOtherEmployees(otherEmployees)
+            self.leave_selected_management_screen.showSameDateRequests(otherEmployees)
         else:
             self.show_popup("Error", "No leave request found for this employee.")
         
     def acceptRequest(self, employee, start_date, end_date):
         start_date_format = datetime.strptime(start_date, '%d/%m/%Y').date()
         end_date_format = datetime.strptime(end_date, '%d/%m/%Y').date()
-        result = self.db.acceptRequest(employee, start_date_format, end_date_format)
+        result = self.db.saveRequest(employee, start_date_format, end_date_format)
         if result:
             self.db.createNotification(
                 employee, 
@@ -86,7 +86,7 @@ class ManageLeavesClass:
     def declineRequest(self, employee, start_date, end_date, decline_reason):
         start_date_format = datetime.strptime(start_date, '%d/%m/%Y').date()
         end_date_format = datetime.strptime(end_date, '%d/%m/%Y').date()
-        result = self.db.declineRequest(employee, start_date_format, end_date_format, decline_reason)
+        result = self.db.saveDeclinedRequest(employee, start_date_format, end_date_format, decline_reason)
         if result:
             self.db.createNotification(
                 employee, 

@@ -24,7 +24,7 @@ class LeaveSelectedManagementScreen(QDialog):
         self.otherEmployeesList.verticalHeader().setDefaultSectionSize(40)
         self.exec()
         
-    def setOtherEmployees(self, other_employees:list):
+    def showSameDateRequests(self, other_employees:list):
         self.otherEmployeesList.setRowCount(0)
         self.otherEmployeesList.clearContents()
         for employee in other_employees:
