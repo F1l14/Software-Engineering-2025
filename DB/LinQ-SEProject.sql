@@ -76,17 +76,6 @@ INSERT INTO `departments` (`name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `department_notices`
---
-
-CREATE TABLE `department_notices` (
-  `notice_id` int(11) NOT NULL,
-  `department` varchar(80) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `employees`
 --
 
@@ -207,11 +196,18 @@ INSERT INTO messages_history (name, user_1, user_2, history) VALUES
 --
 
 CREATE TABLE `notices` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` enum('business','department','team') NOT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `body` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO notices (type, title, body) VALUES
+('business', 'Στρατηγική 2025', 'Το πλάνο για το 2025 παρουσιάζεται την Τρίτη.'),
+('department', 'Αλλαγή Ωραρίου', 'Το νέο ωράριο ισχύει από 1η Ιουνίου.'),
+('team', 'Ομαδική Συνάντηση', 'Συνάντηση ομάδας στις 14:00 στην αίθουσα Δ.'),
+('business', 'Νέα Συνεργασία', 'Ξεκινάμε συνεργασία με την εταιρεία X.'),
+('team', 'Ανασκόπηση Sprint', 'Η ανασκόπηση sprint θα γίνει Παρασκευή.');
 
 -- --------------------------------------------------------
 
@@ -374,16 +370,7 @@ INSERT INTO `team_members` (`team_id`, `member`) VALUES
 (3, 'mkonstantinou'),
 (5, 'janesmith');
 
--- --------------------------------------------------------
 
---
--- Table structure for table `team_notices`
---
-
-CREATE TABLE `team_notices` (
-  `notice_id` int(11) NOT NULL,
-  `team_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -439,12 +426,6 @@ ALTER TABLE `business`
 ALTER TABLE `departments`
   ADD PRIMARY KEY (`name`);
 
---
--- Indexes for table `department_notices`
---
-ALTER TABLE `department_notices`
-  ADD PRIMARY KEY (`notice_id`,`department`),
-  ADD KEY `dep_notice_depname` (`department`);
 
 --
 -- Indexes for table `employees`
@@ -548,12 +529,6 @@ ALTER TABLE `team_members`
   ADD PRIMARY KEY (`team_id`,`member`),
   ADD KEY `member_employee` (`member`);
 
---
--- Indexes for table `team_notices`
---
-ALTER TABLE `team_notices`
-  ADD PRIMARY KEY (`notice_id`,`team_id`),
-  ADD KEY `team_notice_teamid` (`team_id`);
 
 --
 -- Indexes for table `users`
@@ -622,13 +597,6 @@ ALTER TABLE `teams`
 --
 ALTER TABLE `business`
   ADD CONSTRAINT `business_owner_user` FOREIGN KEY (`owner`) REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `department_notices`
---
-ALTER TABLE `department_notices`
-  ADD CONSTRAINT `dep_notice_depname` FOREIGN KEY (`department`) REFERENCES `departments` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `dep_notice_id` FOREIGN KEY (`notice_id`) REFERENCES `notices` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `employees`
@@ -704,14 +672,6 @@ ALTER TABLE `teams`
 ALTER TABLE `team_members`
   ADD CONSTRAINT `member_employee` FOREIGN KEY (`member`) REFERENCES `employees` (`username`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `members_team_id` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `team_notices`
---
-ALTER TABLE `team_notices`
-  ADD CONSTRAINT `team_notice_id` FOREIGN KEY (`notice_id`) REFERENCES `notices` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `team_notice_teamid` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -13,7 +13,8 @@ class MainScreen(QMainWindow):
         self.salariesButton.clicked.connect(self.manage.salaries)
 
         self.messageSelect.clicked.connect(self.manage.showMessageScreen)
-
+        self.noticeSelect.clicked.connect(self.manage.showNoticeboardScreen)
+        
         self.tasksButton.clicked.connect(self.manage.showTasksScreen)
 
         self.show()

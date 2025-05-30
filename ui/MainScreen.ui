@@ -17,10 +17,10 @@
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="0">
      <layout class="QGridLayout" name="gridLayout">
-      <item row="4" column="0">
-       <widget class="QPushButton" name="salariesButton">
+      <item row="3" column="0">
+       <widget class="QPushButton" name="tasksButton">
         <property name="text">
-         <string>Salaries</string>
+         <string>Tasks</string>
         </property>
        </widget>
       </item>
@@ -31,10 +31,10 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QPushButton" name="tasksButton">
+      <item row="4" column="0">
+       <widget class="QPushButton" name="salariesButton">
         <property name="text">
-         <string>Tasks</string>
+         <string>Salaries</string>
         </property>
        </widget>
       </item>
@@ -56,6 +56,13 @@
        <widget class="QPushButton" name="messageSelect">
         <property name="text">
          <string>Messages</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QPushButton" name="noticeSelect">
+        <property name="text">
+         <string>Πίνακας Ανακοινώσεων</string>
         </property>
        </widget>
       </item>

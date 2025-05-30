@@ -448,3 +448,59 @@ class DBManager:
 
     def queryNoticeboard(self, team_space_id):
         pass
+
+
+    #-----------------Use case 10-----------------------
+    def queryAvailableNotices(self):
+        cursor = self.conn.cursor(dictionary=True)
+        try:
+            cursor.execute("""
+               SELECT id, title, type, created
+                FROM notices
+                ORDER BY id DESC
+            """)
+            return cursor.fetchall()
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+
+
+    def loadNotice(self):
+        cursor = self.conn.cursor(dictionary=True)
+        try:
+            cursor.execute(""" 
+                SELECT title, type, created, body 
+                FROM notices 
+                WHERE id = %s
+            """,  (self.notice_id,))
+            notice = cursor.fetchone()
+            if notice:
+                if self.titleLabel:
+                    self.titleLabel.setText(notice.get("title", ""))
+                if self.typeLabel:
+                    self.typeLabel.setText(notice.get("type", ""))
+                if self.createdLabel:
+                    created = notice.get("created")
+                    if created and hasattr(created, "strftime"):
+                        self.createdLabel.setText(created.strftime("%Y-%m-%d %H:%M"))
+                    else:
+                        self.createdLabel.setText(str(created) if created else "")
+                if self.bodyLabel:
+                    self.bodyLabel.setText(notice.get("body", ""))
+        finally:
+            cursor.close()
+
+    def insertNotice(self, notice_type, title, body):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("""
+                INSERT INTO notices (type, title, body)
+                VALUES (%s, %s, %s)
+            """, (notice_type, title, body))
+            self.conn.commit()
+        except Exception as e:
+            self.conn.rollback()
+            raise e
+        finally:
+            cursor.close()

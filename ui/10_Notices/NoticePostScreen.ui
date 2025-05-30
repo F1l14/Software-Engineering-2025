@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>612</width>
+    <height>627</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="postNoticeLabel">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>-10</y>
+      <width>161</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>ΔΗΜΙΟΥΡΓΙΑ ΑΝΑΚΟΙΝΩΣΗΣ:</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="titleTextEdit">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>70</y>
+      <width>561</width>
+      <height>51</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="postNoticeButton">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>510</y>
+      <width>91</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Ανάρτηση</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="titleLabel">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>50</y>
+      <width>49</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>θΈΜΑ</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="bodyLabel">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>230</y>
+      <width>81</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>ΠΕΡΙΓΡΑΦΗ</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="bodyTextEdit">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>260</y>
+      <width>561</width>
+      <height>151</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="typeLabel">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>150</y>
+      <width>51</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>ΤΥΠΟΣ</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="typeComboBox">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>150</y>
+      <width>161</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="editable">
+     <bool>false</bool>
+    </property>
+    <item>
+     <property name="text">
+      <string>business</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>department</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>team</string>
+     </property>
+    </item>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>612</width>
+     <height>33</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

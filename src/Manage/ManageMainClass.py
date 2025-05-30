@@ -5,6 +5,7 @@ from src.Manage.Projects.ManageProjectClass import ManageProjectClass
 from src.Manage.Salaries.ManageEmployeeListClass import ManageEmployeeListClass
 
 from src.Manage.Messages.ManageMessagesClass import ManageMessagesClass
+from src.Manage.Notices.ManageNoticeboardClass import ManageNoticeboardClass
 
 from src.Manage.Tasks.ManageTasksClass import ManageTasksClass
 
@@ -31,3 +32,6 @@ class ManageMainClass:
     
     def showTasksScreen(self):
         ManageTasksClass()
+
+    def showNoticeboardScreen(self):
+        ManageNoticeboardClass()
