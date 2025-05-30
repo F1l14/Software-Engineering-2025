@@ -1,37 +1,43 @@
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QFrame, QLabel, QRadioButton, QButtonGroup
 from PyQt6 import uic
 from src.Class.DBManager import DBManager
+from src.Class.Session import Session
 
-class EvaluationFillingScreenEmployee(QDialog):
-    def __init__(self):
+class EvaluationFillingScreen(QDialog):
+    def __init__(self, evaluation_for:str):
         super().__init__()
+        self.evaluation_for = evaluation_for
 
-    def display(self,type:str):
-        uic.loadUi("ui/5_Evaluation/EvaluationFillingScreenEmployee.ui", self)
+    def display(self):
+        uic.loadUi("ui/5_Evaluation/EvaluationFillingScreen.ui", self)
 
-        self.submitAnswersButton.setEnabled(False)
+        #self.submitAnswersButton.setEnabled(False)
         self.cancelButton.clicked.connect(self.manage.cancel)
-        self.submitAnswersButton.clicked.connect(self.manage.submit_answers_manager)
+        self.submitAnswersButton.clicked.connect(self.manage.submit_answers)
 
         db = DBManager()
-        questions_data = db.queryEvaluationForm("eval_for_managers")  
-        form_id = questions_data[0][0] if questions_data else None
-        if isinstance(questions_data, str):
-            print("Error fetching questions:", questions_data)
+        if Session.getRole() == "employee":
+            self.questions_data = db.queryEvaluationForm("eval_for_managers")  
+        elif Session.getRole() == "manager":
+            self.questions_data = db.queryEvaluationForm("eval_for_employees")
+        self.form_id = self.questions_data[0][0] if self.questions_data else None
+        if isinstance(self.questions_data, str):
+            self.manage.show_popup("Error", self.questions_data)
             return
 
+        layout = QVBoxLayout(self.formToAnswer)
+        self.formToAnswer.setStyleSheet("background-color: white;")
 
         for i in reversed(range(self.formToAnswer.layout().count())):
             item = self.formToAnswer.layout().itemAt(i)
             if item.widget():
                 item.widget().deleteLater()
 
-        layout = QVBoxLayout(self.formToAnswer)
-        self.formToAnswer.setStyleSheet("background-color: white;")
+        
 
-        for row in questions_data:
-            question_text = row[1]  # question_text
-            answers_list = [a.strip() for a in row[2].split(",") if a.strip()]  # answers
+        for row in self.questions_data:
+            question_text = row[2]  # question_text
+            answers_list = [a.strip() for a in row[3].split(",") if a.strip()]  # answers
 
             frame = QFrame()
             frame_layout = QVBoxLayout(frame)
@@ -74,5 +80,5 @@ class EvaluationFillingScreenEmployee(QDialog):
             layout.addWidget(frame)
 
         layout.addStretch()
-        self.questionsContainer.setLayout(layout)
+        self.formToAnswer.setLayout(layout)
         self.exec()

@@ -1,4 +1,5 @@
 import mysql.connector
+
 class DBManager:
     def __init__(self, host="localhost", user="root", password="", database="LinQ-SEProject"):
         self.conn = mysql.connector.connect(
@@ -470,7 +471,6 @@ class DBManager:
         finally:
             cursor.close()
 
-
     # Use Case 7:
     def queryEmployeeSalaries(self):
         cursor = self.conn.cursor()
@@ -494,7 +494,8 @@ class DBManager:
         finally:
             cursor.close()
 
-    #Use Case 5:
+
+    #USE CASE 5:
     def saveEvaluationForm(self, type, start_date, end_date):
             cursor = self.conn.cursor()
 
@@ -522,7 +523,7 @@ class DBManager:
             finally:
                 cursor.close()
     
-    def querryAllManagers(self):
+    def queryAllManagers(self):
         cursor = self.conn.cursor()
         try:
             cursor.execute("SELECT username FROM users INNER JOIN managers ON users.username = managers.username")
@@ -532,6 +533,7 @@ class DBManager:
             return f"Error: {err}"
         finally:
             cursor.close()
+
 
     
     # Use Case 6:
@@ -553,22 +555,20 @@ class DBManager:
         finally:
             cursor.close()
 
-
-
-
     def queryEvaluationForm(self, type):
         cursor = self.conn.cursor()
         try:
                 cursor.execute("""
                     SELECT 
-                        f.id AS form_id,
+                        f.eval_id AS form_id,
+                        q.question_id AS question_id,
                         q.question_text,
                         q.answers
                     FROM evaluation_forms f
-                    JOIN evaluation_questions q ON f.id = q.eval_id
+                    JOIN evaluation_questions q ON f.eval_id = q.eval_id
                     WHERE f.type = %s
-                    AND f.id = (
-                        SELECT MAX(id)
+                    AND f.eval_id = (
+                        SELECT MAX(eval_id)
                         FROM evaluation_forms
                         WHERE type = %s
                     )
@@ -579,47 +579,113 @@ class DBManager:
         finally:
             cursor.close()
 
-    
-    def saveEvaluationAnswers(self, eval_id, username, answers):
+    def saveEvaluationAnswer(self, eval_id, username, eval_for, question_id, answer):
         cursor = self.conn.cursor()
         try:
-            cursor.execute("INSERT INTO evaluation_answers (eval_id, username, answers) VALUES (%s, %s, %s)", (eval_id, username, ','.join(answers)))
+            cursor.execute("INSERT INTO evaluation_answers (eval_id, username, eval_for, question_id, answers) VALUES (%s, %s, %s, %s, %s)", (eval_id, username, eval_for, question_id, answer))
             self.conn.commit()
         except mysql.connector.Error as err:
             return f"Error: {err}"
         else:
-            return "Answers saved successfully"
+            return "Answer saved successfully"
         finally:
             cursor.close()
-
-    def queryUserType(self, username):
+            
+    def queryManagerEmployees(self, manager_username):
         cursor = self.conn.cursor()
         try:
-            
-            if username == "admin":
-                return "admin"
-
-            
-            cursor.execute("SELECT 1 FROM managers WHERE username = %s", (username,))
-            is_manager = cursor.fetchone() is not None
-
-            if is_manager:
-                return "manager"
-
-            
-            cursor.execute("SELECT 1 FROM employees WHERE username = %s", (username,))
-            is_employee = cursor.fetchone() is not None
-
-            if is_employee:
-                return "employee"
-
-            return "unknown"  
-
+            cursor.execute("""
+                SELECT e.username, u.firstname, u.lastname
+                FROM employees e
+                INNER JOIN users u ON e.username = u.username
+                INNER JOIN managers m ON e.department = m.department
+                WHERE m.username = %s
+            """, (manager_username,))
+            result = cursor.fetchall()
+            return result
         except mysql.connector.Error as err:
-            print(f"Error: {err}")
-            return None
+            return f"Error: {err}"
         finally:
             cursor.close()
+
+    def queryManager(self, username):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("SELECT m.username FROM managers m INNER JOIN employees e ON m.department = e.department WHERE e.username = %s", (username,))
+            result = cursor.fetchone()
+            if result:
+                return result[0]
+            else:
+                return None
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+
+    def getEvaluationEndDate(self):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("SELECT end_date FROM evaluation_forms ORDER BY eval_id DESC LIMIT 1")
+            result = cursor.fetchone()
+            if result:
+                return result[0]
+            else:
+                return None
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+
+    def isEvaluationActive(self, user_type):
+        cursor = self.conn.cursor()
+        try:
+            eval_type = 'eval_for_employees' if user_type == 'manager' else 'eval_for_managers'
+
+            cursor.execute("""
+                SELECT COUNT(*) FROM evaluation_forms 
+                WHERE type = %s AND NOW() BETWEEN start_date AND end_date
+            """, (eval_type,))
+            result = cursor.fetchone()
+            if result[0] > 0:
+                return True
+            else:
+                return False
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+            
+    def employeeHasAnswered(self, username):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("SELECT COUNT(*) FROM evaluation_answers WHERE username = %s", (username,))
+            result = cursor.fetchone()
+            return result[0] > 0
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+    #END OF USE CASE 5
+    
+    # Use Case 6:
+    def queryTeams(self, username):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("""
+                SELECT 
+                    t.id AS team_id, 
+                    t.name AS team_name 
+                FROM teams t
+                INNER JOIN team_members tm ON t.id = tm.team_id
+                WHERE tm.member = %s
+            """, (username,))
+            result = cursor.fetchall()
+            return result
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+
 
 
     def createBonusDetails(self, badget_numbers, perc1, perc2):
@@ -749,6 +815,146 @@ class DBManager:
     def queryNoticeboard(self, team_space_id):
         pass
 
+    #USE CASE 9
+    def queryUserLeaveRequests(self, username):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("""
+                SELECT leave_request_id, start_date, end_date, state
+                FROM employee_leave_request 
+                WHERE user = %s
+            """, (username,))
+            result = cursor.fetchall()
+            return result
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+
+    def insertLeaveRequest(self, user, start_date, end_date, reason):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("INSERT INTO employee_leave_request (user, start_date, end_date, reason,state) VALUES (%s, %s, %s, %s,%s)", (user, start_date, end_date, reason,"Pending"))
+            self.conn.commit()
+            return True
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+    
+    def checkLeaveCapability(self, user):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("SELECT COUNT(*) FROM employee_leave_request WHERE user = %s AND state = 'Pending'", (user,))
+            result = cursor.fetchone()
+            return result[0] == 0
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+    
+    def queryDepartmentLeaveRequests(self, manager_username):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("""
+                SELECT elr.leave_request_id, elr.user, elr.start_date, elr.end_date, elr.reason
+                FROM employee_leave_request elr
+                INNER JOIN employees e ON elr.user = e.username
+                INNER JOIN managers m ON e.department = m.department
+                WHERE m.username = %s AND elr.state = 'Pending'
+            """, (manager_username,))
+            result = cursor.fetchall()
+            return result
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+    
+    def queryDepartmentLeaves(self, manager_username):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("""
+                SELECT user, start_date, end_date
+                FROM employee_leave
+                INNER JOIN employees e ON employee_leave.user = e.username
+                INNER JOIN managers m ON e.department = m.department
+                WHERE m.username = %s
+            """, (manager_username,))
+            result = cursor.fetchall()
+            return result
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+
+    def queryLeaveRequestById(self, request_id):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("""
+                SELECT user, start_date, end_date, reason
+                FROM employee_leave_request 
+                WHERE leave_request_id = %s
+            """, (request_id,))
+            result = cursor.fetchall()
+            return result
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+    
+    def checkSameDateRequests(self, employee, start_date, end_date):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("""
+                SELECT user, start_date, end_date
+                FROM employee_leave_request 
+                WHERE user != %s AND state = 'Accepted' AND (
+                    (start_date <= %s AND end_date >= %s) OR
+                    (start_date <= %s AND end_date >= %s) OR
+                    (start_date >= %s AND end_date <= %s)
+                )
+            """, (employee, start_date, start_date, end_date, end_date, start_date, end_date))
+            result = cursor.fetchall()
+            return result
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+
+    def saveRequest(self, employee, start_date, end_date):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("""
+                UPDATE employee_leave_request
+                SET state = 'Accepted'
+                WHERE user = %s AND start_date = %s AND end_date = %s
+            """, (employee, start_date, end_date))
+            cursor.execute("""
+                INSERT INTO employee_leave (user, start_date, end_date)
+                VALUES (%s, %s, %s)
+            """, (employee, start_date, end_date))
+            self.conn.commit()
+            return True
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+
+    def saveDeclinedRequest(self, employee, start_date, end_date, decline_reason):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("""
+                UPDATE employee_leave_request
+                SET state = 'Declined', reason = %s
+                WHERE user = %s AND start_date = %s AND end_date = %s
+            """, (decline_reason, employee, start_date, end_date))
+            self.conn.commit()
+            return True
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
+    #END OF USE CASE 9
 
     def queryUserType(self, username):
         cursor = self.conn.cursor()

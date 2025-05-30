@@ -49,7 +49,7 @@
     </property>
    </widget>
   </widget>
-  <widget class="QPushButton" name="submitAnwersButton">
+  <widget class="QPushButton" name="submitAnswersButton">
    <property name="geometry">
     <rect>
      <x>10</x>
