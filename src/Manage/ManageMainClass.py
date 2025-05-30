@@ -3,6 +3,8 @@ from src.Manage.Progress.ManageProgressClass import ManageProgressClass
 from src.Manage.Team_Space.ManageTeamListClass import ManageTeamListClass
 from src.Manage.Projects.ManageProjectClass import ManageProjectClass
 from src.Manage.Salaries.ManageEmployeeListClass import ManageEmployeeListClass
+from src.Manage.Messages.ManageMessagesClass import ManageMessagesClass
+from src.Manage.Notices.ManageNoticeboardClass import ManageNoticeboardClass
 from src.Manage.Evaluation.ManageEvalFormClass import ManageEvalFormClass
 from src.Manage.Evaluation.ManageFormAnswerClass import ManageFormAnswerClass
 from src.Manage.Leaves.ManageLeaveRequestsClass import ManageLeaveRequestsClass
@@ -39,7 +41,13 @@ class ManageMainClass:
         ManageEmployeeListClass()        
 
     def salaries(self):
-        ManageEmployeeListClass()        
+        ManageEmployeeListClass()
+
+    def showMessageScreen(self):
+        ManageMessagesClass()
+
+    def showNoticeboardScreen(self):
+        ManageNoticeboardClass()
 
     def showEvaluationFormatWindow(self):
         user_type = Session.getRole()
@@ -63,4 +71,3 @@ class ManageMainClass:
             ManageLeavesClass()
         else:
             ManageLeaveRequestsClass()
-        

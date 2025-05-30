@@ -116,17 +116,6 @@ INSERT INTO `departments` (`name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `department_notices`
---
-
-CREATE TABLE `department_notices` (
-  `notice_id` int(11) NOT NULL,
-  `department` varchar(80) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `employees`
 --
 
@@ -139,6 +128,7 @@ CREATE TABLE `employees` (
 --
 -- Dumping data for table `employees`
 --
+
 
 INSERT INTO `employees` (`username`, `department`, `salary`) VALUES
 ('anikolaou', 'Πωλήσεις', 3400),
@@ -194,6 +184,7 @@ CREATE TABLE `employee_leave_request` (
 
 INSERT INTO `employee_leave_request` (`leave_request_id`, `user`, `start_date`, `end_date`, `reason`, `state`, `decline_reason`) VALUES
 (2, 'kchatzidaki', '2026-01-01', '2026-01-04', 'Διακοπάρες', 'Accepted', NULL);
+
 
 -- --------------------------------------------------------
 
@@ -312,9 +303,11 @@ INSERT INTO `managers` (`username`, `department`) VALUES
 CREATE TABLE `messages` (
   `id` int(11) NOT NULL,
   `history_id` int(11) NOT NULL,
+  `username` varchar(80) NOT NULL,
   `from_user` varchar(80) NOT NULL,
-  `to_user` varchar(80) NOT NULL
+  `to_user` varchar(80) NOT NULL 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 
 -- --------------------------------------------------------
 
@@ -323,12 +316,25 @@ CREATE TABLE `messages` (
 --
 
 CREATE TABLE `messages_history` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL PRIMARY KEY,
   `name` varchar(80) NOT NULL,
   `user_1` varchar(80) NOT NULL,
   `user_2` varchar(80) NOT NULL,
-  `history` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`history`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `history` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL 
+  CHECK (json_valid(`history`))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+ NOT NULL CHECK (JSON_VALID(`history`);
+
+INSERT INTO messages_history (name, user_1, user_2, history) VALUES
+('Συνομιλία Jane και John', 'janesmith', 'johndoe', JSON_ARRAY(
+    JSON_OBJECT('from', 'janesmith', 'to', 'johndoe', 'message', 'Γεια σου John!', 'timestamp', '2025-05-26 12:00:00'),
+    JSON_OBJECT('from', 'johndoe', 'to', 'janesmith', 'message', 'Γεια σου Jane!', 'timestamp', '2025-05-26 12:01:00')
+)),
+('Συνομιλία Jane και Μαρία', 'janesmith', 'mkonstantinou', JSON_ARRAY(
+    JSON_OBJECT('from', 'janesmith', 'to', 'mkonstantinou', 'message', 'Καλημέρα!', 'timestamp', '2025-05-26 10:00:00'),
+    JSON_OBJECT('from', 'mkonstantinou', 'to', 'janesmith', 'message', 'Καλημέρα και σε σένα!', 'timestamp', '2025-05-26 10:01:00')
+));
+
 
 -- --------------------------------------------------------
 
@@ -337,11 +343,18 @@ CREATE TABLE `messages_history` (
 --
 
 CREATE TABLE `notices` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` enum('business','department','team') NOT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `body` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO notices (type, title, body) VALUES
+('business', 'Στρατηγική 2025', 'Το πλάνο για το 2025 παρουσιάζεται την Τρίτη.'),
+('department', 'Αλλαγή Ωραρίου', 'Το νέο ωράριο ισχύει από 1η Ιουνίου.'),
+('team', 'Ομαδική Συνάντηση', 'Συνάντηση ομάδας στις 14:00 στην αίθουσα Δ.'),
+('business', 'Νέα Συνεργασία', 'Ξεκινάμε συνεργασία με την εταιρεία X.'),
+('team', 'Ανασκόπηση Sprint', 'Η ανασκόπηση sprint θα γίνει Παρασκευή.');
 
 -- --------------------------------------------------------
 
@@ -525,16 +538,7 @@ INSERT INTO `team_members` (`team_id`, `member`) VALUES
 (6, 'kchatzidaki'),
 (6, 'tmichailidis');
 
--- --------------------------------------------------------
 
---
--- Table structure for table `team_notices`
---
-
-CREATE TABLE `team_notices` (
-  `notice_id` int(11) NOT NULL,
-  `team_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -572,6 +576,7 @@ INSERT INTO `users` (`username`, `password`, `firstname`, `lastname`) VALUES
 ('santoniou', 'root', 'Σοφία', 'Αντωνίου'),
 ('tmichailidis', 'root', 'Θανάσης', 'Μιχαηλίδης');
 
+
 --
 -- Indexes for dumped tables
 --
@@ -595,12 +600,6 @@ ALTER TABLE `business`
 ALTER TABLE `departments`
   ADD PRIMARY KEY (`name`);
 
---
--- Indexes for table `department_notices`
---
-ALTER TABLE `department_notices`
-  ADD PRIMARY KEY (`notice_id`,`department`),
-  ADD KEY `dep_notice_depname` (`department`);
 
 --
 -- Indexes for table `employees`
@@ -671,13 +670,15 @@ ALTER TABLE `messages`
   ADD PRIMARY KEY (`id`),
   ADD KEY `message_history_id` (`history_id`),
   ADD KEY `message_from_user` (`from_user`),
-  ADD KEY `message_to_user` (`to_user`);
+  ADD KEY `message_to_user` (`to_user`),
+  MODIFY COLUMN id INT AUTO_INCREMENT PRIMARY KEY;
 
 --
 -- Indexes for table `messages_history`
 --
-ALTER TABLE `messages_history`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE messages_history 
+MODIFY COLUMN id INT AUTO_INCREMENT PRIMARY KEY;
+
 
 --
 -- Indexes for table `notices`
@@ -736,12 +737,6 @@ ALTER TABLE `team_members`
   ADD PRIMARY KEY (`team_id`,`member`),
   ADD KEY `member_employee` (`member`);
 
---
--- Indexes for table `team_notices`
---
-ALTER TABLE `team_notices`
-  ADD PRIMARY KEY (`notice_id`,`team_id`),
-  ADD KEY `team_notice_teamid` (`team_id`);
 
 --
 -- Indexes for table `users`
@@ -836,13 +831,6 @@ ALTER TABLE `business`
   ADD CONSTRAINT `business_owner_user` FOREIGN KEY (`owner`) REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `department_notices`
---
-ALTER TABLE `department_notices`
-  ADD CONSTRAINT `dep_notice_depname` FOREIGN KEY (`department`) REFERENCES `departments` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `dep_notice_id` FOREIGN KEY (`notice_id`) REFERENCES `notices` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
 -- Constraints for table `employees`
 --
 ALTER TABLE `employees`
@@ -913,7 +901,30 @@ ALTER TABLE `notifications`
 --
 ALTER TABLE `project_tags`
   ADD CONSTRAINT `project_tags_tag` FOREIGN KEY (`tag`) REFERENCES `tags` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
-COMMIT;
+
+
+--
+-- Constraints for table `tasks`
+--
+ALTER TABLE `tasks`
+  ADD CONSTRAINT `task_assigned_member` FOREIGN KEY (`assigned_to`) REFERENCES `team_members` (`member`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `task_project_id` FOREIGN KEY (`project`) REFERENCES `projects` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `task_team_id` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `teams`
+--
+ALTER TABLE `teams`
+  ADD CONSTRAINT `team_department` FOREIGN KEY (`department`) REFERENCES `departments` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `team_leader_employee` FOREIGN KEY (`leader`) REFERENCES `employees` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `team_members`
+--
+ALTER TABLE `team_members`
+  ADD CONSTRAINT `member_employee` FOREIGN KEY (`member`) REFERENCES `employees` (`username`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `members_team_id` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
