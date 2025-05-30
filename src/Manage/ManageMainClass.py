@@ -7,6 +7,8 @@ from src.Manage.Evaluation.ManageEvalFormClass import ManageEvalFormClass
 from src.Manage.Evaluation.ManageFormAnswerClass import ManageFormAnswerClass
 from src.Class.DBManager import DBManager
 from src.Manage.Tasks.ManageTasksClass import ManageTasksClass
+from src.Class.DBManager import DBManager
+from src.Class.Session import Session
 
 class ManageMainClass:
     def __init__(self):
@@ -21,7 +23,13 @@ class ManageMainClass:
         ManageTeamListClass()
         
     def showProjectsScreen(self):
-        ManageProjectClass()
+        user = Session.getUser()
+        db = DBManager()
+        user_type = db.queryUserType(user)
+        ManageProjectClass(user_type)
+
+    def showEmployeeListScreen(self):
+        ManageEmployeeListClass()        
 
     def salaries(self):
         ManageEmployeeListClass()        
@@ -35,6 +43,7 @@ class ManageMainClass:
             ManageFormAnswerClass()
 
         ManageEmployeeListClass()
+
     
     def showTasksScreen(self):
         ManageTasksClass()
