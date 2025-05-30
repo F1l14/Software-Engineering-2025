@@ -54,10 +54,9 @@ class ManageLeavesClass:
             start_date = leave_request[0][1].strftime('%d/%m/%Y')
             end_date = leave_request[0][2].strftime('%d/%m/%Y')
             reason = leave_request[0][3]
-            self.leave_selected_management_screen.display(employee, start_date, end_date, reason)
-            self.leave_request_management_screen.close()
             otherEmployees = self.db.checkSameDateRequests(employee, start_date, end_date)
-            self.leave_selected_management_screen.showSameDateRequests(otherEmployees)
+            self.leave_selected_management_screen.display(employee, start_date, end_date, reason, otherEmployees)
+            self.leave_request_management_screen.close()
         else:
             self.show_popup("Error", "No leave request found for this employee.")
         

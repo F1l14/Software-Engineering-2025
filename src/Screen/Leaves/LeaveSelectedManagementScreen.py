@@ -6,7 +6,7 @@ class LeaveSelectedManagementScreen(QDialog):
     def __init__(self):
         super().__init__()
         
-    def display(self, employee:str, start_date:str=None, end_date:str=None, reason:str=None):
+    def display(self, employee:str, start_date:str=None, end_date:str=None, reason:str=None, other_employees:list=None):
         uic.loadUi("ui/9_Leaves/LeaveSelectedManagementScreen.ui", self)
         self.employeeName.setText(employee)
         self.startDate.setText(start_date)
@@ -22,6 +22,7 @@ class LeaveSelectedManagementScreen(QDialog):
         self.otherEmployeesList.setHorizontalHeaderLabels(["Employee", "Start Date", "End Date"])
         self.otherEmployeesList.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.otherEmployeesList.verticalHeader().setDefaultSectionSize(40)
+        self.showSameDateRequests(other_employees)
         self.exec()
         
     def showSameDateRequests(self, other_employees:list):
