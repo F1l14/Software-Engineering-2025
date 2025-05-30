@@ -1,21 +1,22 @@
 from PyQt6.QtWidgets import QDialog, QTableWidget, QTableWidgetItem, QMessageBox
 from PyQt6 import uic
+from src.Class.Session import Session
 
-class ProjectScreen(QDialog):
+class ManagerProjectScreen(QDialog):
     def __init__(self):
         super().__init__()
     
     def display(self):
-        uic.loadUi("ui/2_Projects/ProjectScreen.ui", self)
+        uic.loadUi("ui/2_Projects/ManagerProjectScreen.ui", self)
         self.projectList = self.findChild(QTableWidget, "projectList")
         self.showAllProjects()
 
-        self.createProjectButton.clicked.connect(self.manage.showProjectCreation)
-        self.editProjectButton.clicked.connect(self.checkSelection)
+        self.assignButton.clicked.connect(self.checkSelection)
         self.exec()
 
     def showAllProjects(self):
-        self.projects = self.manage.getAllProjects()
+        username = Session.getUser()
+        self.projects = self.manage.getMyProjects(username)
         id = [item[0] for item in self.projects]
         name = [item[1] for item in self.projects]
         description = [item[2] for item in self.projects]
@@ -44,7 +45,7 @@ class ProjectScreen(QDialog):
     def checkSelection(self):
         selected_row = self.projectList.currentRow()
         if selected_row == -1:
-            QMessageBox.information(self, "No Selection", "Please select a project to edit.")
+            QMessageBox.information(self, "No Selection", "Please select a project.")
             return
 
         project_data = {
@@ -56,4 +57,4 @@ class ProjectScreen(QDialog):
             "value": self.projectList.item(selected_row, 8).text(),
         }
 
-        self.manage.showProjectEditScreen(project_data)
+        self.manage.showProjectTeamsScreen(project_data)

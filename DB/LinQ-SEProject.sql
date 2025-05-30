@@ -92,25 +92,26 @@ CREATE TABLE `department_notices` (
 
 CREATE TABLE `employees` (
   `username` varchar(80) NOT NULL,
-  `department` varchar(80) NOT NULL
+  `department` varchar(80) NOT NULL,
+  `salary` float(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `employees`
 --
 
-INSERT INTO `employees` (`username`, `department`) VALUES
-('anikolaou', 'Πωλήσεις'),
-('epanagiotou', 'Ανθρώπινο Δυναμικό'),
-('gpapadopoulos', 'Πληροφορική'),
-('ivasileiou', 'Προμήθειες'),
-('janesmith', 'asdfasf'),
-('kchatzidaki', 'Νομικό Τμήμα'),
-('kdimetriou', 'Μάρκετινγκ'),
-('mkonstantinou', 'Λογιστήριο'),
-('nstathopoulos', 'Έρευνα και Ανάπτυξη'),
-('santoniou', 'Διοίκηση'),
-('tmichailidis', 'Υποστήριξη');
+INSERT INTO `employees` (`username`, `department`, `salary`) VALUES
+('anikolaou', 'Πωλήσεις', 3400.00),
+('epanagiotou', 'Ανθρώπινο Δυναμικό', 3200.00),
+('gpapadopoulos', 'Πληροφορική', 3700.00),
+('ivasileiou', 'Προμήθειες', 3100.00),
+('kchatzidaki', 'Νομικό Τμήμα', 3600.00),
+('kdimetriou', 'Μάρκετινγκ', 3300.00),
+('mkonstantinou', 'Λογιστήριο', 3550.00),
+('nstathopoulos', 'Έρευνα και Ανάπτυξη', 4000.00),
+('santoniou', 'Διοίκηση', 3800.00),
+('tmichailidis', 'Υποστήριξη', 3000.00),
+('janesmith', 'Νομικό Τμήμα', 1000.00);
 
 -- --------------------------------------------------------
 
@@ -139,6 +140,19 @@ CREATE TABLE `events` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `bonus_setup`
+--
+
+CREATE TABLE `bonus_setup` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `category_value` FLOAT NOT NULL,  
+  `manager_bonus_percentage` FLOAT NOT NULL,  
+  `employee_bonus_percentage` FLOAT NOT NULL 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `managers`
 --
 
@@ -153,7 +167,6 @@ CREATE TABLE `managers` (
 
 INSERT INTO `managers` (`username`, `department`) VALUES
 ('epanagiotou', 'Ανθρώπινο Δυναμικό'),
-('johndoe', 'asdfasf'),
 ('kdimetriou', 'Μάρκετινγκ'),
 ('santoniou', 'Διοίκηση');
 
@@ -234,18 +247,42 @@ CREATE TABLE `projects` (
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `status` enum('unassigned','assigned','completed') NOT NULL DEFAULT 'unassigned',
   `completed_at` datetime DEFAULT NULL,
-  `deadline` datetime NOT NULL
+  `deadline` datetime NOT NULL,
+  `value` FLOAT NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `projects`
 --
 
-INSERT INTO `projects` (`id`, `name`, `description`, `team_id`, `created`, `status`, `completed_at`, `deadline`) VALUES
-(1, 'ERP Εφαρμογή', 'Ανάπτυξη συστήματος ERP για την εταιρεία', 1, '2025-05-22 13:14:27', 'completed', '2025-05-22 16:33:48', '2025-07-15 00:00:00'),
-(2, 'Web Portal Πελατών', 'Δημιουργία διαδραστικού portal για πελάτες', 3, '2025-05-22 13:14:27', 'completed', '2025-05-22 16:33:55', '2025-06-20 00:00:00'),
-(3, 'Σύστημα HR', 'Διαχείριση προσωπικού και αιτήσεων', 2, '2025-05-22 13:14:27', 'assigned', NULL, '2025-09-30 00:00:00'),
-(4, 'NEW_project', 'asdasdfasfd', 5, '2025-05-26 20:22:44', 'unassigned', NULL, '2025-05-26 22:21:54');
+INSERT INTO `projects` (`id`, `name`, `description`, `team_id`, `created`, `status`, `completed_at`, `deadline`, `value`) VALUES
+(1, 'ERP Εφαρμογή', 'Ανάπτυξη συστήματος ERP για την εταιρεία', 1, '2025-05-22 13:14:27', 'completed', '2025-05-22 16:33:48', '2025-07-15 00:00:00', 45000.00),
+(2, 'Web Portal Πελατών', 'Δημιουργία διαδραστικού portal για πελάτες', 3, '2025-05-22 13:14:27', 'completed', '2025-05-22 16:33:55', '2025-06-20 00:00:00', 238000.00),
+(3, 'Σύστημα HR', 'Διαχείριση προσωπικού και αιτήσεων', 2, '2025-05-22 13:14:27', 'assigned', NULL, '2025-09-30 00:00:00', 1200000.00),
+(4, 'NEW_project', 'asdasdfasfd', 5, '2025-05-26 20:22:44', 'unassigned', NULL, '2025-05-26 22:21:54', 69000.00);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `project_departments`
+--
+
+CREATE TABLE `project_departments` (
+  `project_id` INT NOT NULL,
+  `department_name` varchar(80) NOT NULL
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `project_departments`
+--
+
+INSERT INTO `project_departments` (`project_id`, `department_name`) VALUES
+('2', 'Διοίκηση'),
+('1', 'Διοίκηση'),
+('3', 'Ανθρώπινο Δυναμικό'),
+('3', 'Έρευνα και Ανάπτυξη'),
+('2', 'Ανθρώπινο Δυναμικό'),
+('2', 'Πληροφορική');
 
 -- --------------------------------------------------------
 
@@ -372,6 +409,23 @@ CREATE TABLE `team_notices` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `bonus_state`
+--
+
+CREATE TABLE `bonus_state` (
+  `state` ENUM('active', 'inactive') NOT NULL DEFAULT 'inactive' 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `bonus_state`
+--
+
+INSERT INTO `bonus_state` (`state`) VALUES
+('inactive');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -404,6 +458,8 @@ INSERT INTO `users` (`username`, `password`, `firstname`, `lastname`) VALUES
 ('nstathopoulos', 'root', 'Νίκος', 'Σταθόπουλος'),
 ('santoniou', 'root', 'Σοφία', 'Αντωνίου'),
 ('tmichailidis', 'root', 'Θανάσης', 'Μιχαηλίδης');
+
+
 
 --
 -- Indexes for dumped tables
@@ -491,6 +547,12 @@ ALTER TABLE `notifications`
 ALTER TABLE `projects`
   ADD PRIMARY KEY (`id`),
   ADD KEY `project_team_id` (`team_id`);
+
+--
+-- Indexes for table `projects`
+--
+ALTER TABLE `project_departments`
+  ADD PRIMARY KEY (`project_id`, `department_name`);
 
 --
 -- Indexes for table `project_tags`
@@ -657,6 +719,13 @@ ALTER TABLE `notifications`
 --
 ALTER TABLE `projects`
   ADD CONSTRAINT `project_team_id` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `projects`
+--
+ALTER TABLE `project_departments`
+  ADD CONSTRAINT `project_id` FOREIGN KEY (`project_id`) REFERENCES `projects`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `department_name` FOREIGN KEY (`department_name`) REFERENCES `departments`(`name`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `project_tags`

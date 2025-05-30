@@ -11,17 +11,22 @@ class ProjectCreationScreen(QDialog):
         self.nameBox = self.findChild(QLineEdit, "nameBox")
         self.descriptionBox = self.findChild(QTextEdit, "descriptionBox")
         self.deadlineBox = self.findChild(QDateTimeEdit, "deadlineBox")
+        self.valueBox = self.findChild(QLineEdit, "valueBox")
         self.nextButton = self.findChild(QPushButton, "nextButton")
-        self.nextButton.clicked.connect(self.checkProjectDetails)
+        self.nextButton.clicked.connect(self.submitProjectDetails)
         self.backButton = self.findChild(QPushButton, "backButton")
-        self.backButton.clicked.connect(self.cancel)
+        self.backButton.clicked.connect(self.back)
         self.exec()
 
-    def checkProjectDetails(self):
+    def submitProjectDetails(self):
         name = self.nameBox.text().strip()
         description = self.descriptionBox.toPlainText().strip()
         deadline = self.deadlineBox.dateTime().toPyDateTime()
+        value = self.valueBox.text().strip()
+        self.checkProjectDetails(name, description, deadline, value)
 
+    def checkProjectDetails(self, name, description, deadline, value):
+        projectDetails = [name, description, deadline, value]
         errors = []
 
         if not name:
@@ -30,12 +35,16 @@ class ProjectCreationScreen(QDialog):
             errors.append("Project description cannot be empty.")
         if deadline <= datetime.now():
             errors.append("Deadline must be a future date and time.")
+        if not value:
+            errors.append("Project value cannot be empty.")
 
         if errors:
             QMessageBox.warning(self, "Input Error", "\n".join(errors))
             return False
-
+        
+        self.close()
+        self.manage.showAssignProjectScreen(projectDetails)
         return True
 
-    def cancel(self):
+    def back(self):
         self.reject()

@@ -33,7 +33,10 @@ class ManageMainClass:
         ManageTeamListClass()
         
     def showProjectsScreen(self):
-        ManageProjectClass()
+        ManageProjectClass(Session.getRole())
+
+    def showEmployeeListScreen(self):
+        ManageEmployeeListClass()        
 
     def salaries(self):
         ManageEmployeeListClass()        
@@ -50,7 +53,6 @@ class ManageMainClass:
                 return
             else:
                 ManageFormAnswerClass()
-
 
     def showTasksScreen(self):
         ManageTasksClass()
