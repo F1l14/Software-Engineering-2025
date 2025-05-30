@@ -15,7 +15,7 @@ class LeaveRequestDeclinedScreen(QDialog):
     def submitDeclineRequest(self):
             decline_reason = self.declineReason.toPlainText()
             if not decline_reason.strip():
-                self.show_popup("Error", "Please provide a reason for declining the leave request.")
+                self.manage.show_popup("Error", "Please provide a reason for declining the leave request.")
                 return
             self.manage.declineRequest(self.manage.leave_selected_management_screen.employeeName.text(), self.manage.leave_selected_management_screen.startDate.text(), self.manage.leave_selected_management_screen.endDate.text(), decline_reason)
             self.close()
