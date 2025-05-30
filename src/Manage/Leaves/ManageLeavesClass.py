@@ -90,7 +90,7 @@ class ManageLeavesClass:
             self.db.createNotification(
                 employee, 
                 "Leave Request Answer",
-                f"Your leave request from {start_date} to {end_date} has been declined by {self.user.name}. Reason: {decline_reason}"
+                f"Your leave request from {start_date} to {end_date} has been declined by {self.user}. Reason: {decline_reason}"
             )
             self.show_popup("Success", "Leave request declined successfully.")
             self.leave_request_declined_screen.close()
