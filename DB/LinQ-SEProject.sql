@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 27, 2025 at 12:54 AM
+-- Generation Time: May 30, 2025 at 03:42 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -20,6 +20,46 @@ SET time_zone = "+00:00";
 --
 -- Database: `LinQ-SEProject`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bonus_setup`
+--
+
+CREATE TABLE `bonus_setup` (
+  `id` int(11) NOT NULL,
+  `category_value` float NOT NULL,
+  `manager_bonus_percentage` float NOT NULL,
+  `employee_bonus_percentage` float NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `bonus_setup`
+--
+
+INSERT INTO `bonus_setup` (`id`, `category_value`, `manager_bonus_percentage`, `employee_bonus_percentage`) VALUES
+(1, 23121, 1, 2),
+(2, 1313120, 2, 3),
+(3, 2313320, 3, 4),
+(4, 323232000, 5, 5);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bonus_state`
+--
+
+CREATE TABLE `bonus_state` (
+  `state` enum('active','inactive') NOT NULL DEFAULT 'inactive'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `bonus_state`
+--
+
+INSERT INTO `bonus_state` (`state`) VALUES
+('inactive');
 
 -- --------------------------------------------------------
 
@@ -81,26 +121,69 @@ INSERT INTO `departments` (`name`) VALUES
 
 CREATE TABLE `employees` (
   `username` varchar(80) NOT NULL,
-  `department` varchar(80) NOT NULL
+  `department` varchar(80) NOT NULL,
+  `salary` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `employees`
 --
 
-INSERT INTO `employees` (`username`, `department`) VALUES
-('anikolaou', 'Πωλήσεις'),
-('chatHistoryTextBrowser
-', 'Ανθρώπινο Δυναμικό'),
-('gpapadopoulos', 'Πληροφορική'),
-('ivasileiou', 'Προμήθειες'),
-('janesmith', 'asdfasf'),
-('kchatzidaki', 'Νομικό Τμήμα'),
-('kdimetriou', 'Μάρκετινγκ'),
-('mkonstantinou', 'Λογιστήριο'),
-('nstathopoulos', 'Έρευνα και Ανάπτυξη'),
-('santoniou', 'Διοίκηση'),
-('tmichailidis', 'Υποστήριξη');
+
+INSERT INTO `employees` (`username`, `department`, `salary`) VALUES
+('anikolaou', 'Πωλήσεις', 3400),
+('epanagiotou', 'Ανθρώπινο Δυναμικό', 3200),
+('gpapadopoulos', 'Πληροφορική', 3700),
+('ivasileiou', 'Προμήθειες', 3100),
+('janesmith', 'Νομικό Τμήμα', 1000),
+('kchatzidaki', 'Διοίκηση', 3600),
+('kdimetriou', 'Μάρκετινγκ', 3300),
+('mkonstantinou', 'Λογιστήριο', 3550),
+('nstathopoulos', 'Έρευνα και Ανάπτυξη', 4000),
+('tmichailidis', 'Υποστήριξη', 3000);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `employee_leave`
+--
+
+CREATE TABLE `employee_leave` (
+  `user` varchar(80) NOT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `leave_id` int(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `employee_leave`
+--
+
+INSERT INTO `employee_leave` (`user`, `start_date`, `end_date`, `leave_id`) VALUES
+('kchatzidaki', '2026-01-01', '2026-01-04', 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `employee_leave_request`
+--
+
+CREATE TABLE `employee_leave_request` (
+  `leave_request_id` int(10) NOT NULL,
+  `user` varchar(80) NOT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `reason` text NOT NULL,
+  `state` enum('Pending','Accepted','Declined','') NOT NULL,
+  `decline_reason` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `employee_leave_request`
+--
+
+INSERT INTO `employee_leave_request` (`leave_request_id`, `user`, `start_date`, `end_date`, `reason`, `state`, `decline_reason`) VALUES
+(2, 'kchatzidaki', '2026-01-01', '2026-01-04', 'Διακοπάρες', 'Accepted', NULL);
 
 
 -- --------------------------------------------------------
@@ -113,6 +196,70 @@ CREATE TABLE `employee_tags` (
   `employee` varchar(80) NOT NULL,
   `tag` varchar(80) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `evaluation_answers`
+--
+
+CREATE TABLE `evaluation_answers` (
+  `eval_id` int(10) NOT NULL,
+  `username` varchar(80) NOT NULL,
+  `eval_for` varchar(80) NOT NULL,
+  `question_id` int(10) NOT NULL,
+  `answers` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `evaluation_answers`
+--
+
+INSERT INTO `evaluation_answers` (`eval_id`, `username`, `eval_for`, `question_id`, `answers`) VALUES
+(1, 'kchatzidaki', 'santoniou', 1, '123'),
+(2, 'santoniou', 'kchatzidaki', 2, 'dfadsf');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `evaluation_forms`
+--
+
+CREATE TABLE `evaluation_forms` (
+  `eval_id` int(10) NOT NULL,
+  `type` enum('eval_for_employees','eval_for_managers') NOT NULL,
+  `start_date` datetime NOT NULL,
+  `end_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `evaluation_forms`
+--
+
+INSERT INTO `evaluation_forms` (`eval_id`, `type`, `start_date`, `end_date`) VALUES
+(1, 'eval_for_managers', '2025-01-01 00:00:00', '2026-01-01 00:00:00'),
+(2, 'eval_for_employees', '2025-01-01 00:00:00', '2026-01-01 00:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `evaluation_questions`
+--
+
+CREATE TABLE `evaluation_questions` (
+  `question_id` int(10) NOT NULL,
+  `eval_id` int(10) NOT NULL,
+  `question_text` text NOT NULL,
+  `answers` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `evaluation_questions`
+--
+
+INSERT INTO `evaluation_questions` (`question_id`, `eval_id`, `question_text`, `answers`) VALUES
+(1, 1, '123', '123,456'),
+(2, 2, 'eval', 'dfadsf');
 
 -- --------------------------------------------------------
 
@@ -145,7 +292,6 @@ CREATE TABLE `managers` (
 INSERT INTO `managers` (`username`, `department`) VALUES
 ('epanagiotou', 'Ανθρώπινο Δυναμικό'),
 ('johndoe', 'asdfasf'),
-('kdimetriou', 'Μάρκετινγκ'),
 ('santoniou', 'Διοίκηση');
 
 -- --------------------------------------------------------
@@ -247,18 +393,49 @@ CREATE TABLE `projects` (
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `status` enum('unassigned','assigned','completed') NOT NULL DEFAULT 'unassigned',
   `completed_at` datetime DEFAULT NULL,
-  `deadline` datetime NOT NULL
+  `deadline` datetime NOT NULL,
+  `value` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `projects`
 --
 
-INSERT INTO `projects` (`id`, `name`, `description`, `team_id`, `created`, `status`, `completed_at`, `deadline`) VALUES
-(1, 'ERP Εφαρμογή', 'Ανάπτυξη συστήματος ERP για την εταιρεία', 1, '2025-05-22 13:14:27', 'completed', '2025-05-22 16:33:48', '2025-07-15 00:00:00'),
-(2, 'Web Portal Πελατών', 'Δημιουργία διαδραστικού portal για πελάτες', 3, '2025-05-22 13:14:27', 'completed', '2025-05-22 16:33:55', '2025-06-20 00:00:00'),
-(3, 'Σύστημα HR', 'Διαχείριση προσωπικού και αιτήσεων', 2, '2025-05-22 13:14:27', 'assigned', NULL, '2025-09-30 00:00:00'),
-(4, 'NEW_project', 'asdasdfasfd', 5, '2025-05-26 20:22:44', 'unassigned', NULL, '2025-05-26 22:21:54');
+INSERT INTO `projects` (`id`, `name`, `description`, `team_id`, `created`, `status`, `completed_at`, `deadline`, `value`) VALUES
+(1, 'ERP Εφαρμογή', 'Ανάπτυξη συστήματος ERP για την εταιρεία', 1, '2025-05-22 10:14:27', 'completed', '2025-05-22 16:33:48', '2025-07-15 00:00:00', 45000),
+(2, 'Web Portal Πελατών', 'Δημιουργία διαδραστικού portal για πελάτες', 3, '2025-05-22 10:14:27', 'completed', '2025-05-22 16:33:55', '2025-06-20 00:00:00', 238000),
+(3, 'Σύστημα HR', 'Διαχείριση προσωπικού και αιτήσεων', 2, '2025-05-22 10:14:27', 'assigned', NULL, '2025-09-30 00:00:00', 1200000),
+(4, 'NEW_project', 'asdasdfasfd', 5, '2025-05-26 17:22:44', 'unassigned', NULL, '2025-05-26 22:21:54', 69000),
+(5, '123', '123', NULL, '2025-05-30 10:35:46', 'unassigned', NULL, '2026-01-01 00:00:00', 1000000),
+(6, '1234', '1234', NULL, '2025-05-30 10:51:03', 'unassigned', NULL, '2026-01-01 00:00:00', 1234);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `project_departments`
+--
+
+CREATE TABLE `project_departments` (
+  `project_id` int(11) NOT NULL,
+  `department_name` varchar(80) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `project_departments`
+--
+
+INSERT INTO `project_departments` (`project_id`, `department_name`) VALUES
+(1, 'Διοίκηση'),
+(2, 'Ανθρώπινο Δυναμικό'),
+(2, 'Διοίκηση'),
+(2, 'Πληροφορική'),
+(3, 'Ανθρώπινο Δυναμικό'),
+(3, 'Έρευνα και Ανάπτυξη'),
+(5, 'Πληροφορική'),
+(5, 'Νομικό Τμήμα'),
+(6, 'Διοίκηση'),
+(6, 'Έρευνα και Ανάπτυξη'),
+(6, 'Ανθρώπινο Δυναμικό');
 
 -- --------------------------------------------------------
 
@@ -316,15 +493,6 @@ CREATE TABLE `tasks` (
   `state` enum('pending','completed') NOT NULL DEFAULT 'pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `tasks`
---
-
-INSERT INTO `tasks` (`id`, `team_id`, `project`, `task_name`, `assigned_to`, `state`) VALUES
-(17, 5, 4, 'NEW_TASK', 'janesmith', 'completed'),
-(18, 5, 4, 'SSSS', 'janesmith', 'completed'),
-(19, 5, 4, 'HHH', 'janesmith', 'completed');
-
 -- --------------------------------------------------------
 
 --
@@ -344,9 +512,8 @@ CREATE TABLE `teams` (
 
 INSERT INTO `teams` (`id`, `name`, `department`, `leader`) VALUES
 (1, 'Ομάδα Ανάπτυξης ERP', 'Έρευνα και Ανάπτυξη', 'nstathopoulos'),
-(2, 'Ομάδα HR', 'Ανθρώπινο Δυναμικό', 'epanagiotou'),
 (3, 'Ομάδα Portal Πελατών', 'Πωλήσεις', 'anikolaou'),
-(5, 'TEAM_A', '123', 'janesmith');
+(6, '1234', 'Διοίκηση', 'anikolaou');
 
 -- --------------------------------------------------------
 
@@ -366,10 +533,10 @@ CREATE TABLE `team_members` (
 INSERT INTO `team_members` (`team_id`, `member`) VALUES
 (1, 'gpapadopoulos'),
 (1, 'nstathopoulos'),
-(2, 'gpapadopoulos'),
-(3, 'kdimetriou'),
 (3, 'mkonstantinou'),
-(5, 'janesmith');
+(6, 'gpapadopoulos'),
+(6, 'kchatzidaki'),
+(6, 'tmichailidis');
 
 
 
@@ -415,6 +582,12 @@ INSERT INTO `users` (`username`, `password`, `firstname`, `lastname`) VALUES
 --
 
 --
+-- Indexes for table `bonus_setup`
+--
+ALTER TABLE `bonus_setup`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `business`
 --
 ALTER TABLE `business`
@@ -436,11 +609,45 @@ ALTER TABLE `employees`
   ADD KEY `employee_department_name` (`department`);
 
 --
+-- Indexes for table `employee_leave`
+--
+ALTER TABLE `employee_leave`
+  ADD PRIMARY KEY (`leave_id`),
+  ADD KEY `fk_user_leave` (`user`);
+
+--
+-- Indexes for table `employee_leave_request`
+--
+ALTER TABLE `employee_leave_request`
+  ADD PRIMARY KEY (`leave_request_id`),
+  ADD KEY `fk_user_leave_request` (`user`);
+
+--
 -- Indexes for table `employee_tags`
 --
 ALTER TABLE `employee_tags`
   ADD PRIMARY KEY (`employee`,`tag`),
   ADD KEY `employee_tags_tag` (`tag`);
+
+--
+-- Indexes for table `evaluation_answers`
+--
+ALTER TABLE `evaluation_answers`
+  ADD PRIMARY KEY (`eval_id`,`username`,`question_id`) USING BTREE,
+  ADD KEY `user_answer` (`username`);
+
+--
+-- Indexes for table `evaluation_forms`
+--
+ALTER TABLE `evaluation_forms`
+  ADD PRIMARY KEY (`eval_id`);
+
+--
+-- Indexes for table `evaluation_questions`
+--
+ALTER TABLE `evaluation_questions`
+  ADD PRIMARY KEY (`question_id`),
+  ADD KEY `fk_eval_questions_form` (`eval_id`);
 
 --
 -- Indexes for table `events`
@@ -542,6 +749,30 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `employee_leave`
+--
+ALTER TABLE `employee_leave`
+  MODIFY `leave_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `employee_leave_request`
+--
+ALTER TABLE `employee_leave_request`
+  MODIFY `leave_request_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `evaluation_forms`
+--
+ALTER TABLE `evaluation_forms`
+  MODIFY `eval_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `evaluation_questions`
+--
+ALTER TABLE `evaluation_questions`
+  MODIFY `question_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `events`
 --
 ALTER TABLE `events`
@@ -575,7 +806,7 @@ ALTER TABLE `notifications`
 -- AUTO_INCREMENT for table `projects`
 --
 ALTER TABLE `projects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `tasks`
@@ -587,7 +818,7 @@ ALTER TABLE `tasks`
 -- AUTO_INCREMENT for table `teams`
 --
 ALTER TABLE `teams`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables
@@ -607,11 +838,36 @@ ALTER TABLE `employees`
   ADD CONSTRAINT `employee_user_username` FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Constraints for table `employee_leave`
+--
+ALTER TABLE `employee_leave`
+  ADD CONSTRAINT `fk_user_leave` FOREIGN KEY (`user`) REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `employee_leave_request`
+--
+ALTER TABLE `employee_leave_request`
+  ADD CONSTRAINT `fk_user_leave_request` FOREIGN KEY (`user`) REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `employee_tags`
 --
 ALTER TABLE `employee_tags`
   ADD CONSTRAINT `employee_tags_employee` FOREIGN KEY (`employee`) REFERENCES `employees` (`username`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `employee_tags_tag` FOREIGN KEY (`tag`) REFERENCES `tags` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `evaluation_answers`
+--
+ALTER TABLE `evaluation_answers`
+  ADD CONSTRAINT `evaluation_answer` FOREIGN KEY (`eval_id`) REFERENCES `evaluation_forms` (`eval_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `user_answer` FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `evaluation_questions`
+--
+ALTER TABLE `evaluation_questions`
+  ADD CONSTRAINT `fk_eval_questions_form` FOREIGN KEY (`eval_id`) REFERENCES `evaluation_forms` (`eval_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `events`
@@ -641,16 +897,11 @@ ALTER TABLE `notifications`
   ADD CONSTRAINT `notification_user` FOREIGN KEY (`user`) REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `projects`
---
-ALTER TABLE `projects`
-  ADD CONSTRAINT `project_team_id` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
 -- Constraints for table `project_tags`
 --
 ALTER TABLE `project_tags`
   ADD CONSTRAINT `project_tags_tag` FOREIGN KEY (`tag`) REFERENCES `tags` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
+
 
 --
 -- Constraints for table `tasks`
@@ -673,6 +924,7 @@ ALTER TABLE `teams`
 ALTER TABLE `team_members`
   ADD CONSTRAINT `member_employee` FOREIGN KEY (`member`) REFERENCES `employees` (`username`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `members_team_id` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -50,6 +50,8 @@ class ManageSetupClass:
 
     def createBusiness(self):
         name = self.business_creation_screen.business_field.toPlainText()
+        if not name:
+            self.show_popup("Enter a business name")
         owner = self.admin.username
         msg = self.admin.createBusiness(self.__db, name, owner, self.__logo_data)
         if msg != "OK":
@@ -115,6 +117,9 @@ class ManageSetupClass:
             self.user_import_screen.file_label.clear()
 
     def processUsers(self, filename):
+        if not filename:
+            self.show_popup("No users file selected")
+            return
         try:
             with open(filename, 'r', encoding='utf-8') as f:
                 

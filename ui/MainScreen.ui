@@ -17,34 +17,7 @@
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="0">
      <layout class="QGridLayout" name="gridLayout">
-      <item row="3" column="0">
-       <widget class="QPushButton" name="tasksButton">
-        <property name="text">
-         <string>Tasks</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QPushButton" name="progressButton">
-        <property name="text">
-         <string> Πρόοδος</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QPushButton" name="salariesButton">
-        <property name="text">
-         <string>Salaries</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QPushButton" name="teamsButton">
-        <property name="text">
-         <string>Οι Ομάδες μου</string>
-        </property>
-       </widget>
-      </item>
+
       <item row="0" column="0">
        <widget class="QPushButton" name="projectsButton">
         <property name="text">
@@ -52,6 +25,39 @@
         </property>
        </widget>
       </item>
+
+      <item row="1" column="0">
+       <widget class="QPushButton" name="progressButton">
+        <property name="text">
+         <string>Πρόοδος</string>
+        </property>
+       </widget>
+      </item>
+
+      <item row="2" column="0">
+       <widget class="QPushButton" name="evaluationButton">
+        <property name="text">
+         <string>Evaluation</string>
+        </property>
+       </widget>
+      </item>
+
+      <item row="3" column="0">
+       <widget class="QPushButton" name="tasksButton">
+        <property name="text">
+         <string>Tasks</string>
+        </property>
+       </widget>
+      </item>
+
+      <item row="4" column="0">
+       <widget class="QPushButton" name="teamsButton">
+        <property name="text">
+         <string>Οι Ομάδες μου</string>
+        </property>
+       </widget>
+      </item>
+
       <item row="5" column="0">
        <widget class="QPushButton" name="messageSelect">
         <property name="text">
@@ -59,6 +65,7 @@
         </property>
        </widget>
       </item>
+
       <item row="6" column="0">
        <widget class="QPushButton" name="noticeSelect">
         <property name="text">
@@ -66,6 +73,23 @@
         </property>
        </widget>
       </item>
+
+      <item row="7" column="0">
+       <widget class="QPushButton" name="salariesButton">
+        <property name="text">
+         <string>Salaries</string>
+        </property>
+       </widget>
+      </item>
+
+      <item row="8" column="0">
+       <widget class="QPushButton" name="leavesButton">
+        <property name="text">
+         <string>Leaves</string>
+        </property>
+       </widget>
+      </item>
+
      </layout>
     </item>
    </layout>

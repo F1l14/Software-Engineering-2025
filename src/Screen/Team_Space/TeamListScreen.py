@@ -26,7 +26,4 @@ class TeamListScreen(QDialog):
         self.exec()
         
     def showTeamSpace(self):
-        selected_row = self.tableWidget.currentRow()
-        if selected_row >= 0:
-            team_id = self.tableWidget.item(selected_row, 0).text()
-            ManageTeamSpaceClass(team_id)
+        self.manage.showTeamSpaceScreen()
