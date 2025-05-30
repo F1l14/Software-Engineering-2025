@@ -90,7 +90,8 @@ CREATE TABLE `employees` (
 
 INSERT INTO `employees` (`username`, `department`) VALUES
 ('anikolaou', 'Πωλήσεις'),
-('epanagiotou', 'Ανθρώπινο Δυναμικό'),
+('chatHistoryTextBrowser
+', 'Ανθρώπινο Δυναμικό'),
 ('gpapadopoulos', 'Πληροφορική'),
 ('ivasileiou', 'Προμήθειες'),
 ('janesmith', 'asdfasf'),
