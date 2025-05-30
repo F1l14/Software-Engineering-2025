@@ -137,7 +137,7 @@
    <item row="12" column="1">
     <widget class="QLabel" name="evaluationResultsLabel">
      <property name="text">
-      <string>Αποτελέσματα Αξιολογήσεων:</string>
+      <string>Αποτελέσματα Αξιολόγησης:</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>

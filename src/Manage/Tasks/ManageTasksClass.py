@@ -38,12 +38,14 @@ class ManageTasksClass:
         # self.assign_tasks_screen.submit_assign_button.clicked.connect(self.assignTask)
 
     def assignTask(self):
-        selected_task = self.assign_tasks_screen.unassigned_list.selectedItems()[0]
-        selected_member = self.assign_tasks_screen.members_list.selectedItems()[0]
+        selected_task = self.assign_tasks_screen.unassigned_list.selectedItems()
+        selected_member = self.assign_tasks_screen.members_list.selectedItems()
 
         if not selected_task or not selected_member:
             self.show_popup("Please select a task and a member to assign the task.")
             return
+        selected_task = selected_task[0]
+        selected_member = selected_member[0]
         task_id = selected_task.data(Qt.ItemDataRole.UserRole)[0]["task_id"]
         member = selected_member.text()
         mesg=self.__db.assignTask(task_id, member)
