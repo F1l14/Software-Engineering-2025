@@ -23,10 +23,7 @@ class ManageMainClass:
         ManageTeamListClass()
         
     def showProjectsScreen(self):
-        user = Session.getUser()
-        db = DBManager()
-        user_type = db.queryUserType(user)
-        ManageProjectClass(user_type)
+        ManageProjectClass(Session.getRole())
 
     def showEmployeeListScreen(self):
         ManageEmployeeListClass()        

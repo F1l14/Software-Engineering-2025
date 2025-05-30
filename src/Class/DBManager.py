@@ -489,6 +489,10 @@ class DBManager:
             cursor.execute("SELECT state FROM bonus_state")
             result = cursor.fetchone()  # Use fetchone instead of fetchall
             return result[0] if result else None
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+        finally:
+            cursor.close()
 
     #Use Case 5:
     def saveEvaluationForm(self, type, start_date, end_date):
