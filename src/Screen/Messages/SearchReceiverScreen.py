@@ -5,7 +5,6 @@ class SearchReceiverScreen(QMainWindow):
     def __init__(self):
         super().__init__()
 
-    def display(self):
         uic.loadUi("ui/4_Messages/SearchReceiverScreen.ui", self)
 
         # Σύνδεση με τα widgets

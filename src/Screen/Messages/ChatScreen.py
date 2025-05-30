@@ -5,7 +5,6 @@ class ChatScreen(QMainWindow):
     def __init__(self):
         super().__init__()
 
-    def display(self):
         uic.loadUi("ui/4_Messages/ChatScreen.ui", self)
 
         self.receiverNameLabel = self.findChild(QLabel, "receiverNameLabel2")
