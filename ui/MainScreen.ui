@@ -18,71 +18,51 @@
     <item row="0" column="0">
      <layout class="QGridLayout" name="gridLayout">
       <item row="4" column="0">
-       <widget class="QPushButton" name="evaluationButton">
-        <property name="text">
-         <string>Evaluation</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
-       <widget class="QPushButton" name="salariesButton">
-        <property name="text">
-         <string>Evaluation</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QPushButton" name="projectsButton">
-        <property name="text">
-         <string>Projects</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QPushButton" name="tasksButton">
-        <property name="text">
-         <string>Tasks</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
        <widget class="QPushButton" name="teamsButton">
         <property name="text">
          <string>Οι Ομάδες μου</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QPushButton" name="tasksButton">
-      <item row="1" column="0">
-       <widget class="QPushButton" name="progressButton">
+      <item row="2" column="0">
+       <widget class="QPushButton" name="evaluationButton">
         <property name="text">
-         <string> Πρόοδος</string>
+         <string>Evaluation</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QPushButton" name="projectsButton">
+        <property name="text">
+         <string>Projects</string>
         </property>
        </widget>
       </item>
       <item row="6" column="0">
+       <widget class="QPushButton" name="tasksButton">
+        <property name="text">
+         <string>Tasks</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0">
+       <widget class="QPushButton" name="leavesButton">
+        <property name="text">
+         <string>Leaves</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0">
        <widget class="QPushButton" name="salariesButton">
         <property name="text">
          <string>Salaries</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
+      <item row="1" column="0">
        <widget class="QPushButton" name="progressButton">
         <property name="text">
-         <string> Πρόοδος</string>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="0">
-       <widget class="QPushButton" name="leavesButton">
-        <property name="text">
-         <string>Leaves</string>
-      <item row="3" column="0">
-       <widget class="QPushButton" name="taskButton">
-        <property name="text">
-         <string>Tasks</string>
+         <string>Πρόοδος</string>
         </property>
        </widget>
       </item>
@@ -96,7 +76,7 @@
      <x>0</x>
      <y>0</y>
      <width>798</width>
-     <height>21</height>
+     <height>30</height>
     </rect>
    </property>
   </widget>
